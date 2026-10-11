@@ -1,0 +1,6 @@
+# media stays out of this public repo
+*.mp4
+*.mov
+*.wav
+*.jpg
+*.png
