@@ -1,0 +1,323 @@
+{
+ "text": " بتمرين الدفع  معصمك لازم يضل ثابت  مو متحرك بكل اتجاه  خصوصاً بتمرين مثل البنش  أو حتى الدمبل برس  قبل ما تفكر بالوزن  لازم تنتبه لوضعية إيدك  طبعاً هو بيحمي المعصم  وبيحافظ على ثباته  بس أبداً ما بيغني  عن الأداء الصحيح",
+ "segments": [
+  {
+   "start": 0.721,
+   "end": 1.542,
+   "text": " بتمرين الدفع",
+   "words": [
+    {
+     "word": " بتمرين",
+     "start": 0.721,
+     "end": 1.141,
+     "probability": 1.0
+    },
+    {
+     "word": " الدفع",
+     "start": 1.221,
+     "end": 1.542,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 1.822,
+   "end": 3.444,
+   "text": " معصمك لازم يضل ثابت",
+   "words": [
+    {
+     "word": " معصمك",
+     "start": 1.822,
+     "end": 2.343,
+     "probability": 1.0
+    },
+    {
+     "word": " لازم",
+     "start": 2.663,
+     "end": 2.883,
+     "probability": 1.0
+    },
+    {
+     "word": " يضل",
+     "start": 2.943,
+     "end": 3.124,
+     "probability": 1.0
+    },
+    {
+     "word": " ثابت",
+     "start": 3.184,
+     "end": 3.444,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 3.684,
+   "end": 4.826,
+   "text": " مو متحرك بكل اتجاه",
+   "words": [
+    {
+     "word": " مو",
+     "start": 3.684,
+     "end": 3.724,
+     "probability": 1.0
+    },
+    {
+     "word": " متحرك",
+     "start": 3.824,
+     "end": 4.185,
+     "probability": 1.0
+    },
+    {
+     "word": " بكل",
+     "start": 4.245,
+     "end": 4.425,
+     "probability": 1.0
+    },
+    {
+     "word": " اتجاه",
+     "start": 4.465,
+     "end": 4.826,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 6.418,
+   "end": 7.7,
+   "text": " خصوصاً بتمرين مثل البنش",
+   "words": [
+    {
+     "word": " خصوصاً",
+     "start": 6.418,
+     "end": 6.719,
+     "probability": 1.0
+    },
+    {
+     "word": " بتمرين",
+     "start": 6.759,
+     "end": 7.139,
+     "probability": 1.0
+    },
+    {
+     "word": " مثل",
+     "start": 7.219,
+     "end": 7.359,
+     "probability": 1.0
+    },
+    {
+     "word": " البنش",
+     "start": 7.399,
+     "end": 7.7,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 7.84,
+   "end": 8.781,
+   "text": " أو حتى الدمبل برس",
+   "words": [
+    {
+     "word": " أو",
+     "start": 7.84,
+     "end": 7.88,
+     "probability": 1.0
+    },
+    {
+     "word": " حتى",
+     "start": 7.98,
+     "end": 8.14,
+     "probability": 1.0
+    },
+    {
+     "word": " الدمبل",
+     "start": 8.2,
+     "end": 8.541,
+     "probability": 1.0
+    },
+    {
+     "word": " برس",
+     "start": 8.581,
+     "end": 8.781,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 9.161,
+   "end": 10.082,
+   "text": " قبل ما تفكر بالوزن",
+   "words": [
+    {
+     "word": " قبل",
+     "start": 9.161,
+     "end": 9.281,
+     "probability": 1.0
+    },
+    {
+     "word": " ما",
+     "start": 9.342,
+     "end": 9.382,
+     "probability": 1.0
+    },
+    {
+     "word": " تفكر",
+     "start": 9.442,
+     "end": 9.702,
+     "probability": 1.0
+    },
+    {
+     "word": " بالوزن",
+     "start": 9.742,
+     "end": 10.082,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 10.223,
+   "end": 11.664,
+   "text": " لازم تنتبه لوضعية إيدك",
+   "words": [
+    {
+     "word": " لازم",
+     "start": 10.223,
+     "end": 10.423,
+     "probability": 1.0
+    },
+    {
+     "word": " تنتبه",
+     "start": 10.503,
+     "end": 10.803,
+     "probability": 1.0
+    },
+    {
+     "word": " لوضعية",
+     "start": 10.863,
+     "end": 11.284,
+     "probability": 1.0
+    },
+    {
+     "word": " إيدك",
+     "start": 11.384,
+     "end": 11.664,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 12.23,
+   "end": 13.331,
+   "text": " طبعاً هو بيحمي المعصم",
+   "words": [
+    {
+     "word": " طبعاً",
+     "start": 12.23,
+     "end": 12.43,
+     "probability": 1.0
+    },
+    {
+     "word": " هو",
+     "start": 12.511,
+     "end": 12.571,
+     "probability": 1.0
+    },
+    {
+     "word": " بيحمي",
+     "start": 12.651,
+     "end": 12.891,
+     "probability": 1.0
+    },
+    {
+     "word": " المعصم",
+     "start": 12.951,
+     "end": 13.331,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 13.532,
+   "end": 14.513,
+   "text": " وبيحافظ على ثباته",
+   "words": [
+    {
+     "word": " وبيحافظ",
+     "start": 13.532,
+     "end": 13.932,
+     "probability": 1.0
+    },
+    {
+     "word": " على",
+     "start": 14.012,
+     "end": 14.112,
+     "probability": 1.0
+    },
+    {
+     "word": " ثباته",
+     "start": 14.192,
+     "end": 14.513,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 14.933,
+   "end": 15.874,
+   "text": " بس أبداً ما بيغني",
+   "words": [
+    {
+     "word": " بس",
+     "start": 14.933,
+     "end": 15.073,
+     "probability": 1.0
+    },
+    {
+     "word": " أبداً",
+     "start": 15.174,
+     "end": 15.374,
+     "probability": 1.0
+    },
+    {
+     "word": " ما",
+     "start": 15.494,
+     "end": 15.554,
+     "probability": 1.0
+    },
+    {
+     "word": " بيغني",
+     "start": 15.634,
+     "end": 15.874,
+     "probability": 1.0
+    }
+   ]
+  },
+  {
+   "start": 15.955,
+   "end": 16.735,
+   "text": " عن الأداء الصحيح",
+   "words": [
+    {
+     "word": " عن",
+     "start": 15.955,
+     "end": 16.015,
+     "probability": 1.0
+    },
+    {
+     "word": " الأداء",
+     "start": 16.055,
+     "end": 16.315,
+     "probability": 1.0
+    },
+    {
+     "word": " الصحيح",
+     "start": 16.355,
+     "end": 16.735,
+     "probability": 1.0
+    }
+   ]
+  }
+ ],
+ "language": "ar"
+}
