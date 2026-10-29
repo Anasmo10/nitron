@@ -1,6 +1,6 @@
 ---
 name: content-principles
-description: Use when writing or reviewing a short video script, hook or caption for nitron.sport. Applies the principles below, not a template.
+description: Use when writing or reviewing a short video script, hook, caption or reel plan for nitron.sport, or when given a video idea or a product to turn into a Reel or an ad. Applies Nitron's audience, Syrian-dialect voice and principles, and runs the reel workflow that routes each step to the right skill.
 ---
 
 # Content principles
@@ -36,3 +36,25 @@ Language and tone: عربي لهجة سورية — متل مدرّب صاحبك
 - Never copy the structure of a reference post. Take only the reason it works.
 - Any rule, number or name on screen needs a source (federation rulebook, the product itself, or what the
   presenter says on camera). No source → say it in general terms instead.
+
+## Workflow when given a video idea or a product
+These house principles win over any generic skill. The other skills are tools for one step each.
+
+1. **Audience and goal.** Name the viewer (from Audience above) and ONE goal: reach, sends, saves, or a sale.
+2. **References.** If search or reel files are available, study 2–3 real reels (`viral-reverse-engineering`).
+   Use only what can be seen: transcript, frames, visible counts. Never claim to have watched a reel from a
+   link alone. Label every pattern taken from them as **مستند** (seen in a reference) or **فرضية** (a creative
+   guess to test).
+3. **Three different ideas**: three different mechanisms (e.g. contradiction, demo, mistake→fix), not three
+   wordings of one idea.
+4. **Hooks for each idea.** Verbal hook system from `hooksmith` (spoken line + on-screen text + open loop +
+   rehook). Visual hook from `virality`: frame 0 already moving, what is on screen every 0.5 s up to 3 s.
+5. **Final script with timings** for the chosen idea (`reels-script`): a row per beat — time · shot ·
+   spoken · on-screen text · audio. Muted version must still make sense.
+6. **Shoot and edit plan**: shot list grouped by setup, angle, camera move, light, sound, transitions
+   (`scripting-and-storyboarding`, `talking-head-and-piece-to-camera`).
+7. **Why, and what to test**: one reason per choice, then 1–2 A/B tests (e.g. two hooks as Trial Reels),
+   each with the metric that decides it (3-second hold, average watch time, sends, saves).
+
+For paid ads or a direct sale, add `ad-maker`: pick the angle from its angle × awareness matrix before
+writing the hook. Organic videos still follow principle 8 (product in the middle, no ad ending).
