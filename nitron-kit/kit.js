@@ -1,0 +1,127 @@
+/* ═══ Nitron kit — scene components (house style v1, from reel #2) ═══
+   Loaded after the engine (compose.html). A reel's scenes.js only sets SCENES and calls these.
+   Brand: black #0A0A0C · white · purple #76028A (acc) · light purple #C77DDB (accText) · Cairo 900.
+   Rules: everything lands on a spoken word · ease-out 0.18–0.30 s · no bounce · no text on the face. */
+const nkImg=s=>{const i=new Image(); i.src=s; return i;};
+const NK_WAIT=[];   /* images the first frame must not render without */
+function nkUse(src){ const i=nkImg(src); NK_WAIT.push(i); return i; }
+(function(){ const _init=window.init;
+  window.init=o=>Promise.resolve(_init(o)).then(r=>Promise.all(NK_WAIT.map(i=>(i.decode?i.decode():0).catch(()=>0))).then(()=>r)); })();
+const nkW=(c,i)=>wordsOf(c)[i];                                   /* word i of caption card c */
+const nkS=(c,i)=>wordsOf(c)[i].s;
+const nkK=(t,t0,d)=>ease(pr(t,t0,t0+(d||0.22)));
+function nkTxt(s,x,y,size,col,al,a,weight){ X.save(); X.globalAlpha*=(a===undefined?1:a); X.font=(weight||900)+' '+size+'px '+FONT;
+  X.fillStyle=col; X.textAlign=al||'center'; X.textBaseline='middle'; X.direction='rtl'; X.fillText(s,x,y); X.restore(); }
+function nkLatin(s,x,y,size,col,al){ X.save(); X.font='900 '+size+'px Inter, '+FONT; X.fillStyle=col; X.textAlign=al||'center';
+  X.textBaseline='middle'; X.direction='ltr'; X.fillText(s,x,y); X.restore(); }
+
+/* stage: the black-purple grid every Nitron card scene sits on */
+function nkStage(cy,glow){ X.save(); X.fillStyle=BG; X.fillRect(0,0,W,H); const ga=0.38*(glow===undefined?1:glow);
+  const g=X.createRadialGradient(540,cy||420,40,540,cy||420,760); g.addColorStop(0,'rgba(118,2,138,'+ga.toFixed(3)+')'); g.addColorStop(1,'rgba(118,2,138,0)');
+  X.fillStyle=g; X.fillRect(0,0,W,H); grid(); X.restore(); }
+
+/* product art: the real photo when it exists, otherwise a drawn wrist-wrap glyph (never an empty slot) */
+function nkWrapGlyph(cx,cy,w){ const h=w*1.05; X.save(); X.translate(cx,cy); X.rotate(-0.10);
+  X.fillStyle='#111114'; rr(-w*0.22,-h/2,w*0.44,h,w*0.06); X.fill();
+  X.fillStyle='#E8742A'; for(const dx of [-0.11,0,0.11]){ X.fillRect(dx*w-w*0.025,-h*0.30,w*0.05,h*0.62); }
+  X.fillStyle='#1d1d22'; rr(-w*0.22,-h/2,w*0.44,h*0.20,w*0.05); X.fill();
+  X.strokeStyle='#2a2a30'; X.lineWidth=w*0.035; X.beginPath(); X.ellipse(0,-h/2-w*0.12,w*0.09,w*0.14,0,0,7); X.stroke();
+  X.restore(); }
+function nkProductArt(img,cx,cy,w){ if(img&&img.naturalWidth){ const h=w*img.naturalHeight/img.naturalWidth; X.drawImage(img,cx-w/2,cy-h/2,w,h); }
+  else nkWrapGlyph(cx,cy,w*0.85); }
+
+/* sticker with white rim; stamp = purple ✕ that grows in; dead = greys it out */
+function nkSticker(img,cx,cy,w,rot,k,stamp,dead){
+  if(k<=0) return; X.save(); X.translate(cx,cy); X.rotate(rot); const sc=0.55+0.45*ease(k); X.scale(sc,sc); X.globalAlpha*=Math.min(1,k*2.2);
+  X.shadowColor='rgba(0,0,0,0.45)'; X.shadowBlur=26; X.shadowOffsetY=12;
+  if(dead>0) X.filter='grayscale('+(0.85*dead).toFixed(2)+') brightness('+(1-0.25*dead).toFixed(2)+')';
+  if(img&&img.naturalWidth){ const h=w*img.naturalHeight/img.naturalWidth; X.drawImage(img,-w/2,-h/2,w,h); }
+  else { X.fillStyle='#FFFFFF'; rr(-w*0.40,-w*0.46,w*0.80,w*0.92,w*0.12); X.fill(); X.shadowColor='transparent'; nkWrapGlyph(0,0,w*0.62); }
+  X.filter='none'; X.shadowColor='transparent';
+  if(stamp>0){ const a=w*0.30*ease(stamp); X.lineCap='round';
+    for(const [lw,c] of [[30,'#FFFFFF'],[18,ACC]]){ X.strokeStyle=c; X.lineWidth=lw; X.beginPath(); X.moveTo(-a,-a); X.lineTo(a,a); X.moveTo(a,-a); X.lineTo(-a,a); X.stroke(); } }
+  X.restore(); }
+
+/* ── HOOK CARD ── video in a rounded card on the stage, head breaking out over its top edge,
+   kicker line word by word, big headline(s) slammed behind the head, optional stickers.
+   cfg = {end, face:{headtop,cy,fw}, kicker:{card, hi:[word indices]}, heads:[{text,at}], stickers:[{img,x,y,w,rot,in,stamp}]} */
+function nkHookGeo(t,cfg){
+  const S0=0.80, f=cfg.face, oy0=444-f.headtop*S0, ox0=(W-W*S0)/2, top0=Math.min(1000,oy0+(f.cy+0.62*f.fw)*S0);
+  const kIn=ease(pr(t,0,0.38)), kOut=eio(pr(t,cfg.end-0.24,cfg.end)), drift=0.012*pr(t,0.38,cfg.end-0.24);
+  let s=lerp(0.66,S0,kIn)+drift, ox=540-(540-ox0)*(s/S0), oy=oy0+lerp(150,0,kIn), top=lerp(top0+140,top0,kIn);
+  let x0=540-(540-ox0)*(s/S0), x1=540+(W-ox0-540)*(s/S0), r=44;
+  if(kOut>0){ /* exit straight into the next layout (full screen, or the lower card of an info panel) */
+    const R=cfg.exitRect||{x:0,y:0,w:W,h:H,r:0}, se=Math.max(R.w/W,R.h/H), oxe=R.x+(R.w-W*se)/2;
+    s=lerp(s,se,kOut); ox=lerp(ox,oxe,kOut); oy=lerp(oy,R.y,kOut); top=lerp(top,R.y,kOut); x0=lerp(x0,R.x,kOut); x1=lerp(x1,R.x+R.w,kOut); r=lerp(r,R.r||0,kOut); }
+  return {s,ox,oy,top,x0,x1,r,out:kOut};
+}
+function nkHook(t,cfg){
+  if(t>=cfg.end) return; const G=nkHookGeo(t,cfg), fade=1-pr(t,cfg.end-0.28,cfg.end-0.10);
+  nkStage(420,1-G.out);
+  /* kicker */
+  X.save(); X.globalAlpha=fade; X.translate(0,-60*pr(t,cfg.end-0.28,cfg.end-0.10));
+  const kc=cfg.kicker, kw=wordsOf(kc.card).map(w=>w.t), fs=58; X.font='900 '+fs+'px '+FONT; const sp=X.measureText(' ').width;
+  const wd=kw.map(s=>X.measureText(s).width), tot=wd.reduce((a,b)=>a+b,0)+sp*(kw.length-1); let x=540+tot/2;
+  kw.forEach((s,i)=>{ const k=nkK(t,wordsOf(kc.card)[i].s-0.04,0.18); nkTxt(s,x,232+(1-k)*18,fs,(kc.hi||[]).includes(i)?(ACCTXT||ACC):INK,'right',k); x-=wd[i]+sp; });
+  /* headlines: each new one replaces the previous (old one lifts away, new one slams in) */
+  const BF=cfg.headSize||176;
+  cfg.heads.forEach((h,i)=>{ const nx=cfg.heads[i+1], k=pr(t,h.at-0.03,h.at+0.16); if(k<=0) return;
+    const gone=nx?pr(t,nx.at-0.06,nx.at+0.06):0; if(gone>=1) return;
+    X.font='900 '+BF+'px '+FONT; const fit=Math.min(BF,Math.floor(BF*940/X.measureText(h.text).width));   /* auto-fit: 70px side margins */
+    X.save(); const sc=1.45-0.45*ease(k); X.translate(540,372-40*gone); X.scale(sc,sc);
+    X.shadowColor='rgba(0,0,0,0.55)'; X.shadowBlur=30; X.shadowOffsetY=10; nkTxt(h.text,0,0,fit,'#FFFFFF','center',Math.min(1,k*2)*(1-gone)); X.restore();
+    const ub=nkK(t,h.at+0.14,0.24)*(1-gone); if(ub>0){ X.font='900 '+fit+'px '+FONT; const bw=X.measureText(h.text).width; X.save(); X.fillStyle=ACC; rr(540-bw/2*ub,478,bw*ub,14,7); X.fill(); X.restore(); } });
+  X.restore();
+  /* stickers flank the head */
+  X.save(); X.globalAlpha=fade; const fl=Math.sin(t*3.1)*0.03;
+  (cfg.stickers||[]).forEach((s,i)=>{ const st=s.stamp?nkK(t,s.stamp,0.16):0; nkSticker(s.img,s.x,s.y,s.w,s.rot+(i%2?-fl:fl),nkK(t,s.in,0.30),st,st); });
+  X.restore();
+  /* the card */
+  const vb=G.oy+H*G.s; X.save(); X.beginPath(); rr(G.x0,G.top,G.x1-G.x0,vb-G.top,G.r); X.save();
+  X.shadowColor='rgba(0,0,0,0.6)'; X.shadowBlur=60; X.shadowOffsetY=20; X.fillStyle='#000'; X.fill(); X.restore();
+  X.clip(); X.drawImage(VF,G.ox,G.oy,W*G.s,H*G.s); X.restore();
+  if(G.out<1){ X.save(); X.globalAlpha=1-G.out; X.strokeStyle=ACC; X.lineWidth=5; rr(G.x0,G.top,G.x1-G.x0,vb-G.top,G.r); X.stroke(); X.restore(); }
+  if(PRS_OK&&G.top>4){ X.save(); X.beginPath(); X.rect(0,0,W,G.top+2); X.clip(); X.drawImage(PRS,G.ox,G.oy,W*G.s,H*G.s); X.restore(); }
+}
+
+/* ── PANEL PIECES (inside panelIn, coordinates 130..950 × 278..458, scaled 1.2 by the engine) ── */
+function nkMark(cx,cy,r,ok,k){ X.save(); X.fillStyle=ok?ACC:'rgba(255,255,255,0.14)'; X.beginPath(); X.arc(cx,cy,r,0,7); X.fill();
+  if(ok) iCheck(cx,cy,r*0.95,'#FFFFFF',k); else { const a=r*0.42*ease(k); X.strokeStyle='rgba(255,255,255,0.85)'; X.lineWidth=r*0.18; X.lineCap='round';
+    X.beginPath(); X.moveTo(cx-a,cy-a); X.lineTo(cx+a,cy+a); X.moveTo(cx+a,cy-a); X.lineTo(cx-a,cy+a); X.stroke(); } X.restore(); }
+function nkRow(x1,x0,cy,h,text,ok,k,strike){   /* RTL row: mark on the right, text to its left */
+  if(k<=0) return; X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.translate((1-k)*-22,0);
+  X.fillStyle=ok?'rgba(118,2,138,0.22)':'rgba(255,255,255,0.06)'; rr(x0,cy-h/2,x1-x0,h,h/2); X.fill();
+  X.strokeStyle=ok?ACC:'rgba(255,255,255,0.18)'; X.lineWidth=3; rr(x0,cy-h/2,x1-x0,h,h/2); X.stroke();
+  nkMark(x1-h/2,cy,h/2-9,ok,pr(k,0.3,1)); nkTxt(text,x1-h-16,cy+2,h*0.50,ok?'#FFFFFF':'rgba(255,255,255,0.62)','right');
+  if(strike>0){ X.font='900 '+(h*0.50)+'px '+FONT; const tw=X.measureText(text).width, sx=x1-h-14; X.strokeStyle=ACC; X.lineWidth=6; X.lineCap='round';
+    X.beginPath(); X.moveTo(sx,cy+3); X.lineTo(sx-(tw+8)*strike,cy+3); X.stroke(); }
+  X.restore(); }
+function nkPill(cx,cy,text,k,fill){ if(k<=0) return; X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.font='900 34px '+FONT;
+  const w=X.measureText(text).width+56, sc=0.94+0.06*k; X.translate(cx,cy+(1-k)*14); X.scale(sc,sc);
+  X.fillStyle=fill||'rgba(255,255,255,0.10)'; rr(-w/2,-28,w,56,28); X.fill(); if(!fill){ X.strokeStyle=ACC; X.lineWidth=3; rr(-w/2,-28,w,56,28); X.stroke(); }
+  nkTxt(text,0,2,34,'#FFFFFF','center'); X.restore(); return w; }
+
+/* ── BRAND PLATE: «اطلبه من» + NITRON wordmark wipe (lower third) ── */
+function nkBrandPlate(t,cfg){ const WORD=cfg.word; if(t<cfg.s-0.05||t>cfg.e) return; const k=nkK(t,cfg.s,0.30), kw=nkK(t,cfg.logoAt-0.04,0.34), out=1-pr(t,cfg.e-0.12,cfg.e);
+  if(k<=0) return; const x0=120,w=820,y0=1236+(1-k)*60,h=248; X.save(); X.globalAlpha=Math.min(1,k*1.4)*out;
+  sh(60,20,0.45); X.fillStyle='rgba(10,10,12,0.95)'; rr(x0,y0,w,h,40); X.fill(); nsh(); X.strokeStyle=ACC; X.lineWidth=4; rr(x0,y0,w,h,40); X.stroke();
+  nkTxt(cfg.label||'اطلبه من',540,y0+58,46,MUT,'center');
+  if(kw>0&&WORD.naturalWidth){ const lw=600, lh=lw*WORD.naturalHeight/WORD.naturalWidth, ly=y0+92; X.save(); X.beginPath(); X.rect(540+lw/2-lw*kw-4,ly-6,lw*kw+8,lh+12); X.clip(); X.drawImage(WORD,540-lw/2,ly,lw,lh); X.restore(); }
+  X.restore(); }
+
+/* ── OUTRO CARD: full logo · purple rule · one-line takeaway · CTA pill ── */
+function nkOutro(cfg){ return function(t){ const s=VEND; if(t<s) return;
+  const wipe=eio(pr(t,s,s+0.40)), top=H*(1-wipe);
+  X.save(); X.fillStyle=BG; X.fillRect(0,top,W,H); X.beginPath(); X.rect(0,top,W,H); X.clip(); X.translate(0,top);
+  const gr=X.createRadialGradient(540,720,30,540,720,700); gr.addColorStop(0,'rgba(118,2,138,0.30)'); gr.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=gr; X.fillRect(0,0,W,H);
+  const k1=ease(pr(t,s+0.26,s+0.72));
+  if(k1>0&&LOGO.naturalWidth){ const lw=860, lh=lw*LOGO.naturalHeight/LOGO.naturalWidth, sc=0.95+0.05*k1; X.save(); X.globalAlpha=k1; X.translate(540,700); X.scale(sc,sc); X.drawImage(LOGO,-lw/2,-lh/2,lw,lh); X.restore(); }
+  const k2=ease(pr(t,s+0.55,s+0.95)); if(k2>0){ X.save(); X.fillStyle=ACC; rr(540-260*k2,905,520*k2,10,5); X.fill(); X.restore(); }
+  const k3=ease(pr(t,s+0.75,s+1.15)); if(k3>0) nkTxt(cfg.line,540,1010+(1-k3)*16,cfg.lineSize||60,INK,'center',k3);
+  const k4=ease(pr(t,s+1.05,s+1.45));
+  if(k4>0){ X.save(); X.globalAlpha=k4; const label=cfg.cta||'اطلبه من نايترون'; X.font='900 50px '+FONT; const w=X.measureText(label).width+110;
+    const sc=0.95+0.05*k4; X.translate(540,1160); X.scale(sc,sc); sh(36,14,0.25); X.fillStyle=ACC; rr(-w/2,-58,w,116,58); X.fill(); nsh(); nkTxt(label,0,3,50,'#FFFFFF','center'); X.restore(); }
+  X.restore(); }; }
+
+/* house rule: no progress bar over the hook card (it cut through the stage between headline and card) */
+function nkNoBarUntil(t1){ const b=bar; bar=function(t){ if(t<t1) return; b(t); }; }
