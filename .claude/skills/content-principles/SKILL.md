@@ -23,6 +23,12 @@ Language and tone: عربي لهجة سورية — متل مدرّب صاحبك
 8. The product appears as the tool that fixes the problem, in the middle — never as an ad at the end.
    Reason: this audience scrolls past ads in the first second, but accepts a tool once they've seen the
    problem it solves.
+9. The hook is a specific claim that contradicts what they believe, or a shot they've never seen —
+   never a generic question ("رسغك بيوجعك؟"). Reason: generic questions sound like every other fitness
+   reel; feedback on batch 1 was "no hook".
+10. No line that announces, recaps or stalls ("شوف"، "رح قلّك بالآخر"، "بخمس ثواني"، the same "بتمرينك الجاي"
+    closer in every video). Every line adds a new fact or a new action; 4–6 lines, under 20 seconds.
+    Reason: one empty second is enough to lose them; feedback on batch 1 was "full of filler".
 
 ## How to use
 - Before writing, state which principles the script will lean on.
