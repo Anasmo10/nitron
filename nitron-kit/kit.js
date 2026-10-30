@@ -125,3 +125,57 @@ function nkOutro(cfg){ return function(t){ const s=VEND; if(t<s) return;
 
 /* house rule: no progress bar over the hook card (it cut through the stage between headline and card) */
 function nkNoBarUntil(t1){ const b=bar; bar=function(t){ if(t<t1) return; b(t); }; }
+
+/* ═══ kit v2 (reel #4): full frame always · eyes in the eye zone · text behind the speaker ═══ */
+
+/* WALL WORDS: big words on the wall behind the speaker (person layer on top), placed from his head
+   so the bottom of the word slips behind it. words=[{text,at,color,strike}] swap in order. Needs bt/person
+   frames for the window (behind_fix.py <work> wall f0 f1). Video layer. */
+function nkWallWords(t,cfg){
+  if(t<cfg.s||t>cfg.e||!isFull(vrect(t))) return false;
+  const ws=cfg.words; let i=-1; ws.forEach((w,j)=>{ if(t>=w.at-0.10) i=j; }); if(i<0) return false;
+  const w=ws[i], nx=ws[i+1], k=pr(t,w.at-0.10,w.at+0.12), out=1-pr(t,cfg.e-0.16,cfg.e);
+  if(!w._y){ const f=BEHIND&&BEHIND.faces, ys=[]; const a=Math.floor(w.at*30)+1, b=Math.ceil((nx?nx.at:cfg.e)*30)+1;
+    for(let n=a;n<=b;n++){ const q=f&&f[n]; if(q) ys.push(q.y-0.35*q.h); } ys.sort((p,q)=>p-q);
+    const ht=ys.length?ys[ys.length>>1]:380; X.font='900 '+(cfg.size||250)+'px '+FONT;
+    let sz=Math.min(cfg.size||250,Math.floor((cfg.size||250)*940/X.measureText(w.text).width));
+    let y=ht+0.18*sz; if(y-0.55*sz<168){ sz=Math.max(150,Math.floor((ht+0.18*sz-168)/0.55)); y=Math.max(168+0.55*sz,ht+0.18*sz); }
+    w._y=y; w._sz=sz; }
+  X.save(); X.globalAlpha=Math.min(1,k*1.6)*out; const sc=1.12-0.12*ease(k); X.translate(540,w._y); X.scale(sc,sc);
+  X.shadowColor='rgba(0,0,0,0.22)'; X.shadowBlur=24; X.shadowOffsetY=10; nkTxt(w.text,0,0,w._sz,w.color||ACC,'center');
+  X.shadowColor='transparent';
+  if(w.strike){ const ks=nkK(t,w.strike,0.22); if(ks>0){ X.font='900 '+w._sz+'px '+FONT; const tw=X.measureText(w.text).width;
+    X.strokeStyle=ACC; X.lineWidth=w._sz*0.09; X.lineCap='round'; X.beginPath(); X.moveTo(tw/2,w._sz*0.05); X.lineTo(tw/2-tw*ks,w._sz*0.05); X.stroke(); } }
+  X.restore();
+  if(PRS_OK) X.drawImage(PRS,0,0,W,H);
+  return true;
+}
+
+/* SIDE CARD: the product photo on a white rounded card with a purple rim, sliding in from the side —
+   beside the speaker, never over the face, clear of the right-hand action icons (x ≤ 940). */
+function nkSideCard(t,cfg){
+  if(t<cfg.s-0.05||t>cfg.e) return; const img=cfg.img, k=nkK(t,cfg.s,0.32), out=1-pr(t,cfg.e-0.18,cfg.e); if(k<=0) return;
+  const w=cfg.w, h=img&&img.naturalWidth?w*img.naturalHeight/img.naturalWidth:w*1.3, fl=Math.sin(t*2.6)*0.012;
+  X.save(); X.globalAlpha=Math.min(1,k*1.5)*out; const dx=cfg.rise?0:(1-k)*(cfg.from||420), dy=cfg.rise?(1-k)*cfg.rise:0; X.translate(cfg.cx+dx,cfg.cy+dy);   /* rise:px = enter from below (keeps clear of the right-hand icons) */ X.rotate((cfg.rot||0.06)+fl);
+  sh(50,18,0.40); X.fillStyle='#FFFFFF'; rr(-w/2-10,-h/2-10,w+20,h+20,28); X.fill(); nsh();
+  X.save(); X.beginPath(); rr(-w/2,-h/2,w,h,20); X.clip(); nkProductArt(img,0,0,w); X.restore();
+  X.strokeStyle=ACC; X.lineWidth=6; rr(-w/2-10,-h/2-10,w+20,h+20,28); X.stroke();
+  if(cfg.label){ const kl=nkK(t,cfg.s+0.25,0.24); if(kl>0){ X.globalAlpha*=kl; X.font='900 34px '+FONT; const lw=X.measureText(cfg.label).width+48;
+    X.fillStyle=ACC; rr(-lw/2,h/2-6,lw,56,28); X.fill(); nkTxt(cfg.label,0,h/2+23,34,'#FFFFFF','center'); } }
+  X.restore();
+}
+
+/* CHEST LINES: for close-ups with no wall above the head — the headline lands on the chest band
+   (y 1120–1460), above the caption/UI zone, never on the face. lines=[{text,at,size,color,bar}] stack downward. */
+function nkChest(t,cfg){
+  if(t<cfg.s||t>cfg.e) return; const out=1-pr(t,cfg.e-0.16,cfg.e); let y=cfg.y||1180;
+  X.save(); X.globalAlpha=out;
+  cfg.lines.forEach(l=>{ const k=pr(t,l.at-0.03,l.at+0.16), sz0=l.size||150;
+    X.font='900 '+sz0+'px '+FONT; const sz=Math.min(sz0,Math.floor(sz0*(cfg.maxW||800)/X.measureText(l.text).width));   /* ≤800 wide: clear of the right-hand icons (x>950, y 1100–1750) */
+    if(k>0){ X.save(); const sc=(l.slam===false?1:1.35-0.35*ease(k)); X.translate(540,y); X.scale(sc,sc);
+      X.shadowColor='rgba(0,0,0,0.75)'; X.shadowBlur=34; X.shadowOffsetY=10; nkTxt(l.text,0,0,sz,l.color||'#FFFFFF','center',Math.min(1,k*2)); X.restore();
+      if(l.bar){ const kb=nkK(t,l.at+0.14,0.24); if(kb>0){ X.font='900 '+sz+'px '+FONT; const bw=X.measureText(l.text).width;
+        X.save(); X.fillStyle=ACC; rr(540-bw/2*kb,y+sz*0.58,bw*kb,14,7); X.fill(); X.restore(); } } }
+    y+=sz*1.08; });
+  X.restore();
+}

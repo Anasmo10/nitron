@@ -10,7 +10,10 @@ reel.json
   "pieces": [{"name","clip","a","b","zoom":[z0,z1],"target":[x|null,y|null],"toplock":false}]
             a/b = raw seconds · zoom drifts z0→z1 across the piece · target = where the face lands
             · toplock = zoom from the top edge (pieces shown in the lower card: the head never gets cut)
+            v2 default: target y = 700 → eyes sit in the reel's eye zone (upper third), never pushed down
+  clip "gains": [r,g,b] overrides the wall-patch white balance (e.g. a clip with no plain wall in shot)
 """
+EYE_Y=700
 import json, os, subprocess, sys, numpy as np, cv2
 FPS=30; WALL=np.array([212,204,193.])       # house cream-wall target (R,G,B)
 LOOK=("hqdn3d=1.5:1.5:3:3,curves=m='0/0 0.25/0.23 0.5/0.53 0.8/0.85 1/1',"
@@ -25,6 +28,7 @@ def frame_at(f,t):
 gains={}
 for cid,c in cfg["clips"].items():
     dur=float(subprocess.run(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",c["file"]],capture_output=True,text=True).stdout)
+    if "gains" in c: gains[cid]=c["gains"]; print(f"{cid}: gains (given) {c['gains']}"); continue
     x0,y0,x1,y1=c.get("wall",[0.55,0.05,0.95,0.25]); vals=[]
     for t in np.linspace(0.2,dur-0.2,5):
         im=frame_at(c["file"],t); h,w=im.shape[:2]; p=im[int(h*y0):int(h*y1),int(w*x0):int(w*x1)].reshape(-1,3)
@@ -56,9 +60,12 @@ def place(cx,cy,z,tx,ty):
 for f in os.listdir(W+"/vfr"): os.remove(os.path.join(W+"/vfr",f))
 k=0; start=0.0; tl=[]
 for p in cfg["pieces"]:
-    f=info[p["name"]]; n=f["n"]; z0,z1=p.get("zoom",[1,1]); tx,ty=p.get("target",[None,None])
+    f=info[p["name"]]; n=f["n"]; z0,z1=p.get("zoom",[1,1]); tx,ty=p.get("target",[540,EYE_Y])
     for i in range(n):
-        z=z0+(z1-z0)*i/max(1,n-1); im=cv2.imread(f"{P}/{p['name']}/{i+1:04d}.jpg")
+        if p.get("snap"):   # hook snap: ease-out from z0 to z1 in `snap` seconds, then hold (motion on frame 0)
+            k_=min(1,(i/FPS)/p["snap"]); z=z0+(z1-z0)*(1-(1-k_)**3)
+        else: z=z0+(z1-z0)*i/max(1,n-1)
+        im=cv2.imread(f"{P}/{p['name']}/{i+1:04d}.jpg")
         M=place(f["cx"],0,z,tx,0) if p.get("toplock") else place(f["cx"],f["cy"],z,tx,ty)
         k+=1; cv2.imwrite(f"{W}/vfr/{k:05d}.jpg",cv2.warpAffine(im,M,(1080,1920),flags=cv2.INTER_LANCZOS4,borderMode=cv2.BORDER_REFLECT),[cv2.IMWRITE_JPEG_QUALITY,95])
     tl.append({"name":p["name"],"start":round(start,4),"end":round(start+n/FPS,4),"frames":[k-n+1,k],"face":f}); start+=n/FPS
