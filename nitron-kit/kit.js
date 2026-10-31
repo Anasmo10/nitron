@@ -199,8 +199,10 @@ function nkGlassCard(t,cfg){
   if(rows.length) y+=18;
   rows.forEach(r=>{ const kr=nkK(t,r.at-0.04,0.26); if(kr>0){ X.save(); X.globalAlpha*=Math.min(1,kr*1.6); X.translate((1-kr)*-24,0);
       X.fillStyle='rgba(10,10,12,0.78)'; rr(-iw/2,y,iw,RH,RH/2); X.fill();
-      X.fillStyle=ACC; X.beginPath(); X.arc(iw/2-RH/2,y+RH/2,RH/2-9,0,7); X.fill(); iCheck(iw/2-RH/2,y+RH/2,RH*0.42,'#FFFFFF',pr(kr,0.3,1));
-      nkTxt(r.text,iw/2-RH-14,y+RH/2+2,RH*0.46,'#FFFFFF','right'); X.restore(); }
+      nkMarkDot(iw/2-RH/2,y+RH/2,RH/2-9,r.ok!==false,pr(kr,0.3,1));
+      X.font='900 '+(RH*0.46)+'px '+FONT; const fsr=Math.min(RH*0.46,RH*0.46*(iw-RH-40)/X.measureText(r.text).width);   /* fits inside its pill */
+      nkTxt(r.text,iw/2-RH-14,y+RH/2+2,fsr,r.ok===false?'rgba(255,255,255,0.72)':'#FFFFFF','right');
+      if(r.strike) nkStrike(t,r.strike,r.text,iw/2-RH-14,y+RH/2+3,fsr); X.restore(); }
     y+=RH+12; });
   X.restore(); }
 
@@ -222,3 +224,28 @@ function nkGlassLens(t,cfg){ if(t<cfg.s-0.05||t>cfg.e) return; const k=nkK(t,cfg
   const r=cfg.r*(0.6+0.4*ease(k)); X.save(); X.globalAlpha*=Math.min(1,k*1.8)*out;
   glassPane(cfg.cx-r,cfg.cy-r,2*r,2*r,r,{blur:0.01,lens:cfg.zoom||1.35,a:0.0,shadow:0.22});
   X.lineWidth=5; X.strokeStyle=ACC; X.beginPath(); X.arc(cfg.cx,cfg.cy,r-2.5,0,7); X.stroke(); X.restore(); }
+
+/* ✓ (purple) or ✕ (grey) dot · purple strike-through that draws right→left on its word */
+function nkMarkDot(cx,cy,r,ok,k){ X.save(); X.fillStyle=ok?ACC:'rgba(255,255,255,0.20)'; X.beginPath(); X.arc(cx,cy,r,0,7); X.fill();
+  if(ok) iCheck(cx,cy,r*1.08,'#FFFFFF',k); else { const a=r*0.42*ease(k); X.strokeStyle='#FFFFFF'; X.lineWidth=r*0.16; X.lineCap='round';
+    X.beginPath(); X.moveTo(cx-a,cy-a); X.lineTo(cx+a,cy+a); X.moveTo(cx+a,cy-a); X.lineTo(cx-a,cy+a); X.stroke(); } X.restore(); }
+function nkStrike(t,at,text,xr,y,fs){ const ks=nkK(t,at,0.22); if(ks<=0) return; X.save(); X.font='900 '+fs+'px '+FONT; const tw=X.measureText(text).width;
+  X.strokeStyle=ACC; X.lineWidth=Math.max(5,fs*0.13); X.lineCap='round'; X.beginPath(); X.moveTo(xr+2,y); X.lineTo(xr+2-(tw+4)*ks,y); X.stroke(); X.restore(); }
+
+/* GLASS LIST: dark glass pills that land one by one on his words, beside his head (an equation, a checklist).
+   cfg = {s, e, x, y, w, rowH, rows:[{text, at, mark:'ok'|'no'|'img'|'result', img, strike}]} */
+function nkGlassList(t,cfg){
+  if(t<cfg.s-0.05||t>cfg.e) return; const out=1-pr(t,cfg.e-0.20,cfg.e); if(out<=0) return;
+  const x0=cfg.x, w=cfg.w, h=cfg.rowH||76, gap=cfg.gap||16; let y=cfg.y; X.save(); X.globalAlpha*=out;
+  cfg.rows.forEach(r=>{ const k=nkK(t,r.at-0.04,0.26);
+    if(k>0){ X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.translate((1-ease(k))*-30,0); const res=r.mark==='result', mx=x0+w-h/2, my=y+h/2, fs=r.size||Math.round(h*0.42);
+      if(res){ X.save(); X.shadowColor='rgba(0,0,0,0.30)'; X.shadowBlur=30; X.shadowOffsetY=10; X.fillStyle=ACC; rr(x0,y,w,h,h/2); X.fill(); X.restore();
+        X.strokeStyle='rgba(255,255,255,0.55)'; X.lineWidth=2; rr(x0+1,y+1,w-2,h-2,h/2-1); X.stroke(); nkTxt(r.text,x0+w/2,my+2,fs,'#FFFFFF','center'); }
+      else { glassPane(x0,y,w,h,h/2,{});
+        if(r.mark==='img'){ X.fillStyle='#FFFFFF'; X.beginPath(); X.arc(mx,my,h/2-6,0,7); X.fill(); X.save(); X.beginPath(); X.arc(mx,my,h/2-8,0,7); X.clip(); nkProductArt(r.img,mx,my+2,(h-14)*0.86); X.restore(); }
+        else nkMarkDot(mx,my,h/2-9,r.mark!=='no',pr(k,0.3,1));
+        nkTxt(r.text,mx-h/2-12,my+2,fs,r.mark==='no'?'rgba(255,255,255,0.72)':'#FFFFFF','right');
+        if(r.strike) nkStrike(t,r.strike,r.text,mx-h/2-12,my+3,fs); }
+      X.restore(); }
+    y+=h+gap; });
+  X.restore(); }
