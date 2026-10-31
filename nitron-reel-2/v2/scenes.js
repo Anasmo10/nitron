@@ -3,6 +3,7 @@
    P3b 6.70–9.567 figure-8 strap (he lifts the real one at ~7.9 s, top-left) · P4a 9.567–10.533 · P4b 10.533–11.567 order */
 const FIG8=nkUse('fig8.png'), WRAPS=nkUse('bimute.png'), WORD=nkUse('logo_word.png');
 const T_P2=2.8, T_P3=4.667, T_P3B=6.70, T_P4=9.567, T_P4B=10.533;
+const T_FIG=()=>Math.min(...wordsOf(4).map(w=>w.s));   /* «Figure» — card 4 is listed right→left for the English name */
 SCENES=[{s:0,e:T_P2,m:R_FULL,nocap:true},{s:T_P2,e:T_P3,m:R_FULL},{s:T_P3,e:T_P3B,m:R_FULL},{s:T_P3B,e:T_P4,m:R_FULL},
         {s:T_P4,e:T_P4B,m:R_FULL},{s:T_P4B,e:99,m:R_FULL,nocap:true}];
 
@@ -44,7 +45,7 @@ function meter(x0,x1,y,label,lv,t){ const h=26; nkTxt(label,x1,y,38,'#FFFFFF','r
   const wv=(R-L)*cl(lv,0,1); X.fillStyle=lv<0.25?(Math.floor(t*8)%2?'#FFFFFF':ACC):ACC; if(wv>2){ rr(R-wv,y-h/2,wv,h,h/2); X.fill(); } X.restore(); }
 function gripPanel(t){
   const s=nkS(3,1)-0.10, e=T_P3B+0.85; if(t<s-0.05||t>e) return; const k=nkK(t,s,0.30), out=1-pr(t,e-0.22,e); if(k<=0) return;
-  const drain=eio(pr(t,nkS(3,3),nkS(3,5)+0.25)), refill=ease(pr(t,nkS(4,0),nkS(4,0)+0.40));
+  const drain=eio(pr(t,nkS(3,3),nkS(3,5)+0.25)), refill=ease(pr(t,T_FIG(),T_FIG()+0.40));
   const grip=lerp(1,0.12,drain)+(1-0.12)*refill, back=lerp(1,0.82,drain);
   const x0=86, x1=716, y0=920, w=x1-x0+70, h=210;
   X.save(); X.globalAlpha*=Math.min(1,k*1.6)*out; X.translate(0,(1-ease(k))*40);
@@ -56,7 +57,7 @@ function gripPanel(t){
 SCENE_LIST.push(['gripPanel',gripPanel]);
 
 /* ── 4) the figure-8 strap itself: the real photo on white glass, right of his face, on «الفيغر» ── */
-function strapCard(t){ nkGlassCard(t,{img:FIG8,s:nkS(4,0)-0.02,e:T_P4-0.06,cx:822,cy:948,w:276,rise:200,pad:24,label:'فيغر 8 ستراب'}); }
+function strapCard(t){ nkGlassCard(t,{img:FIG8,s:T_FIG()-0.02,e:T_P4-0.06,cx:822,cy:948,w:276,rise:200,pad:24,label:'FIGURE 8 STRAP'}); }
 SCENE_LIST.push(['strapCard',strapCard]);
 
 /* ── 5) «اطلبه من نايترون» on a glass plate, the NITRON wordmark wipes in on «نايترون» ── */

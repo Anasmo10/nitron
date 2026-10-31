@@ -194,8 +194,10 @@ function nkGlassCard(t,cfg){
   X.translate(cfg.cx,cfg.cy+(1-ease(k))*(cfg.rise===undefined?180:cfg.rise)+Math.sin(t*2.2)*3); X.scale(sc,sc);
   glassPane(-w/2,-h/2,w,h,46,{light:true});
   let y=-h/2+pad; X.save(); X.shadowColor='rgba(0,0,0,0.38)'; X.shadowBlur=30; X.shadowOffsetY=14; nkProductArt(img,0,y+ih/2,iw); X.restore(); y+=ih;
-  if(cfg.label){ X.font='900 34px '+FONT; const lw=Math.min(iw,X.measureText(cfg.label).width+56); X.fillStyle=ACC; rr(-lw/2,y+12,lw,54,27); X.fill();
-    nkTxt(cfg.label,0,y+40,34,'#FFFFFF','center'); y+=lab; }
+  if(cfg.label){ const lat=!/[\u0600-\u06FF]/.test(cfg.label), lf=lat?'900 30px Inter, '+FONT:'900 34px '+FONT;   /* English names in Inter (house rule) */
+    X.font=lf; const lw=Math.min(iw,X.measureText(cfg.label).width+56); X.fillStyle=ACC; rr(-lw/2,y+12,lw,54,27); X.fill();
+    const lfs=lat?Math.min(30,Math.floor(30*(lw-36)/Math.max(1,(X.font='900 30px Inter, '+FONT,X.measureText(cfg.label).width)))):34;   /* fits its pill */
+    if(lat) nkLatin(cfg.label,0,y+40,lfs,'#FFFFFF','center'); else nkTxt(cfg.label,0,y+40,34,'#FFFFFF','center'); y+=lab; }
   if(rows.length) y+=18;
   rows.forEach(r=>{ const kr=nkK(t,r.at-0.04,0.26); if(kr>0){ X.save(); X.globalAlpha*=Math.min(1,kr*1.6); X.translate((1-kr)*-24,0);
       X.fillStyle='rgba(10,10,12,0.78)'; rr(-iw/2,y,iw,RH,RH/2); X.fill();
