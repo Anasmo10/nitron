@@ -83,6 +83,29 @@ const pr=(t,a,b)=>cl((t-a)/(b-a),0,1);
 function rr(x,y,w,h,r){r=Math.min(r,w/2,h/2);X.beginPath();X.moveTo(x+r,y);X.arcTo(x+w,y,x+w,y+h,r);X.arcTo(x+w,y+h,x,y+h,r);X.arcTo(x,y+h,x,y,r);X.arcTo(x,y,x+w,y,r);X.closePath();}
 function sh(b,y,a){X.shadowColor=cINK(a);X.shadowBlur=b;X.shadowOffsetY=y;}
 function nsh(){X.shadowColor='transparent';X.shadowBlur=0;X.shadowOffsetY=0;}
+/* ═══ Nitron v2.1 — liquid glass (iOS style): the pane frosts and slightly magnifies what is behind it,
+   a light sheen from the top, a bright rim top-left and bottom-right. Works under translate/scale.
+   o = {a: tint alpha (0.46), tint: css colour, light: true = white frost (product cards), blur: px, lens, shadow} */
+function glassPane(x,y,w,h,r,o){ o=o||{}; r=Math.min(r,w/2,h/2); const blur=o.blur||18, lens=o.lens||1.08;
+  if(o.shadow!==0){ X.save(); X.shadowColor='rgba(0,0,0,'+(o.shadow||0.28)+')'; X.shadowBlur=46; X.shadowOffsetX=10000; X.shadowOffsetY=18;
+    X.fillStyle='#000'; rr(x-10000,y,w,h,r); X.fill(); X.restore(); }
+  X.save(); rr(x,y,w,h,r); X.clip();
+  const T=X.getTransform(), m=blur*2, p0=T.transformPoint({x:x-m,y:y-m}), p1=T.transformPoint({x:x+w+m,y:y+h+m});
+  const dw=p1.x-p0.x, dh=p1.y-p0.y, cx=p0.x+dw/2, cy=p0.y+dh/2, sw=dw/lens, sH=dh/lens;
+  /* copy the backdrop to a scratch canvas first: a canvas drawn onto itself through a filter comes out unfiltered in the renderer */
+  const G=window.__glassCv||(window.__glassCv=document.createElement('canvas')), gx=G.getContext('2d'), gw=Math.max(1,Math.ceil(sw)), gh=Math.max(1,Math.ceil(sH));
+  if(G.width<gw||G.height<gh){ G.width=Math.max(G.width,gw); G.height=Math.max(G.height,gh); }
+  gx.setTransform(1,0,0,1,0,0); gx.clearRect(0,0,G.width,G.height); gx.drawImage(X.canvas,cx-sw/2,cy-sH/2,sw,sH,0,0,sw,sH);
+  X.filter='blur('+blur+'px) saturate(1.6) brightness('+(o.light?1.10:0.96)+')';
+  X.drawImage(G,0,0,sw,sH,x-m,y-m,w+2*m,h+2*m); X.filter='none';
+  X.fillStyle=o.tint||(o.light?'rgba(255,255,255,'+(o.a===undefined?0.30:o.a)+')':'rgba(16,8,22,'+(o.a===undefined?0.46:o.a)+')'); X.fillRect(x,y,w,h);
+  const g=X.createLinearGradient(0,y,0,y+h); g.addColorStop(0,'rgba(255,255,255,'+(o.light?0.30:0.17)+')'); g.addColorStop(0.42,'rgba(255,255,255,0.03)'); g.addColorStop(1,'rgba(255,255,255,0)');
+  X.fillStyle=g; X.fillRect(x,y,w,h);
+  X.lineWidth=12; X.strokeStyle='rgba(255,255,255,'+(o.light?0.10:0.05)+')'; rr(x+6,y+6,w-12,h-12,Math.max(0,r-6)); X.stroke();
+  X.restore();
+  X.save(); const gr=X.createLinearGradient(x,y,x+w*0.6,y+h*1.6);
+  gr.addColorStop(0,'rgba(255,255,255,0.85)'); gr.addColorStop(0.30,'rgba(255,255,255,0.14)'); gr.addColorStop(0.70,'rgba(255,255,255,0.06)'); gr.addColorStop(1,'rgba(255,255,255,0.50)');
+  X.strokeStyle=gr; X.lineWidth=2.4; rr(x+1.2,y+1.2,w-2.4,h-2.4,Math.max(0,r-1.2)); X.stroke(); X.restore(); }
 function card(x,y,w,h,r,al){X.save();X.globalAlpha*=(al===undefined?1:al);sh(44,18,0.20);X.fillStyle=cBG(0.97);rr(x,y,w,h,r);X.fill();nsh();X.strokeStyle=cINK(0.09);X.lineWidth=2.5;rr(x,y,w,h,r);X.stroke();X.restore();}
 function T(s,x,y,f,c,al,dir){X.save();X.font=f;X.fillStyle=c;X.textAlign=al||'center';X.textBaseline='middle';if(dir)X.direction=dir;X.fillText(s,x,y);X.restore();}
 /* ---------- video staging ---------- */
@@ -256,7 +279,7 @@ function caption(t){
     let pg=pages.find(p=>{const f=p[0].items[0],l=p[p.length-1].items[p[p.length-1].items.length-1];return t>=f.s&&t<l.e;});
     if(!pg){pg=pages.find(p=>t<p[0].items[0].s)||pages[pages.length-1];}
     L=pg;}
-  if(CAPSTYLE!=='card'){ /* ── ستايلات بلا كرت: shadow (كبير بظل) · big (كلمة وحدة ضخمة) · underline (خط تحت الكلمة) · bar (شريط بلون التمييز) · type (ماكينة كاتبة) ── */
+  if(CAPSTYLE!=='card'&&CAPSTYLE!=='glass'){ /* ── ستايلات بلا كرت: shadow (كبير بظل) · big (كلمة وحدة ضخمة) · underline (خط تحت الكلمة) · bar (شريط بلون التمييز) · type (ماكينة كاتبة) ── */
     const GAP2=22,MAXW2=820 /* كان 940: يدخل عمود أزرار انستقرام (x>900) بـ110px — فحص 18 سبتمبر */, isNum=w=>/^[0-9٠-٩]+$/.test(w.t);
     const wordFX=(i,k0)=>{ /* مؤثر الكلمة عند نطقها: drop · shake · type · pulse — يرجّع {ps,dx,dy,clip} */
       const r={ps:1,dx:0,dy:0,clip:1}; const sp=t>=i.s; if(!sp) return r;
@@ -337,10 +360,12 @@ function caption(t){
   const _R=vtarget(t), LOW=_R.y>700&&!_R.off;   /* R_OFF: الكابشن يبقى تحت عند 1460 · مستطيل الهدف لا المتحرّك: الكابشن يثبت بمكانه من أول فريم بلا قفزة */          /* R_DOWN أو R_LOWER → الكابشن فوق كرت الفيديو */          /* الفيديو تحت → الكابشن فوقه */
   const CUT=(cutoutActive(t)||headoutActive(t))&&PTOP>200;   /* الكابشن فوق راسه بالوضعين */
   const SEAM=0;   /* ⛔ 23 سبتمبر: كان الكرت يركب 42٪ منه على حافة الفيديو فيغطي جبهة المتحدث — الحين فوق الكرت بالكامل */
-  const bx=540-bw/2,by=(CUT?PTOP-46:(LOW?_R.y-60+SEAM:1460))-bh;   /* 1460 عادةً · وعلى حافة الفيديو بوضع «الفيديو تحت» */
+  const _cs=SCENES.find(sc=>t>=sc.s&&t<sc.e), CAPB=(_cs&&_cs.capY)||1460;   /* v2.1: scene {capY} = caption bottom edge (lift it off hands or a product) */
+  const bx=540-bw/2,by=(CUT?PTOP-46:(LOW?_R.y-60+SEAM:CAPB))-bh;   /* 1460 عادةً · وعلى حافة الفيديو بوضع «الفيديو تحت» */
   X.save();X.globalAlpha=a;X.translate(540,by+bh/2+dy);X.scale(sc,sc);X.translate(-540,-(by+bh/2));
-  sh(48,20,0.30);X.fillStyle=cBG(0.96);rr(bx,by,bw,bh,38);X.fill();nsh();
-  X.strokeStyle=cINK(0.09);X.lineWidth=2.5;rr(bx,by,bw,bh,38);X.stroke();
+  if(CAPSTYLE==='glass') glassPane(bx,by,bw,bh,38,{a:0.50});   /* v2.1 liquid glass caption */
+  else { sh(48,20,0.30);X.fillStyle=cBG(0.96);rr(bx,by,bw,bh,38);X.fill();nsh();
+  X.strokeStyle=cINK(0.09);X.lineWidth=2.5;rr(bx,by,bw,bh,38);X.stroke(); }
   X.font='800 '+FS+'px '+FONT;X.textAlign='right';X.textBaseline='middle';
   L.forEach((ln,li)=>{let x=540+ln.w/2;const cy=by+PADY+LH*li+LH/2;
     for(const i of ln.items){const act=t>=i.s&&t<i.e,sp=t>=i.s;let lift=0;

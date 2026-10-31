@@ -8,6 +8,7 @@ House sound: dark minimal trap in D minor, beat 0.35 s (bar 1.4 s), half-time fe
 Mix: music ~12 dB under the voice while he talks (−9 dB ducking + speech-band carve), ~9 dB in the gaps.
 
 sound.json = {"drop": s, "slam": s|null, "events": [[kind, t, gain, ...args]]}
+  kinds: whoosh(f0,f1,dur) impact stamp(pan) pop(pan,freq) click ding power_down(dur) power_up(dur) shimmer(dur) velcro(pan,dur) stretch(pan,dur)
   kinds: whoosh(f0,f1,dur) · impact · stamp(pan) · pop(pan,freq) · click · ding · power_down(dur) · power_up(dur) · shimmer(dur)
 """
 import json, numpy as np, subprocess, sys
@@ -118,6 +119,13 @@ def shimmer(d=0.55):
     t=tt(d); x=filt(rng.standard_normal(len(t)),'high',6500)*np.sin(np.pi*t/d)**2*0.6
     for f,dt in [(1174.7,0.0),(1760.0,0.07),(2349.3,0.14)]: x+=(t>=dt)*np.sin(2*np.pi*f*(t-dt))*np.exp(-np.clip(t-dt,0,None)/0.18)*0.35
     return x
+def velcro(d=0.30):        # hook-and-loop rip: dense random micro-clicks, bright band, fast fade (wrap closing)
+    t=tt(d); n=np.zeros(len(t)); i=0
+    while i<len(t): n[i]=rng.uniform(0.4,1.0)*(1 if rng.random()<0.5 else -1); i+=int(rng.uniform(0.0012,0.0045)*SR)
+    n=filt(np.convolve(n,np.exp(-np.arange(60)/9),'same'),'band',[1400,7000],2)
+    env=np.minimum(1,t/0.015)*np.exp(-t/(d*0.55)); return n*env/np.abs(n).max()*0.9
+def stretch(d=0.32):       # elastic wrap pulled tight: narrow noise sliding up, soft
+    t=tt(d); return sweep_bp(rng.standard_normal(len(t)),280,1300,q=3.0)*np.sin(np.pi*t/d)**1.5*0.8
 S=z()
 for e in cfg["events"]:
     k,t,g=e[0],e[1],e[2]; a=e[3:]
@@ -130,6 +138,8 @@ for e in cfg["events"]:
     elif k=="power_down": at(S,t,power(520,120,a[0] if a else 0.85),g)
     elif k=="power_up": at(S,t,power(160,880,a[0] if a else 0.40),g)
     elif k=="shimmer": at(S,t,shimmer(a[0] if a else 0.55),g)
+    elif k=="velcro": at(S,t,velcro(a[1] if len(a)>1 else 0.30),g,a[0] if a else 0)
+    elif k=="stretch": at(S,t,stretch(a[1] if len(a)>1 else 0.32),g,a[0] if a else 0)
     else: raise SystemExit("unknown sfx kind: "+k)
 at(S,VEND-0.30,whoosh(0.34,600,5200),0.24)              # every outro card wipes in on the same whoosh
 S=verb(S,0.10)

@@ -10,7 +10,7 @@
   "grade": "auto",
   "faceAnchor": 0.3,
   "badgeUntil": 0,
-  "capStyle": "card",
+  "capStyle": "glass",
   "onAcc": "#FFFFFF",
   "stack": {
     "accent": true

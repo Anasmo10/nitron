@@ -179,3 +179,46 @@ function nkChest(t,cfg){
     y+=sz*1.08; });
   X.restore();
 }
+
+/* ═══ kit v2.1 (client note on reels #1–#2): liquid glass, iPhone style — the graphics never take a part of
+   the screen away from the video; they sit on it as glass (glassPane in the engine), and the product is
+   always its real photo (product_cutout.py), never a frame of the presenter. ═══ */
+
+/* GLASS CARD: the product cutout floating on white frosted glass; optional ✓ rows inside, each on its word.
+   cfg = {img, s, e, cx, cy, w, rise, label, rows:[{text, at}]} */
+function nkGlassCard(t,cfg){
+  if(t<cfg.s-0.05||t>cfg.e) return; const k=nkK(t,cfg.s,0.34), out=1-pr(t,cfg.e-0.20,cfg.e); if(k<=0||out<=0) return;
+  const img=cfg.img, w=cfg.w, pad=cfg.pad||30, iw=w-pad*2, ih=img&&img.naturalWidth?iw*img.naturalHeight/img.naturalWidth:iw*1.1;
+  const rows=cfg.rows||[], RH=cfg.rowH||74, lab=cfg.label?74:0, h=pad+ih+lab+(rows.length?18+rows.length*(RH+12):0)+pad-(rows.length?12:0);
+  X.save(); X.globalAlpha*=Math.min(1,k*1.6)*out; const sc=0.92+0.08*ease(k);
+  X.translate(cfg.cx,cfg.cy+(1-ease(k))*(cfg.rise===undefined?180:cfg.rise)+Math.sin(t*2.2)*3); X.scale(sc,sc);
+  glassPane(-w/2,-h/2,w,h,46,{light:true});
+  let y=-h/2+pad; X.save(); X.shadowColor='rgba(0,0,0,0.38)'; X.shadowBlur=30; X.shadowOffsetY=14; nkProductArt(img,0,y+ih/2,iw); X.restore(); y+=ih;
+  if(cfg.label){ X.font='900 34px '+FONT; const lw=Math.min(iw,X.measureText(cfg.label).width+56); X.fillStyle=ACC; rr(-lw/2,y+12,lw,54,27); X.fill();
+    nkTxt(cfg.label,0,y+40,34,'#FFFFFF','center'); y+=lab; }
+  if(rows.length) y+=18;
+  rows.forEach(r=>{ const kr=nkK(t,r.at-0.04,0.26); if(kr>0){ X.save(); X.globalAlpha*=Math.min(1,kr*1.6); X.translate((1-kr)*-24,0);
+      X.fillStyle='rgba(10,10,12,0.78)'; rr(-iw/2,y,iw,RH,RH/2); X.fill();
+      X.fillStyle=ACC; X.beginPath(); X.arc(iw/2-RH/2,y+RH/2,RH/2-9,0,7); X.fill(); iCheck(iw/2-RH/2,y+RH/2,RH*0.42,'#FFFFFF',pr(kr,0.3,1));
+      nkTxt(r.text,iw/2-RH-14,y+RH/2+2,RH*0.46,'#FFFFFF','right'); X.restore(); }
+    y+=RH+12; });
+  X.restore(); }
+
+/* GLASS CHIP: dark glass tile with an icon and a short Latin label (exercise names, specs) */
+function nkGlassChip(cx,cy,w,h,k,label,icon){ if(k<=0) return; X.save(); X.globalAlpha*=Math.min(1,k*1.6);
+  const sc=0.90+0.10*ease(k); X.translate(cx,cy+(1-ease(k))*26); X.scale(sc,sc);
+  glassPane(-w/2,-h/2,w,h,Math.min(40,h*0.30),{});
+  if(icon) icon(0,-h*0.16,h*0.56,ACCTXT||'#FFFFFF');
+  if(label) nkLatin(label,0,h*0.27,Math.round(h*0.20),'#FFFFFF','center');
+  X.restore(); }
+
+/* GLASS PILL: one line of text on a dark glass capsule */
+function nkGlassPill(cx,cy,text,k,size){ if(k<=0) return 0; const fs=size||40; X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.font='900 '+fs+'px '+FONT;
+  const w=X.measureText(text).width+fs*1.6, h=fs*1.9, sc=0.92+0.08*ease(k); X.translate(cx,cy+(1-ease(k))*18); X.scale(sc,sc);
+  glassPane(-w/2,-h/2,w,h,h/2,{}); nkTxt(text,0,3,fs,'#FFFFFF','center'); X.restore(); return w; }
+
+/* GLASS LENS: a round liquid-glass magnifier over something he shows with his hands (it enlarges, never hides) */
+function nkGlassLens(t,cfg){ if(t<cfg.s-0.05||t>cfg.e) return; const k=nkK(t,cfg.s,0.30), out=1-pr(t,cfg.e-0.18,cfg.e); if(k<=0||out<=0) return;
+  const r=cfg.r*(0.6+0.4*ease(k)); X.save(); X.globalAlpha*=Math.min(1,k*1.8)*out;
+  glassPane(cfg.cx-r,cfg.cy-r,2*r,2*r,r,{blur:0.01,lens:cfg.zoom||1.35,a:0.0,shadow:0.22});
+  X.lineWidth=5; X.strokeStyle=ACC; X.beginPath(); X.arc(cfg.cx,cfg.cy,r-2.5,0,7); X.stroke(); X.restore(); }

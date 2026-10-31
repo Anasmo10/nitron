@@ -1,0 +1,19 @@
+{
+ "bg": "#0A0A0C",
+ "ink": "#FFFFFF",
+ "acc": "#76028A",
+ "clay": "#4B0158",
+ "mut": "#B8A9C0",
+ "font": "Cairo",
+ "handle": "",
+ "logo": "logo.png",
+ "grade": "auto",
+ "faceAnchor": 0.3,
+ "badgeUntil": 0,
+ "capStyle": "glass",
+ "onAcc": "#FFFFFF",
+ "stack": {
+  "accent": true
+ },
+ "accText": "#C77DDB"
+}
