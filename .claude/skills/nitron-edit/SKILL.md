@@ -16,7 +16,7 @@ Script and wording rules come from the `content-principles` skill.
 4. **Masks:** cut the person out for the hook frames, then write `behind.json` with `ranges` and `faces`.
 5. **`scenes.js`:** use the kit components only: liquid glass (`glassPane`, `nkGlassCard`, `nkGlassChip`, `nkGlassPill`) on the full-frame video, never a solid panel that takes part of the screen. Cut the product photo out first (`python3 nitron-kit/product_cutout.py photo.jpg <work>/product.png`). Where his hands are under the caption, lift it with the scene's `capY`. Then run `python3 nitron-kit/assemble.py <work>`.
 6. **Preview:** check the hook, every panel, and the outro. Fix before the full render.
-7. **Sound:** write `sound.json` (drop = first cut, slam = hook headline, events on spoken words), then run `python3 nitron-kit/sound.py <work>`.
+7. **Sound:** write `sound.json` (drop = first cut, slam = hook headline, events on spoken words), then run `python3 nitron-kit/sound.py <work>`. The background music is always the client's Nitron track (`nitron-kit/music/nitron_music.wav`, not committed because the repo is public). If the script prints "house track not found", ask the client to upload `music_nitron.mp4` again and convert it to that path (48 kHz stereo wav) before delivering.
 8. **Render and master:** `04_render_frames.js all`, then `06_encode.sh`, then `nitron-kit/finish.sh <work>`.
 9. **Cover:** `python3 nitron-kit/product_cover.py <work>/cover product.png "سطر|سطر" ["سطر صغير"] --logo logo.png --first ad-master.mp4`: the product is the hero, never the presenter. Then the QA checklist, then deliver: video, cover, srt, txt, music.
 

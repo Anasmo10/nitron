@@ -1,4 +1,6 @@
-"""Nitron kit — house music bed + sound design, synthesised from scratch (no samples, no licences).
+"""Nitron kit — house music bed + sound design.
+Music: the client's Nitron track (music/nitron_music.wav, not committed — public repo) on every reel since 1 Nov 2026;
+the synthesised bed below is the fallback when the track is missing, or when sound.json says "music": "synth".
 python3 sound.py <work>    reads caps.json · sfx.json (outro) · voice.f32 · sound.json
 writes music.wav (bed alone) · sfx_only.wav · sfx.wav (= bed ducked under the voice + sfx, what 06_encode mixes)
 
@@ -7,9 +9,8 @@ House sound: dark minimal trap in D minor, beat 0.35 s (bar 1.4 s), half-time fe
   → groove breaks just before the outro → outro hit on the logo card.
 Mix: music ~12 dB under the voice while he talks (−9 dB ducking + speech-band carve), ~9 dB in the gaps.
 
-sound.json = {"drop": s, "slam": s|null, "events": [[kind, t, gain, ...args]]}
+sound.json = {"drop": s, "slam": s|null, "music": "house"|"synth"|path, "music_at": s (optional), "events": [[kind, t, gain, ...args]]}
   kinds: whoosh(f0,f1,dur) impact stamp(pan) pop(pan,freq) click ding power_down(dur) power_up(dur) shimmer(dur) velcro(pan,dur) stretch(pan,dur)
-  kinds: whoosh(f0,f1,dur) · impact · stamp(pan) · pop(pan,freq) · click · ding · power_down(dur) · power_up(dur) · shimmer(dur)
 """
 import json, numpy as np, subprocess, sys
 from scipy.signal import butter, sosfilt, fftconvolve
@@ -97,6 +98,30 @@ s_=0
 while VEND+0.7+s_*step<VEND+OUT-0.2: at(M,VEND+0.7+s_*step,hat(v=0.5),0.12,pan=0.2); s_+=1
 M=verb(M,0.16); M=filt(M,'high',28); M=M-0.45*filt(M,'band',[900,4200])      # leave the speech band to his voice
 g=np.ones(N); a,b_=int((BRK+0.02)*SR),int(VEND*SR); g[a:b_]=np.linspace(1,0.12,max(1,b_-a))**2; M*=g[:,None]
+# ── the Nitron house track (client, 1 Nov 2026): every reel uses it when music/nitron_music.wav is present ──
+#    sound.json "music": "house" (default) | "synth" (the synthesised bed above) | a path · "music_at": track second at reel t=0
+import os
+K=os.path.dirname(os.path.abspath(__file__)); _mj=K+"/music/music.json"
+_sel=cfg.get("music","house"); HOUSE=None
+if _sel=="house" and os.path.exists(_mj):
+    _meta=json.load(open(_mj)); HOUSE=K+"/music/"+_meta["file"]
+elif _sel not in ("house","synth"): HOUSE=_sel; _meta={"beat_period":0,"beat0":0,"hot":0}
+if HOUSE and os.path.exists(HOUSE):
+    P_=_meta.get("beat_period",0); off=cfg.get("music_at",_meta.get("hot",0)-DROP)
+    if P_ and "music_at" not in cfg:   # a beat of the track lands exactly on the first cut
+        tb=_meta["beat0"]+round((off+DROP-_meta["beat0"])/P_)*P_; off=tb-DROP
+    off=max(0.0,off)
+    raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{off:.4f}","-stream_loop","-1","-i",HOUSE,"-t",f"{T:.4f}","-ac","2","-ar",str(SR),"-f","f32le","-"],
+                       capture_output=True,check=True).stdout
+    H=np.frombuffer(raw,np.float32).reshape(-1,2).astype(np.float64); H=np.pad(H,((0,max(0,N-len(H))),(0,0)))[:N]
+    k=np.clip((np.arange(N)/SR-(DROP-0.35))/0.35,0,1)[:,None]          # muffled under the hook, opens on the first cut
+    H=filt(H,'low',750,4)*(1-k)+H*k
+    H=filt(H,'high',28); H=H-0.45*filt(H,'band',[900,4200])            # leave the speech band to his voice
+    fi=int(0.12*SR); H[:fi]*=np.linspace(0,1,fi)[:,None]
+    fo=int(1.4*SR); H[N-fo:]*=np.linspace(1,0,fo)[:,None]**1.5          # fades out over the end of the outro card
+    M=H; print(f"house track: {os.path.basename(HOUSE)} from {off:.2f}s (beat on the drop at {DROP:.2f}s)")
+else:
+    print("house track not found — synthesised bed (put the track at nitron-kit/music/nitron_music.wav)")
 # ── sound design palette ──
 def whoosh(d,f0,f1):
     t=tt(d); e=np.sin(np.pi*np.clip(t/d,0,1))**1.6; x=sweep_bp(rng.standard_normal(len(t)),f0,f1,q=1.1)*e

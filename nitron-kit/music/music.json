@@ -1,0 +1,11 @@
+{
+ "file": "nitron_music.wav",
+ "source": "music_nitron.mp4 (client upload, 1 Nov 2026)",
+ "duration": 97.454,
+ "bpm": 150.19,
+ "beat_period": 0.3995,
+ "beat0": 0.1,
+ "hot": 38.0,
+ "lufs": -15.9,
+ "notes": "quiet intro 0-2 s; bass builds from ~36 s, peaks 40-42 s and again 60-62 s; band-limited (no highs above ~11 kHz)"
+}

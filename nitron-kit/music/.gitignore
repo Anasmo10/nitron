@@ -1,0 +1,5 @@
+# the house track itself is not committed (public repo): put it here as nitron_music.wav
+*.wav
+*.mp3
+*.m4a
+*.mp4

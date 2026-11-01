@@ -20,7 +20,7 @@ This file is for whoever (person or Claude session) picks up this work next.
 | Colours only from the logo: black `#0A0A0C`, white, purple `#76028A` (light purple `#C77DDB` for text on dark). Cairo 900 for Arabic, Inter for English. | reel #1 |
 | Text behind the speaker (words on the wall behind his head, person cut out on top), at least twice when there is wall above the head. | reels #1, #4 |
 | Better image quality: grade, denoise, sharpen, white balance matched across clips. | reel #1 |
-| Original background music plus meaningful SFX; music about 12 dB under the voice; −14/−15 LUFS. | reel #2 |
+| Background music plus meaningful SFX; music about 12 dB under the voice; −14/−15 LUFS. **Since 1 Nov 2026 the music on every new reel is the client's Nitron track** (`music_nitron.mp4` → `nitron-kit/music/nitron_music.wav`); `sound.py` uses it automatically. | reel #2, 1 Nov note |
 | A strong hook with motion graphics; one unified Nitron identity across reels. | reels #2, #3 |
 | **Never shrink the speaker or push him down** (no card, no lower-panel `R_DOWN`). Full frame; eyes around y 600–750; respect Instagram safe zones. | reel #4 |
 | **Liquid glass like iPhone:** graphics are frosted glass panes over the video, never a solid panel that takes part of the screen. Captions are glass too. | reels #1–#3 note |
@@ -95,7 +95,7 @@ QA on every delivered v2/v2.1 reel:
   - u2net_human_seg: person masks.
   - BiRefNet-lite: product cutouts.
 - **Python and fonts:** use `opencv-python-headless<5` (v5 has no Haar cascades). Cairo and Inter are installed under `~/.local/share/fonts`.
-- **Music:** synthesized in numpy (no samples, no rights issues). Higgsfield only has a game-music model, and no credits were spent.
+- **Music:** the client's Nitron track. It lives at `nitron-kit/music/nitron_music.wav`, **git-ignored** because the repo is public. `music.json` (committed) holds its beat grid (150 BPM) and the start point. In a fresh container the file is missing: ask the client to re-upload `music_nitron.mp4`, then run `ffmpeg -i music_nitron.mp4 -vn -ac 2 -ar 48000 nitron-kit/music/nitron_music.wav`. Without it, `sound.py` falls back to the old synthesised bed and prints a warning.
 
 ## 6. How to build a reel (short version; full steps in the nitron-edit skill)
 1. Transcribe and align the clips. Pick the takes. **Look at silences before cutting them**, because hand actions hide there.
