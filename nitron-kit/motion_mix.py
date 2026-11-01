@@ -4,7 +4,9 @@ writes <proj>/renders/music_sfx.wav and <proj>/renders/final.mp4
 
 sfx_plan.json = {"music_at": track second at film t=0 (optional; default: bar-aligned near the track's strong section),
                  "transitions": true (a whoosh on every scene start), "events": [[kind, t, gain, ...args]]}
-kinds: whoosh(f0,f1,dur) · impact(f0) · stamp · pop(freq) · click · ding · riser(dur) · shimmer(dur) · tick"""
+kinds: whoosh(f0,f1,dur) · impact(f0) · stamp · pop(freq) · click · ding · riser(dur) · shimmer(dur) · tick
+Voiceover (optional): <proj>/vo/place.json {line_id: start s} + <proj>/vo/<line_id>.wav — music ducks 10 dB under it and sits
+"music_db" (default −22) LU under the voice (K-weighted); SFX drop further."""
 import json, os, subprocess, sys
 import numpy as np
 from scipy.signal import butter, sosfilt
@@ -67,7 +69,26 @@ raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{off:.4f}", "-stream_loo
 M = np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64); M = np.pad(M, ((0, max(0, N - len(M))), (0, 0)))[:N]
 fi = int(0.25 * SR); M[:fi] *= np.linspace(0, 1, fi)[:, None]; fo = int(1.6 * SR); M[N - fo:] *= np.linspace(1, 0, fo)[:, None] ** 1.5
 M = M / np.abs(M).max() * 0.55; Sx = S / max(1e-9, np.abs(S).max()) * 0.5
-mix = np.clip(M * 1.0 + Sx * float(plan.get("sfx_gain", 0.55)), -0.98, 0.98)
+# ── voiceover (vo/lines.json + vo/place.json + vo/<id>.wav): music ducks under it, house level 22 LU below the voice ──
+V = np.zeros(N); vo_ok = os.path.exists(P + "/vo/place.json")
+if vo_ok:
+    place = json.load(open(P + "/vo/place.json"))
+    for lid, t0 in place.items():
+        f = P + f"/vo/{lid}.wav"
+        if not os.path.exists(f): continue
+        r = subprocess.run(["ffmpeg", "-v", "error", "-i", f, "-ac", "1", "-ar", str(SR), "-f", "f32le", "-"], capture_output=True, check=True).stdout
+        x = np.frombuffer(r, np.float32).astype(np.float64); i = int(t0 * SR); j = min(N, i + len(x)); V[i:j] += x[:j - i]
+    hop = 480; env = np.sqrt(np.convolve(V ** 2, np.ones(hop) / hop, "same")); act = (env > 0.012).astype(float)
+    ka, kr = np.exp(-1 / (0.015 * SR)), np.exp(-1 / (0.60 * SR)); d = np.zeros(N); y = 0.0
+    for i in range(0, N, hop):
+        tg = act[i]; y = tg + (y - tg) * ((ka if tg > y else kr) ** hop); d[i:i + hop] = y
+    duck = 10 ** (-10.0 * d / 20); sp = np.repeat(act[::hop], hop)[:N] > 0.5
+    def kw(x): y_ = filt(x, "high", 60); return y_ + 0.58 * filt(y_, "high", 1500)
+    r = lambda x, m: 10 * np.log10((x[m] ** 2).mean() + 1e-12)
+    if sp.any():
+        MG = 10 ** ((float(plan.get("music_db", -22.0)) - (r(kw((M * duck[:, None]).mean(1)), sp) - r(kw(V), sp))) / 20); M = M * duck[:, None] * MG
+    Sx = Sx * 0.55
+mix = np.clip(M * 1.0 + Sx * float(plan.get("sfx_gain", 0.55)) + np.stack([V, V], 1), -0.98, 0.98)
 os.makedirs(P + "/renders", exist_ok=True); wav = P + "/renders/music_sfx.wav"
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "s16le", "-ar", str(SR), "-ac", "2", "-i", "-", wav], input=(mix * 32767).astype("<i2").tobytes(), check=True)
 vid = P + "/renders/video.mp4"; out = P + "/renders/final.mp4"
