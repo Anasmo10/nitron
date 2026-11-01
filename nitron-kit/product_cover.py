@@ -47,9 +47,11 @@ g.save(os.path.join(out, "cover_grid.jpg"), quality=88)
 print("cover →", cj, "· title", size, "px")
 if first and os.path.exists(first):
     o = os.path.splitext(first)[0] + "-cover.mp4"
-    fc = ("[1:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p[c];[0:v]scale=1080:1920,setsar=1,fps=30,format=yuv420p[v];"
+    fr = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=r_frame_rate", "-of", "csv=p=0", first],
+                        capture_output=True, text=True).stdout.strip() or "30"          # keep the film's own frame rate (60 fps motion films)
+    fc = (f"[1:v]scale=1080:1920,setsar=1,fps={fr},format=yuv420p[c];[0:v]scale=1080:1920,setsar=1,fps={fr},format=yuv420p[v];"
           "[2:a]aresample=48000[s];[0:a]aresample=48000[a];[c][s][v][a]concat=n=2:v=1:a=1[ov][oa]")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", first, "-loop", "1", "-t", "0.1", "-framerate", "30", "-i", cj,
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", first, "-loop", "1", "-t", "0.1", "-framerate", fr, "-i", cj,
                     "-f", "lavfi", "-t", "0.1", "-i", "anullsrc=r=48000:cl=stereo", "-filter_complex", fc, "-map", "[ov]", "-map", "[oa]",
                     "-c:a", "aac", "-b:a", "192k", "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p",
                     "-movflags", "+faststart", o], check=True)
