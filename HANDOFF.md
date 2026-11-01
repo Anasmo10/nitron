@@ -36,7 +36,7 @@ The full style guide is `nitron-kit/NITRON-STYLE.md` (v2.1). The pipeline skill 
 | #1 | «معصمك لازم يضل ثابت», wrist wraps (BIMute), IMG_6860/6869/6872 | **v1** (old plugin layout with two `R_DOWN` panels) | A v2.1 redo was made, then **deleted at the client's request**: they had meant reel #3. Only v1 stands. Project: `nitron-reel/`. |
 | #2 | «لا تشتريها للمنظر», figure-8 strap, IMG_7231/7237/7242/7245 | **v2.1** `deliver-v2/nitron-reel-2-v2.mp4` (13.9 s) | Full frame, glass, product photos (5.jpg figure-8, 6.jpg BIMute), «اشتريها → لمشكلتك» behind his head, "Figure 8 Strap" in English (caption and card label), product cover. Project: `nitron-reel-2/v2/`. |
 | #3 | «التكنيك قبل المشد», BIMute wrist wraps, IMG_7250/7253/7260 | **v2.1** `deliver-v2/nitron-reel-3-v2.mp4` (13.6 s) | Camera pushes in on his hands while he wraps the wrist (3.40–4.86 s, `hands_r3.py`), BIMute glass card ✓/✕, hook words behind his head, glass equation list, product cover. Project: `nitron-reel-3/v2/`. |
-| #4 | «المشد مو علاج», SBD wrist wraps, IMG_7263/7265/7277 | **v2** (full frame, wall words, SBD side card, person cover) | Not yet converted to v2.1 (glass captions, product cover). Offer it, don't do it unasked. Project: `nitron-reel-4/`. |
+| #4 | «المشد مو علاج», SBD wrist wraps, IMG_7263/7265/7277 | **v2** video + **product cover** `deliver-v2/nitron-reel-4-v2.mp4` (11.7 s) | On 1 Nov the client asked for the product instead of the person: the cover now shows the new SBD photo (`images/7.jpg`), same title «المشد مو علاج». The video itself is unchanged (no glass captions yet; offer, don't do unasked). Project: `nitron-reel-4/`. |
 
 QA on every delivered v2/v2.1 reel:
 - `08_safe_check.js` all ✅.
@@ -118,6 +118,6 @@ QA on every delivered v2/v2.1 reel:
   No model IDs anywhere else.
 
 ## 8. Suggested next steps (offer them; don't do them unasked)
-- Convert reel #4 to v2.1: glass captions and a product cover with the SBD photo.
+- Convert reel #4's video to v2.1 (glass captions); its side card could use the new SBD photo (`7.jpg`).
 - Ask whether other product names should also appear in English, as "Figure 8 Strap" now does.
 - Reel #1 stays at v1 unless the client asks again; the redo is in git history at `215ca96` if needed.
