@@ -1,4 +1,4 @@
-/* s1 — HOOK: a heavy 3D barbell leaves the floor and bends; «ضهرك مو هو اللي بيوقّفك بالديدلفت… إيدك هي.» */
+/* s1 — HOOK: a heavy 3D barbell leaves the floor and bends; «ضهرك مو هو اللي بيوقّفك بالديدلفت… قبضتك هي.» */
 MOTION.scene({ id: 's1',
   setup(ctx) { const { THREE } = ctx;
     this.st = ctx.stage3D({ fov: 30, camera: [0, 0.4, 11], env: 'room', tone: 'neutral', exposure: 1.05, vignette: 0.0 });
@@ -37,6 +37,6 @@ MOTION.scene({ id: 's1',
     NK.words(ctx, lt, 'ضهرك مو هو اللي', 540, 1230, { size: 84, t0: 0.45, out: out1, maxWidth: 1000 });
     NK.words(ctx, lt, 'بيوقّفك بالديدلفت…', 540, 1345, { size: 84, t0: 0.85, out: out1, maxWidth: 1000 });
     const ks = at(lt, 2.45, 2.66, 'expoOut'); if (ks > 0) { X.save(); const sc = 1.35 - 0.35 * ks; X.translate(540, 1300); X.scale(sc, sc); X.globalAlpha = Math.min(1, ks * 2);
-      ctx.text(X, 'إيدك هي.', 0, 0, { family: 'display', weight: 900, size: 172, color: NK.LILAC, shadow: { blur: 30, y: 8, color: 'rgba(0,0,0,0.6)' } }); X.restore();
+      ctx.text(X, 'قبضتك هي.', 0, 0, { family: 'display', weight: 900, size: 138, color: NK.LILAC, shadow: { blur: 30, y: 8, color: 'rgba(0,0,0,0.6)' } }); X.restore();
       const kb = at(lt, 2.62, 2.95, 'expoOut'); X.fillStyle = NK.PURPLE; NK.rr(X, 540 - 260 * kb, 1380, 520 * kb, 14, 7); X.fill(); }
   } });

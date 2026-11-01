@@ -1,11 +1,11 @@
-# Nitron motion film — «ديدلفت بلا ستراب: إيدك هي اللي بتوقّفك»
+# Nitron motion film — «ديدلفت بلا ستراب: قبضتك هي اللي بتوقّفك»
 
 A 44.7 s motion-graphics reel (9:16, 60 fps) with no presenter and no voice. Syrian Arabic on-screen text, timed to the Nitron house track (150 BPM, every scene on a bar).
 
 ## Scenes
 | Scene | Time (s) | Content |
 |---|---|---|
-| s1 | 0–4.8 | 3D barbell bending as it leaves the floor; «ضهرك مو هو اللي بيوقّفك بالديدلفت… إيدك هي.» |
+| s1 | 0–4.8 | 3D barbell bending as it leaves the floor; «ضهرك مو هو اللي بيوقّفك بالديدلفت… قبضتك هي.» |
 | s2 | 4.8–11.2 | Weakest link: legs, back and grip meters, where the grip runs out first; study panel 160.6 vs 177.0 kg (+10%) |
 | s3 | 11.2–17.6 | Inside the forearm: finger-flexor muscles heat up, tendons under tension, the bar slipping toward the fingertips |
 | s4 | 17.6–24.0 | Mixed grip; the palm-up arm with the elbow extended and the biceps tendon loaded; 96.4% panel |
