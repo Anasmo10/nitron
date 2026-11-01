@@ -7,7 +7,7 @@ writes music.wav (bed alone) · sfx_only.wav · sfx.wav (= bed ducked under the 
 House sound: dark minimal trap in D minor, beat 0.35 s (bar 1.4 s), half-time feel.
   intro (muffled) → sub drop on the hook slam → riser → full groove from the first cut ("drop")
   → groove breaks just before the outro → outro hit on the logo card.
-Mix: music ~12 dB under the voice while he talks (−9 dB ducking + speech-band carve), ~9 dB in the gaps.
+Mix: house track 22 LU under the voice while he talks (K-weighted, −10 dB ducking, slow release; sound.json music_db / duck_db);\n  synth bed 12 dB under (−9 dB ducking). Speech-band carve on both.
 
 sound.json = {"drop": s, "slam": s|null, "music": "house"|"synth"|path, "music_at": s (optional), "events": [[kind, t, gain, ...args]]}
   kinds: whoosh(f0,f1,dur) impact stamp(pan) pop(pan,freq) click ding power_down(dur) power_up(dur) shimmer(dur) velcro(pan,dur) stretch(pan,dur)
@@ -101,6 +101,7 @@ g=np.ones(N); a,b_=int((BRK+0.02)*SR),int(VEND*SR); g[a:b_]=np.linspace(1,0.12,m
 # ── the Nitron house track (client, 1 Nov 2026): every reel uses it when music/nitron_music.wav is present ──
 #    sound.json "music": "house" (default) | "synth" (the synthesised bed above) | a path · "music_at": track second at reel t=0
 import os
+HOUSE_USED=False
 K=os.path.dirname(os.path.abspath(__file__)); _mj=K+"/music/music.json"
 _sel=cfg.get("music","house"); HOUSE=None
 if _sel=="house" and os.path.exists(_mj):
@@ -119,7 +120,7 @@ if HOUSE and os.path.exists(HOUSE):
     H=filt(H,'high',28); H=H-0.45*filt(H,'band',[900,4200])            # leave the speech band to his voice
     fi=int(0.12*SR); H[:fi]*=np.linspace(0,1,fi)[:,None]
     fo=int(1.4*SR); H[N-fo:]*=np.linspace(1,0,fo)[:,None]**1.5          # fades out over the end of the outro card
-    M=H; print(f"house track: {os.path.basename(HOUSE)} from {off:.2f}s (beat on the drop at {DROP:.2f}s)")
+    M=H; HOUSE_USED=True; print(f"house track: {os.path.basename(HOUSE)} from {off:.2f}s (beat on the drop at {DROP:.2f}s)")
 else:
     print("house track not found — synthesised bed (put the track at nitron-kit/music/nitron_music.wav)")
 # ── sound design palette ──
@@ -171,15 +172,21 @@ S=verb(S,0.10)
 # ── duck under the voice ──
 v=np.fromfile(W+"/voice.f32",np.float32).astype(np.float64); v=np.pad(v,(0,max(0,N-len(v))))[:N]
 hop=480; env=np.sqrt(np.convolve(v**2,np.ones(hop)/hop,'same')); act=(env>0.012).astype(float)
-ka,kr=np.exp(-1/(0.015*SR)),np.exp(-1/(0.28*SR)); d=np.zeros(N); y=0.0
+# the house track is a full, dense mix: it needs a perceptual (K-weighted) target well under the voice, deeper ducking
+# and a slow release so it doesn't swell between words (client, 1 Nov: "way too loud" at the synth bed's settings)
+DUCK_DB,REL,TGT=(cfg.get("duck_db",10.0),0.60,cfg.get("music_db",-22.0)) if HOUSE_USED else (9.0,0.28,-12.0)
+ka,kr=np.exp(-1/(0.015*SR)),np.exp(-1/(REL*SR)); d=np.zeros(N); y=0.0
 for i in range(0,N,hop):
     tg=act[i]; y=tg+(y-tg)*((ka if tg>y else kr)**hop); d[i:i+hop]=y
-duck=10**(-9.0*d/20)
+duck=10**(-DUCK_DB*d/20)
 Mn=M/np.abs(M).max()*0.5; Sn=S/max(1e-9,np.abs(S).max())*0.5
 sp=np.repeat(act[::hop],hop)[:N]>0.5; r=lambda x,m: 10*np.log10((x[m]**2).mean()+1e-12)
-MG=0.45*10**(np.clip(-12.0-(r((Mn*0.45*duck[:,None]).mean(1),sp)-r(v,sp)),-4,4)/20)   # house level: music 12 dB under the voice
-bed=np.clip(Mn*MG*duck[:,None]+Sn*0.80,-0.97,0.97)
+def kw(x): y_=filt(x,'high',60); return y_+0.58*filt(y_,'high',1500)          # ≈ BS.1770 K-weighting (perceived loudness)
+if HOUSE_USED: MG=10**((TGT-(r(kw((Mn*duck[:,None]).mean(1)),sp)-r(kw(v),sp)))/20)   # music TGT LU under the voice while he talks
+else: MG=0.45*10**(np.clip(-12.0-(r((Mn*0.45*duck[:,None]).mean(1),sp)-r(v,sp)),-4,4)/20)   # synth bed: 12 dB under the voice
+SFX_G=cfg.get("sfx_gain",0.30 if HOUSE_USED else 0.80)   # with the house track the hits sit under his voice too (−8.5 dB)
+bed=np.clip(Mn*MG*duck[:,None]+Sn*SFX_G,-0.97,0.97)
 for name,x in [("music.wav",Mn),("sfx_only.wav",Sn),("sfx.wav",bed)]:
     subprocess.run(["ffmpeg","-v","error","-y","-f","s16le","-ar",str(SR),"-ac","2","-i","-",W+"/"+name],input=(np.clip(x,-1,1)*32767).astype('<i2').tobytes(),check=True)
-mu=(Mn*MG*duck[:,None]).mean(1)
-print("ok %.2fs · music vs voice: %.1f dB under speech · %.1f dB in gaps"%(T,r(mu,sp)-r(v,sp),r(mu,~sp&(np.arange(N)<int(VEND*SR)))-r(v,sp)))
+mu=(Mn*MG*duck[:,None]).mean(1); gp=~sp&(np.arange(N)<int(VEND*SR))
+print("ok %.2fs · music vs voice (K-weighted): %.1f LU under speech · %.1f LU in gaps"%(T,r(kw(mu),sp)-r(kw(v),sp),r(kw(mu),gp)-r(kw(v),sp)))

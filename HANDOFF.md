@@ -20,7 +20,7 @@ This file is for whoever (person or Claude session) picks up this work next.
 | Colours only from the logo: black `#0A0A0C`, white, purple `#76028A` (light purple `#C77DDB` for text on dark). Cairo 900 for Arabic, Inter for English. | reel #1 |
 | Text behind the speaker (words on the wall behind his head, person cut out on top), at least twice when there is wall above the head. | reels #1, #4 |
 | Better image quality: grade, denoise, sharpen, white balance matched across clips. | reel #1 |
-| Background music plus meaningful SFX; music about 12 dB under the voice; −14/−15 LUFS. **Since 1 Nov 2026 the music on every new reel is the client's Nitron track** (`music_nitron.mp4` → `nitron-kit/music/nitron_music.wav`); `sound.py` uses it automatically. | reel #2, 1 Nov note |
+| Background music plus meaningful SFX; music about 12 dB under the voice; −14/−15 LUFS. **Since 1 Nov 2026 the music on every new reel is the client's Nitron track** (`music_nitron.mp4` → `nitron-kit/music/nitron_music.wav`); `sound.py` uses it automatically. The client found the first level **way too loud**, so it is now 22 LU under the voice (K-weighted), with −10 dB ducking, a slow release and SFX −8.5 dB. Never turn it up without asking. | reel #2, 1 Nov note |
 | A strong hook with motion graphics; one unified Nitron identity across reels. | reels #2, #3 |
 | **Never shrink the speaker or push him down** (no card, no lower-panel `R_DOWN`). Full frame; eyes around y 600–750; respect Instagram safe zones. | reel #4 |
 | **Liquid glass like iPhone:** graphics are frosted glass panes over the video, never a solid panel that takes part of the screen. Captions are glass too. | reels #1–#3 note |
