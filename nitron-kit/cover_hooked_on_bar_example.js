@@ -34,7 +34,7 @@ MOTION.scene({ id: 'cv',
     const fill = new THREE.DirectionalLight(0xd8d0ff, 0.5); fill.position.set(-3, 1.5, 3); this.st.add(fill);
     const rim = new THREE.DirectionalLight(0xb070ff, 1.6); rim.position.set(-2, 2.5, -4); this.st.add(rim);
   },
-  draw(t, lt, ctx) { const { X } = ctx, L = this.L, R0 = 0.225, T = -20;
+  draw(t, lt, ctx) { const { X } = ctx, L = this.L, R0 = 0.225, T = -85;
     X.fillStyle = '#0A0A0C'; X.fillRect(0, 0, ctx.W, ctx.H);
     const sp = X.createRadialGradient(540, 980, 40, 540, 1000, 900); sp.addColorStop(0, 'rgba(118,2,138,0.55)'); sp.addColorStop(0.55, 'rgba(75,1,88,0.2)'); sp.addColorStop(1, 'rgba(10,10,12,0)'); X.fillStyle = sp; X.fillRect(0, 0, ctx.W, ctx.H);
     // bar on a rack height (no floor contact), close hero shot: knurled shaft across the frame, near plates at the right edge
@@ -47,19 +47,22 @@ MOTION.scene({ id: 'cv',
     this.bar.updateMatrixWorld(true);
     const A = P(-0.32, R0), B = P(0.16, R0), ang = Math.atan2(B[1] - A[1], B[0] - A[0]), C = P(0.15, R0), rpx = Math.abs(P(0.15, R0 + 0.014)[1] - C[1]);
     // the straps: rotated so both left loops sit on the bar and the straps hang down
-    const img = ctx.img('red8'); if (!img) return; const s = 1.2, rot = 2.437 + ang, mx = 179.5, my = 258.5;
+    const img = ctx.img('red8'); if (!img) return; const s = 1.34, rot = 2.437 + ang, mx = 179.5, my = 258.5;
     const hole = (hx, hy) => { const dx = (hx - mx) * s, dy = (hy - my) * s; return [C[0] + dx * Math.cos(rot) - dy * Math.sin(rot), C[1] + dx * Math.sin(rot) + dy * Math.cos(rot)]; };
     X.save(); X.translate(C[0], C[1]); X.rotate(rot); X.scale(s, s); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 40; X.shadowOffsetY = 26; X.drawImage(img, -mx, -my); X.restore();
     // thread the bar: on the left side of each loop the bar passes in front of the strap
     for (const h of [hole(80, 174), hole(279, 343)]) { X.save(); X.translate(h[0], h[1]); X.rotate(ang); X.beginPath(); X.rect(-150, -rpx + 1, 150, 2 * rpx - 2); X.rotate(-ang); X.translate(-h[0], -h[1]); X.clip();
       ctx.resetTransform(X); X.save(); X.translate(0, T); this.st.draw(X); X.restore(); X.restore(); }
-    // text
-    X.font = ctx.font('num', 800, 30); const kw = X.measureText('FIGURE 8 STRAP').width + 56; X.fillStyle = NK.PURPLE; NK.rr(X, 540 - kw / 2, 448, kw, 54, 27); X.fill();
-    ctx.text(X, 'FIGURE 8 STRAP', 540, 477, { family: 'num', weight: 800, size: 30, color: '#FFFFFF', dir: 'ltr' });
-    ctx.text(X, 'قبضتك', 540, 650, { family: 'display', weight: 900, size: 170, color: '#FFFFFF', shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
-    ctx.text(X, 'ما رح تفلت', 540, 790, { family: 'display', weight: 900, size: 112, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
-    const by = 1420, bw = 600; NK.glass(X, 540 - bw / 2, by - 62, bw, 124, 62, { tint: 'rgba(10,10,12,0.55)' });
-    ctx.text(X, '+10%', 730, by + 4, { family: 'num', weight: 900, size: 88, color: NK.LILAC, dir: 'ltr' });
-    ctx.text(X, 'أقوى رفعة', 450, by - 16, { family: 'display', weight: 900, size: 42, color: '#FFFFFF' }); ctx.text(X, 'مع ستراب', 450, by + 34, { family: 'display', weight: 800, size: 34, color: NK.MUT });
-    const logo = ctx.img('logo'); if (logo) { const w = 360, h = w * logo.height / logo.width; X.drawImage(logo, 540 - w / 2, 1580 - h / 2, w, h); }
+    // text: headline top, FIGURE 8 STRAP tag on the bar, 3 numbered steps at the bottom (standard figure-8 method)
+    ctx.text(X, 'كيف تلبس', 540, 560, { family: 'display', weight: 900, size: 132, color: '#FFFFFF', shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
+    ctx.text(X, 'الستراب صح؟', 540, 690, { family: 'display', weight: 900, size: 100, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
+    X.font = ctx.font('num', 800, 28); const kw = X.measureText('FIGURE 8 STRAP').width + 52; X.fillStyle = NK.PURPLE; NK.rr(X, 40, C[1] - 150, kw, 50, 25); X.fill();
+    ctx.text(X, 'FIGURE 8 STRAP', 40 + kw / 2, C[1] - 124, { family: 'num', weight: 800, size: 28, color: '#FFFFFF', dir: 'ltr' });
+    const steps = [['١', 'إيدك', 'بالحلقة'], ['٢', 'الحلقة', 'تحت البار'], ['٣', 'امسك', 'وشد']], cw = 310, gap = 20, y0 = 1330;
+    steps.forEach(([n, a, b], i) => { const x = 540 + (1 - i) * (cw + gap) - cw / 2; NK.glass(X, x, y0, cw, 150, 34, { tint: 'rgba(10,10,12,0.55)' });
+      X.fillStyle = NK.PURPLE; X.beginPath(); X.arc(x + cw - 50, y0 + 75, 32, 0, 7); X.fill();
+      ctx.text(X, n, x + cw - 50, y0 + 84, { family: 'display', weight: 900, size: 40, color: '#FFFFFF' });
+      ctx.text(X, a, x + cw - 96, y0 + 64, { family: 'display', weight: 900, size: 38, color: '#FFFFFF', align: 'right' });
+      ctx.text(X, b, x + cw - 96, y0 + 112, { family: 'display', weight: 800, size: 34, color: NK.LILAC, align: 'right' }); });
+    const logo = ctx.img('logo'); if (logo) { const w = 360, h = w * logo.height / logo.width; X.drawImage(logo, 540 - w / 2, 1620 - h / 2, w, h); }
   } });
