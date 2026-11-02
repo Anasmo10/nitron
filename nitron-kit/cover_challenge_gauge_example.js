@@ -18,7 +18,7 @@ MOTION.scene({ id: 'cv',
     put(g2, 670, 1215, 430, -0.32, true); put(g1, 420, 1235, 550, 0.28, false);
     // headline
     ctx.text(X, 'تحدي القبضة', 540, 585, { family: 'display', weight: 900, size: 116, color: '#FFFFFF', shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
-    ctx.text(X, 'كم كيلو بتعصر؟', 540, 695, { family: 'display', weight: 900, size: 78, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
+    ctx.text(X, 'مين قبضته أقوى؟', 540, 695, { family: 'display', weight: 900, size: 78, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
     // collab badge
     const by = 1420; X.font = ctx.font('num', 900, 40); const w1 = X.measureText('NITRON').width, w2 = X.measureText('MED KNIGHT').width, wx = X.measureText(' × ').width, bw = w1 + w2 + wx + 80;
     NK.glass(X, 540 - bw / 2, by - 44, bw, 88, 44, { tint: 'rgba(10,10,12,0.65)' }); let x = 540 - bw / 2 + 40;
