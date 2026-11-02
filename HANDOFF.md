@@ -122,3 +122,15 @@ QA on every delivered v2/v2.1 reel:
 - Convert reel #4's video to v2.1 (glass captions); its side card could use the new SBD photo (`7.jpg`).
 - Ask whether other product names should also appear in English, as "Figure 8 Strap" now does.
 - Reel #1 stays at v1 unless the client asks again; the redo is in git history at `215ca96` if needed.
+
+## Motion v2 (deadlift straps) — delivered, approved 100%
+Final: 45 s, voice lines 1–5 (user's recordings) then text + music only; the long-term/elbow scene was cut. Cover = strap photo, «القبضة بتفلت أول».
+
+### Rules learned (save tokens next time)
+- **No AI voice, ever.** Don't clone or generate voices. Missing lines → finish with on-screen text + house music.
+- **Only claims viewers instantly get and the client believes.** Drop anything indirect (population studies not on lifters, youth-athlete reviews). Check every number before render (17,192 N ≈ 1.75 t).
+- **Preview first, render once:** 2–4 `preview` frames per change → then one parallel `range` render (4–6 processes) of only the changed frames (delete just those `f_*.jpg`). Never re-render the whole film for a text fix.
+- Realistic 3D: real proportions (Olympic bar 28 mm shaft, 450 mm bumpers), floor + contact shadows, `envMapIntensity` ≤ 0.3 on matte surfaces or they wash out white.
+- Text system: `NK.head` (kicker pill + right-aligned headline, lilac key word + purple marker) and `NK.note` (dark-glass line) in `scenes/lib.js`.
+- Cover: 2 short lines max or the title covers the product. `CHROME_PATH=/home/user/work/bin/chrome` for product_cover.py.
+- upload.higgsfield.ai is blocked from this environment.
