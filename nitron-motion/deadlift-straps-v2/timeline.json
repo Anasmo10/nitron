@@ -1,5 +1,5 @@
 {
- "duration": 51.959,
+ "duration": 49.709,
  "bpm": 150.19,
  "beatsPerBar": 4,
  "beats": [
@@ -135,13 +135,7 @@
   51.5355,
   51.935,
   52.3345,
-  52.734,
-  53.1335,
-  53.533,
-  53.9325,
-  54.332,
-  54.7315,
-  55.131
+  52.734
  ],
  "sections": [],
  "scenes": [
@@ -220,7 +214,7 @@
    "id": "s6",
    "file": "scenes/s6.js",
    "start": 35.409,
-   "end": 42.459,
+   "end": 40.209,
    "lines": [
     "l6"
    ],
@@ -234,8 +228,8 @@
   {
    "id": "s7",
    "file": "scenes/s7.js",
-   "start": 42.459,
-   "end": 48.109,
+   "start": 40.209,
+   "end": 45.859,
    "lines": [
     "l7"
    ],
@@ -249,8 +243,8 @@
   {
    "id": "s8",
    "file": "scenes/s8.js",
-   "start": 48.109,
-   "end": 51.959,
+   "start": 45.859,
+   "end": 49.709,
    "lines": [
     "l8"
    ],
@@ -649,23 +643,23 @@
    "id": "l6",
    "text": "",
    "start": 35.559,
-   "end": 42.159,
+   "end": 39.909,
    "words": [],
    "placeholder": true
   },
   {
    "id": "l7",
    "text": "",
-   "start": 42.609,
-   "end": 47.809,
+   "start": 40.359,
+   "end": 45.559,
    "words": [],
    "placeholder": true
   },
   {
    "id": "l8",
    "text": "",
-   "start": 48.259,
-   "end": 51.059,
+   "start": 46.009,
+   "end": 48.809,
    "words": [],
    "placeholder": true
   }
