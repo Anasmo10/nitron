@@ -4,7 +4,7 @@
 MOTION.scene({ id: 's3',
   draw(t, lt, ctx) { const { X, at, lerp } = ctx; const W_ = i => NK.W(ctx, 'l3', i);
     NK.bg2(ctx, t, { glowY: 760, glowA: 0.30 });
-    NK.slam(ctx, t, 'جوّا ساعدك', 540, 250, W_(0), { size: 96, from: 1.15 });
+    NK.head(ctx, t, 'جوّا ساعدك', W_(0), { y: 300, size: 104, hi: [1], kicker: 'الوزن كلّه معلّق هون', times: [W_(0), W_(3)] });
     const k = at(lt, 0.1, 0.6, 'expoOut'), heat = at(t, W_(6), W_(11) + 0.3, 'sineInOut'), slip = at(t, W_(12), W_(16), 'cubicIn');
     const scan = at(t, W_(0), W_(3) + 0.35, 'cubicInOut'), dropT = t - W_(16), drop = dropT > 0 ? dropT : 0;
     const cx = 540, yE = 420, yW = 900, sx = v => cx + v * 1.8, push = 1 + 0.035 * at(lt, 0, 6, 'sineInOut');
@@ -48,7 +48,7 @@ MOTION.scene({ id: 's3',
     X.restore();
     NK.label(ctx, t, 'عضلات ثني الأصابع', 540 - 90 * 1.8, 420 + 200, 165, 420 + 90, W_(3), { size: 34 });
     NK.label(ctx, t, 'الأوتار', 540 - 36 * 1.8, 900 + 20, 860, 900 - 60, W_(4), { size: 38 });
-    NK.slam(ctx, t, 'بلا ستراب: القبضة بتتعب أكتر', 540, 1335, W_(6), { size: 58, from: 1.12 });
-    NK.slam(ctx, t, 'والبار رح يوقع', 540, 1418, W_(14), { size: 50, color: NK.LILAC, from: 1.12 });
+    NK.note(ctx, t, 'بلا ستراب: القبضة بتتعب أكتر', W_(6), { y: 1360, size: 52, hi: [3, 4], out: W_(14) - 0.15 });
+    NK.note(ctx, t, 'والبار رح يوقع', W_(14), { y: 1360, size: 60, hi: [2] });
     NK.source(ctx, t, 'Jukic et al., Physiology & Behavior 2021 · n = 16', W_(6), 1484);
   } });

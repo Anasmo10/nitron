@@ -4,7 +4,7 @@
 MOTION.scene({ id: 's2',
   setup(ctx) { const { THREE } = ctx;
     this.st = ctx.stage3D({ fov: 30, camera: [0, 0.2, 15], env: 'room', tone: 'neutral', exposure: 1.05 });
-    const steel = () => new THREE.MeshStandardMaterial({ color: 0xd9dce2, metalness: 1, roughness: 0.24 });
+    const steel = () => new THREE.MeshStandardMaterial({ color: 0xd9dce2, metalness: 1, roughness: 0.3, roughnessMap: NK.noiseTex(THREE, [4, 1], 120, 220) });
     const torus = (arc) => new THREE.TorusGeometry(0.72, 0.17, 28, 96, arc);
     this.chain = new THREE.Group(); this.st.add(this.chain); this.links = [];
     [2.15, 0.25, -1.65].forEach((y, i) => { const m = new THREE.Mesh(torus(Math.PI * 2), steel()); m.scale.set(1, 1.55, 1); m.position.y = y; m.rotation.y = i % 2 ? Math.PI / 2 : 0; this.chain.add(m); this.links.push(m); });
@@ -13,10 +13,7 @@ MOTION.scene({ id: 's2',
     // anchor bar on top, plate hanging below
     const top = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 4.2, 32), steel()); top.rotation.z = Math.PI / 2; top.position.y = 3.35; this.chain.add(top);
     this.plate = new THREE.Group(); this.chain.add(this.plate);
-    const rubber = new THREE.MeshStandardMaterial({ color: 0x141418, metalness: 0.05, roughness: 0.6 });
-    const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.32, 80), rubber); disc.rotation.x = Math.PI / 2; this.plate.add(disc);
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.03, 10, 90), new THREE.MeshStandardMaterial({ color: 0x76028a, emissive: 0x2a0033, metalness: 0.3, roughness: 0.35 })); rim.position.z = 0.17; this.plate.add(rim);
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.36, 32), steel()); hub.rotation.x = Math.PI / 2; this.plate.add(hub);
+    const bp = NK.bumper(THREE, { w: 0.066, kg: '20 KG' }); bp.scale.setScalar(1.25 / 0.225); bp.rotation.x = Math.PI / 2; this.plate.add(bp);
     const hook = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.07, 14, 40, Math.PI * 1.2), steel()); hook.position.y = 1.45; hook.rotation.z = -0.3; this.plate.add(hook);
     this.plateY0 = -4.05; this.plate.position.y = this.plateY0;
     const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(4, 5, 7); this.st.add(key);
@@ -44,15 +41,13 @@ MOTION.scene({ id: 's2',
         const [sx, sy] = NK.proj(this.st, this.v, ctx); X.save(); X.globalAlpha = Math.min(1, k * 1.6) * (1 - chainOut);
         const col = i === 2 ? NK.LILAC : '#FFFFFF'; X.strokeStyle = 'rgba(255,255,255,0.45)'; X.lineWidth = 2.5; X.beginPath(); X.moveTo(sx - 10, sy); X.lineTo(sx - 110 * k, sy); X.stroke();
         ctx.text(X, n, sx - 130 * k, sy + 2, { family: 'display', weight: 900, size: 54, color: col, align: 'right' }); X.restore(); });
-      NK.slam(ctx, t, 'القبضة بتتعب أول', 540, 260, W_(6), { size: 84, color: NK.LILAC, from: 1.2, out: tStudy });
+      NK.head(ctx, t, 'القبضة بتتعب أول', W_(5), { y: 330, size: 100, hi: [0], kicker: 'الحلقة الأضعف', kt: W_(0), times: [W_(5), W_(6), W_(7)], out: tStudy });
       if (snapped) { const kf = 1 - at(t, W_(7) + 0.05, W_(7) + 0.35); if (kf > 0) { X.save(); X.globalAlpha = kf * 0.5; X.fillStyle = '#FFFFFF'; X.fillRect(0, 0, ctx.W, ctx.H); X.restore(); } }
-      ctx.text(X, 'الحلقة الأضعف', 540, 260, { family: 'display', weight: 900, size: 92, color: '#FFFFFF', alpha: at(t, W_(0) - 0.1, W_(0) + 0.25) * (1 - at(t, W_(6) - 0.2, W_(6) - 0.05)) });
     }
     // the study
     const kp = at(t, tStudy + 0.15, tStudy + 0.55, 'expoOut'); if (kp <= 0) return;
     X.save(); X.globalAlpha = kp; X.translate(0, (1 - kp) * 50);
-    ctx.text(X, 'دراسة على 20 رياضي مدرّب', 540, 330, { family: 'display', weight: 900, size: 58, color: '#FFFFFF' });
-    ctx.text(X, 'أقصى رفعة ديدلفت', 540, 410, { family: 'display', weight: 700, size: 40, color: NK.MUT });
+    NK.head(ctx, t, 'أقصى رفعة ديدلفت', tStudy + 0.2, { y: 400, size: 84, hi: [2], kicker: 'دراسة · 20 رياضي مدرّب' });
     const base = 1180, hmax = 620, grow = at(t, tStudy + 0.4, tStudy + 1.6, 'expoOut'), grow2 = at(t, W_(11) - 0.1, W_(12) + 0.6, 'expoOut');
     const bar = (cx, kg, k, col, label, labCol) => { const h = hmax * (kg / 177) * k; NK.glass(X, cx - 150, base - hmax - 40, 300, hmax + 40, 34, { a0: 0.06, a1: 0.02 });
       const gr = X.createLinearGradient(0, base - h, 0, base); gr.addColorStop(0, col); gr.addColorStop(1, '#4B0158'); X.fillStyle = gr; NK.rr(X, cx - 110, base - h, 220, h, 22); X.fill();

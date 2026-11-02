@@ -4,7 +4,7 @@
 MOTION.scene({ id: 's4',
   draw(t, lt, ctx) { const { X, at, lerp } = ctx; const W_ = i => NK.W(ctx, 'l4', i);
     NK.bg2(ctx, t, { glowY: 760, glowA: 0.28 });
-    NK.slam(ctx, t, 'لما القبضة تفلت…', 540, 250, W_(0) - 0.1, { size: 92, from: 1.15 });
+    NK.head(ctx, t, 'لما القبضة تفلت…', W_(0) - 0.1, { y: 300, size: 96, hi: [1], kicker: 'القبضة المختلطة' });
     // bar + two hands (top view); the left hand flips on «بيقلبوا»
     const kb = at(lt, 0.1, 0.5, 'expoOut'), flip = at(t, W_(2), W_(2) + 0.45, 'cubicInOut');
     if (kb > 0) { X.save(); X.globalAlpha = kb;
@@ -48,6 +48,6 @@ MOTION.scene({ id: 's4',
       const L2 = ctx.text.layout(X, 'وبالديدلفت: كل التمزقات بالإيد اللي كفّها لفوق', { family: 'display', weight: 800, size: 32, maxWidth: 420, lineHeight: 1.3 });
       ctx.text.drawLayout(X, L2, 745, 1150, { align: 'center', color: NK.MUT });
       X.restore(); }
-    NK.slam(ctx, t, 'بالإيد اللي كفّها لفوق', 540, 1415, W_(10), { size: 54, color: NK.LILAC, from: 1.12 });
+    NK.note(ctx, t, 'بالإيد اللي كفّها لفوق', W_(10), { y: 1395, size: 52, hi: [2, 3] });
     NK.source(ctx, t, 'Kapicioglu et al., OJSM 2021 · Lappen et al., BMC Musculoskelet Disord 2022', W_(5), 1484);
   } });
