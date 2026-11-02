@@ -4,9 +4,8 @@
        (Mersmann, Bohm & Arampatzis, Front Physiol 2017, review). The chart is a concept sketch, not data. */
 MOTION.scene({ id: 's6',
   draw(t, lt, ctx) { const { X, at, lerp } = ctx;
-    NK.bg(ctx, 760, 0.28);
-    NK.words(ctx, lt, 'على المدى الطويل', 540, 255, { size: 96, t0: 0.05 });
-    NK.words(ctx, lt, 'إذا ضل الوزن أتقل من قبضتك:', 540, 345, { size: 46, t0: 0.3, color: NK.MUT, gap: 0.05 });
+    NK.bg2(ctx, t, { glowY: 760, glowA: 0.28 });
+    NK.head(ctx, lt, 'وبعد سنين؟', 0.1, { y: 320, size: 120, hi: [1], kicker: 'إذا ضل الوزن أتقل من قبضتك' });
     // card 1 — inner elbow
     const k1 = at(lt, 0.5, 0.9, 'expoOut'); if (k1 > 0) { X.save(); X.globalAlpha = k1; X.translate((1 - k1) * 40, 0);
       NK.glass(X, 90, 420, 900, 330, 40);
@@ -17,8 +16,8 @@ MOTION.scene({ id: 's6',
       X.fillStyle = 'rgba(255,255,255,0.75)'; X.beginPath(); X.arc(362, 640, 30, 0, 7); X.fill();                                           // fist
       const pulse = 0.6 + 0.4 * Math.sin(lt * 7); X.fillStyle = `rgba(199,125,219,${0.55 + 0.45 * pulse})`; X.beginPath(); X.arc(204, 622, 16 + 7 * pulse, 0, 7); X.fill();
       X.strokeStyle = `rgba(199,125,219,${0.35 * pulse})`; X.lineWidth = 3; X.beginPath(); X.arc(204, 622, 34 + 10 * pulse, 0, 7); X.stroke();
-      ctx.text(X, 'التهاب الكوع الداخلي', 930, 530, { family: 'display', weight: 900, size: 52, color: '#FFFFFF', align: 'right' });
-      const L = ctx.text.layout(X, 'الشغل القوي والمتكرر مرتبط فيه بالدراسات السكانية', { family: 'display', weight: 700, size: 34, maxWidth: 560, lineHeight: 1.3 });
+      ctx.text(X, 'الكوع الداخلي (كوع الغولف)', 930, 530, { family: 'display', weight: 900, size: 48, color: '#FFFFFF', align: 'right' });
+      const L = ctx.text.layout(X, 'الشد القوي والمتكرر مرتبط فيه (دراسة سكانية، مو على رافعين)', { family: 'display', weight: 700, size: 34, maxWidth: 560, lineHeight: 1.3 });
       ctx.text.drawLayout(X, L, 930, 600, { align: 'right', color: NK.MUT });
       ctx.text(X, 'Shiri et al., Am J Epidemiol 2006', 930, 715, { family: 'num', weight: 500, size: 24, color: 'rgba(255,255,255,0.5)', align: 'right', dir: 'ltr' });
       X.restore(); }
@@ -38,10 +37,10 @@ MOTION.scene({ id: 's6',
       if (draw > 0.6) { const a = at(lt, 3.0, 3.4); X.save(); X.globalAlpha *= a;
         ctx.text(X, 'العضل', gx1 - 60, mus(1) - 28, { family: 'display', weight: 900, size: 34, color: NK.LILAC });
         ctx.text(X, 'الوتر', gx1 - 60, ten(1) + 44, { family: 'display', weight: 900, size: 34, color: '#FFFFFF' });
-        ctx.text(X, 'الفجوة = خطر التهاب الوتر', 470, mus(0.35) + 62, { family: 'display', weight: 800, size: 32, color: '#FFFFFF' }); X.restore(); }
+        ctx.text(X, 'الفجوة ممكن تزيد خطر التهاب الوتر', 470, mus(0.35) + 62, { family: 'display', weight: 800, size: 32, color: '#FFFFFF' }); X.restore(); }
       ctx.text(X, 'الوقت ←', gx1 - 40, gy0 + 40, { family: 'display', weight: 700, size: 26, color: NK.MUT });
       ctx.text(X, 'Mersmann et al., Front Physiol 2017 (review)', 400, 1318, { family: 'num', weight: 500, size: 23, color: 'rgba(255,255,255,0.5)', dir: 'ltr' });
       ctx.text(X, 'مخطط توضيحي', 860, 1318, { family: 'display', weight: 700, size: 24, color: 'rgba(255,255,255,0.5)' });
       X.restore(); }
-    NK.words(ctx, lt, 'وكمان: البار ممكن يفلت ويوقع', 540, 1430, { size: 44, t0: 4.3, color: NK.MUT, gap: 0.05 });
+    NK.note(ctx, lt, 'وكمان: البار ممكن يفلت ويوقع', 4.4, { y: 1440, size: 46, hi: [3, 4] });
   } });

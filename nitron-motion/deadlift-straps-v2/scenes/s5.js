@@ -40,7 +40,7 @@ MOTION.scene({ id: 's5',
       ctx.text(X, ctx.num(Math.round(17192 * at(t, W_(7), W_(9), 'expoOut'))), 790, 700, { family: 'num', weight: 800, size: 96, color: '#FFFFFF', dir: 'ltr' });
       ctx.text(X, 'نيوتن على L4/L5', 790, 785, { family: 'display', weight: 800, size: 38, color: NK.MUT }); X.restore(); }
     NK.chip(ctx, 790, 885, 'أضعاف وزن جسمك', at(t, W_(9) - 0.05, W_(9) + 0.25, 'expoOut'), { size: 38 });
-    const kc = at(t, W_(10), W_(10) + 0.3); if (kc > 0) ctx.text(X, '≈ 1.7 طن · تقدير بنموذج', 790, 965, { family: 'display', weight: 700, size: 30, color: NK.MUT, alpha: kc });
+    const kc = at(t, W_(10), W_(10) + 0.3); if (kc > 0) ctx.text(X, '≈ 1.75 طن · تقدير بنموذج', 790, 965, { family: 'display', weight: 700, size: 30, color: NK.MUT, alpha: kc });
     // tip after the line: keep the bar close
     const tipT = ctx.lineSpan('l5').e + 0.15, kt = at(t, tipT, tipT + 0.35, 'expoOut');
     if (kt > 0) { X.save(); X.globalAlpha = kt; X.translate(0, (1 - kt) * 30); NK.glass(X, 90, 1290, 900, 150, 40, { tint: 'rgba(10,10,12,0.6)' });

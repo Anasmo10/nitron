@@ -2,9 +2,8 @@
    and the honest line: straps don't take load off the back — technique does. */
 MOTION.scene({ id: 's7',
   draw(t, lt, ctx) { const { X, at } = ctx;
-    NK.bg(ctx, 640, 0.36);
-    const kt = at(lt, 0.0, 0.25, 'expoOut'); if (kt > 0) { X.save(); const sc = 1.3 - 0.3 * kt; X.translate(540, 250); X.scale(sc, sc); X.globalAlpha = Math.min(1, kt * 2);
-      ctx.text(X, 'الحل؟', 0, 0, { family: 'display', weight: 900, size: 116, color: NK.LILAC }); X.restore(); }
+    NK.bg2(ctx, t, { glowY: 640, glowA: 0.36 });
+    NK.head(ctx, lt, 'الحل؟', 0.05, { y: 300, size: 120, hi: [0], kicker: 'من نايترون' });
     // product card
     const img = ctx.img('fig8'), kp = at(lt, 0.25, 0.7, 'expoOut');
     if (kp > 0 && img) { X.save(); X.globalAlpha = Math.min(1, kp * 1.5); const s = 0.92 + 0.08 * kp; X.translate(540, 620 + (1 - kp) * 60 + Math.sin(lt * 2.2) * 4); X.scale(s, s);
