@@ -4,7 +4,7 @@ import json
 P = 0.3995; LEAD = 0.15; TAIL = 0.30
 lines = {L["id"]: L for L in json.load(open("vo/lines.json"))}
 EST = {"l6": 4.35, "l7": 5.2, "l8": 2.8}                      # lines 6-8 have no voice: text-only scenes over the music
-extra = {"s5": 1.6, "s7": 2.45, "s8": 1.8}                                 # s5: lever beat after the line · s8: end card holds
+extra = {"s5": 1.6, "s7": -0.27, "s8": 0.9}                                 # s5: lever beat after the line · s8: end card holds
 TR = {"s2": {"type": "zoom", "dur": 0.45}, "s3": {"type": "wipe", "dir": "rtl", "dur": 0.5, "ease": "expoInOut"},
       "s4": {"type": "push", "dir": "up", "dur": 0.45, "ease": "expoInOut"}, "s5": {"type": "zoom", "dur": 0.5},
       "s6": {"type": "wipe", "dir": "rtl", "dur": 0.5, "ease": "expoInOut"}, "s7": {"type": "push", "dir": "up", "dur": 0.45, "ease": "expoInOut"},
