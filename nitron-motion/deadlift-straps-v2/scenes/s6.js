@@ -10,12 +10,15 @@ MOTION.scene({ id: 's6',
     const k1 = at(lt, 0.5, 0.9, 'expoOut'); if (k1 > 0) { X.save(); X.globalAlpha = k1; X.translate((1 - k1) * 40, 0);
       NK.glass(X, 90, 420, 900, 330, 40);
       // bent arm outline with the inner-elbow spot
-      X.lineCap = 'round'; X.lineJoin = 'round';
-      X.strokeStyle = 'rgba(255,255,255,0.75)'; X.lineWidth = 46; X.beginPath(); X.moveTo(180, 450); X.lineTo(180, 640); X.stroke();   // upper arm
-      X.lineWidth = 38; X.beginPath(); X.moveTo(180, 640); X.lineTo(340, 640); X.stroke();                                                  // forearm
-      X.fillStyle = 'rgba(255,255,255,0.75)'; X.beginPath(); X.arc(362, 640, 30, 0, 7); X.fill();                                           // fist
-      const pulse = 0.6 + 0.4 * Math.sin(lt * 7); X.fillStyle = `rgba(199,125,219,${0.55 + 0.45 * pulse})`; X.beginPath(); X.arc(204, 622, 16 + 7 * pulse, 0, 7); X.fill();
-      X.strokeStyle = `rgba(199,125,219,${0.35 * pulse})`; X.lineWidth = 3; X.beginPath(); X.arc(204, 622, 34 + 10 * pulse, 0, 7); X.stroke();
+      // arm (side view, elbow bent): tapered upper arm + forearm + fist, flexor tendons from the inner elbow, pulsing hot spot
+      const limb = (x0, y0, x1, y1, w0, w1) => { const a = Math.atan2(y1 - y0, x1 - x0), nx = -Math.sin(a), ny = Math.cos(a); X.beginPath();
+        X.moveTo(x0 + nx * w0, y0 + ny * w0); X.lineTo(x1 + nx * w1, y1 + ny * w1); X.arc(x1, y1, w1, a + Math.PI / 2, a - Math.PI / 2, true); X.lineTo(x0 - nx * w0, y0 - ny * w0); X.arc(x0, y0, w0, a - Math.PI / 2, a + Math.PI / 2, true); X.closePath(); };
+      const sk = X.createLinearGradient(140, 0, 440, 0); sk.addColorStop(0, 'rgba(255,255,255,0.85)'); sk.addColorStop(1, 'rgba(255,255,255,0.55)'); X.fillStyle = sk;
+      limb(205, 462, 212, 632, 34, 27); X.fill(); limb(212, 638, 380, 622, 25, 19); X.fill(); X.beginPath(); X.ellipse(408, 618, 34, 28, -0.1, 0, 7); X.fill();
+      X.strokeStyle = 'rgba(118,2,138,0.75)'; X.lineWidth = 3; X.lineCap = 'round';
+      for (let i = 0; i < 4; i++) { X.beginPath(); X.moveTo(222, 650); X.quadraticCurveTo(280, 650 - i * 4, 360 + i * 6, 628 + i * 3 - 8); X.stroke(); }
+      const pulse = 0.6 + 0.4 * Math.sin(lt * 7), hg = X.createRadialGradient(222, 650, 2, 222, 650, 46 + 10 * pulse); hg.addColorStop(0, `rgba(199,125,219,${0.95})`); hg.addColorStop(1, 'rgba(199,125,219,0)');
+      X.fillStyle = hg; X.beginPath(); X.arc(222, 650, 46 + 10 * pulse, 0, 7); X.fill(); X.fillStyle = '#FFFFFF'; X.beginPath(); X.arc(222, 650, 7, 0, 7); X.fill();
       ctx.text(X, 'الكوع الداخلي (كوع الغولف)', 930, 530, { family: 'display', weight: 900, size: 48, color: '#FFFFFF', align: 'right' });
       const L = ctx.text.layout(X, 'الشد القوي والمتكرر مرتبط فيه (دراسة سكانية، مو على رافعين)', { family: 'display', weight: 700, size: 34, maxWidth: 560, lineHeight: 1.3 });
       ctx.text.drawLayout(X, L, 930, 600, { align: 'right', color: NK.MUT });
