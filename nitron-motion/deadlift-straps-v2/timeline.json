@@ -1,5 +1,5 @@
 {
- "duration": 49.709,
+ "duration": 44.909,
  "bpm": 150.19,
  "beatsPerBar": 4,
  "beats": [
@@ -123,19 +123,7 @@
   46.7415,
   47.141,
   47.5405,
-  47.94,
-  48.3395,
-  48.739,
-  49.1385,
-  49.538,
-  49.9375,
-  50.337,
-  50.7365,
-  51.136,
-  51.5355,
-  51.935,
-  52.3345,
-  52.734
+  47.94
  ],
  "sections": [],
  "scenes": [
@@ -211,25 +199,10 @@
    }
   },
   {
-   "id": "s6",
-   "file": "scenes/s6.js",
-   "start": 35.409,
-   "end": 40.209,
-   "lines": [
-    "l6"
-   ],
-   "transition": {
-    "type": "wipe",
-    "dir": "rtl",
-    "dur": 0.5,
-    "ease": "expoInOut"
-   }
-  },
-  {
    "id": "s7",
    "file": "scenes/s7.js",
-   "start": 40.209,
-   "end": 45.859,
+   "start": 35.409,
+   "end": 41.059,
    "lines": [
     "l7"
    ],
@@ -243,8 +216,8 @@
   {
    "id": "s8",
    "file": "scenes/s8.js",
-   "start": 45.859,
-   "end": 49.709,
+   "start": 41.059,
+   "end": 44.909,
    "lines": [
     "l8"
    ],
@@ -640,26 +613,18 @@
    ]
   },
   {
-   "id": "l6",
-   "text": "",
-   "start": 35.559,
-   "end": 39.909,
-   "words": [],
-   "placeholder": true
-  },
-  {
    "id": "l7",
    "text": "",
-   "start": 40.359,
-   "end": 45.559,
+   "start": 35.559,
+   "end": 40.759,
    "words": [],
    "placeholder": true
   },
   {
    "id": "l8",
    "text": "",
-   "start": 46.009,
-   "end": 48.809,
+   "start": 41.209,
+   "end": 44.009,
    "words": [],
    "placeholder": true
   }

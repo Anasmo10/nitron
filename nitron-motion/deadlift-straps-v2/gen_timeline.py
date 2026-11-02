@@ -9,9 +9,11 @@ TR = {"s2": {"type": "zoom", "dur": 0.45}, "s3": {"type": "wipe", "dir": "rtl", 
       "s4": {"type": "push", "dir": "up", "dur": 0.45, "ease": "expoInOut"}, "s5": {"type": "zoom", "dur": 0.5},
       "s6": {"type": "wipe", "dir": "rtl", "dur": 0.5, "ease": "expoInOut"}, "s7": {"type": "push", "dir": "up", "dur": 0.45, "ease": "expoInOut"},
       "s8": {"type": "iris", "dur": 0.6, "at": [540, 960]}}
+SKIP = {"s6"}                                                  # the long-term scene is cut (weak evidence, viewers didn't buy it)
 t = 0.0; scenes = [{"id": "lib", "file": "scenes/lib.js", "start": 0, "end": 0}]; vo = []; place = {}
 for i in range(1, 9):
     sid, lid = f"s{i}", f"l{i}"; L = lines.get(lid); d = L["dur"] if L else EST[lid]
+    if sid in SKIP: continue
     v0 = t + LEAD; end = v0 + d + TAIL + extra.get(sid, 0)
     sc = {"id": sid, "file": f"scenes/{sid}.js", "start": round(t, 4), "end": round(end, 4), "lines": [lid]}
     if sid in TR: sc["transition"] = TR[sid]
