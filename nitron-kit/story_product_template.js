@@ -14,6 +14,13 @@ MOTION.scene({ id: 'cv',
     ctx.text(X, P.line, 540, 630, { family: 'display', weight: 900, size: 66, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 24, y: 8 } });
     const gl = X.createRadialGradient(540, 1060, 20, 540, 1060, 470); gl.addColorStop(0, 'rgba(199,125,219,0.36)'); gl.addColorStop(1, 'rgba(199,125,219,0)'); X.fillStyle = gl; X.fillRect(0, 560, 1080, 1000);
     X.save(); X.translate(540, P.floor || 1400); X.scale(1, 0.10); const cs = X.createRadialGradient(0, 0, 10, 0, 0, 400); cs.addColorStop(0, 'rgba(0,0,0,0.85)'); cs.addColorStop(1, 'rgba(0,0,0,0)'); X.fillStyle = cs; X.beginPath(); X.arc(0, 0, 400, 0, 7); X.fill(); X.restore();
+    /* the thread: one light-purple line runs through every story of the highlight, behind each product; it leaves each story
+       on the left edge at the same height it enters the next one from the right (RTL order), so the stories read as one piece */
+    const YE = 1150, path = () => { X.beginPath(); const x0 = P.first ? 960 : 1080, x1 = P.last ? 120 : 0; X.moveTo(x0, YE);
+      X.bezierCurveTo(840, YE, 760, 930, 540, 930); X.bezierCurveTo(320, 930, 240, YE, x1, YE); };
+    X.save(); X.lineCap = 'round'; X.strokeStyle = 'rgba(199,125,219,0.22)'; X.lineWidth = 16; path(); X.stroke();
+    X.strokeStyle = NK.LILAC; X.lineWidth = 5; path(); X.stroke(); X.fillStyle = NK.LILAC;
+    if (P.first) { X.beginPath(); X.arc(960, YE, 12, 0, 7); X.fill(); } if (P.last) { X.beginPath(); X.arc(120, YE, 12, 0, 7); X.fill(); } X.restore();
     (P.imgs || []).forEach(([k, w, cx, cy, rot]) => { const im = ctx.img(k); if (!im) return; const h = w * im.height / im.width;
       X.save(); X.translate(cx, cy); X.rotate(rot); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 50; X.shadowOffsetY = 28; X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); });
     const label = 'اطلبه من نايترون'; X.font = ctx.font('display', 900, 50); const bw = X.measureText(label).width + 120;
