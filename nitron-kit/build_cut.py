@@ -16,6 +16,9 @@ reel.json
   piece "hold": s   = a freeze frame of the clip at `a`, held s seconds (silent) — e.g. an opening that points at the mistake
   piece "anchor": [x,y] = the point (1080-space, source frame) the zoom holds on instead of the detected face
   piece "tail": [z,s]   = ease into zoom z over the last s seconds (a punch-in that carries across the cut)
+  piece "track": [[t,x,y,z],...] = a virtual camera (from reframe.py): source point x,y (1080-space) held at "target", zoom z,
+                  keyframes at piece-relative seconds, interpolated per frame — his face stays the same size and place across cuts
+  piece "xfade": n = dissolve n frames from the previous piece into this one (the two overlap; the voice crossfades too)
   "hires": optional working width (e.g. 1620) for 4K sources: pieces are graded at that size and the zoom
            is resampled from it straight to 1080×1920, so a 1.2–1.4× punch-in stays sharp
 """
@@ -45,11 +48,12 @@ for cid,c in cfg["clips"].items():
 # 2) grade + scale each piece to frames, exact frame count
 info={}
 for p in cfg["pieces"]:
-    n=round((p["hold"] if p.get("hold") else p["b"]-p["a"])*FPS); d=f"{P}/{p['name']}"; os.makedirs(d,exist_ok=True)
+    xf=int(p.get("xfade",0)); p["_a"]=p["a"]-xf/FPS
+    n=round((p["hold"] if p.get("hold") else p["b"]-p["a"])*FPS)+xf; d=f"{P}/{p['name']}"; os.makedirs(d,exist_ok=True)
     for f in os.listdir(d): os.remove(os.path.join(d,f))
     r,g,b=gains[p["clip"]]
     vf=f"fps={FPS},colorchannelmixer=rr={r}:gg={g}:bb={b},{LOOK},scale={HW}:{round(1920*HS)}:flags=lanczos"
-    subprocess.run(["ffmpeg","-v","error","-y","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-vf",vf,"-frames:v",str(1 if p.get("hold") else n),"-q:v","1",f"{d}/%04d.jpg"],check=True)
+    subprocess.run(["ffmpeg","-v","error","-y","-ss",f"{p['_a']}","-i",cfg["clips"][p["clip"]]["file"],"-vf",vf,"-frames:v",str(1 if p.get("hold") else n),"-q:v","1",f"{d}/%04d.jpg"],check=True)
     have=len(os.listdir(d))
     while have<n:   # pad a short tail by repeating the last frame
         subprocess.run(["cp",f"{d}/{have:04d}.jpg",f"{d}/{have+1:04d}.jpg"]); have+=1
@@ -78,22 +82,32 @@ for p in cfg["pieces"]:
             zt,ts=p["tail"]; u=(i/FPS-(n/FPS-ts))/ts
             if u>0: z=z+(zt-z)*min(1,u)**2
         im=cv2.imread(f"{P}/{p['name']}/{i+1:04d}.jpg")
-        M=place(f["cx"],0,z,tx,0) if p.get("toplock") else place(f["cx"],f["cy"],z,tx,ty)
+        if p.get("track"):   # virtual camera: interpolate the tracked point + zoom (keyframes in seconds of the piece, xfade lead included)
+            K=np.array(p["track"],float); tt_=(i-int(p.get("xfade",0)))/FPS
+            ax,ay,z=[float(np.interp(tt_,K[:,0],K[:,c])) for c in (1,2,3)]; M=place(ax,ay,z,tx,ty)
+        else: M=place(f["cx"],0,z,tx,0) if p.get("toplock") else place(f["cx"],f["cy"],z,tx,ty)
         if HS!=1: M=M.copy(); M[:,:2]/=HS; im=cv2.GaussianBlur(im,(0,0),0.35*HS/z) if HS/z>1.05 else im   # hires source → 1080 out
-        k+=1; cv2.imwrite(f"{W}/vfr/{k:05d}.jpg",cv2.warpAffine(im,M,(1080,1920),flags=cv2.INTER_LANCZOS4,borderMode=cv2.BORDER_REFLECT),[cv2.IMWRITE_JPEG_QUALITY,95])
-    tl.append({"name":p["name"],"start":round(start,4),"end":round(start+n/FPS,4),"frames":[k-n+1,k],"face":f}); start+=n/FPS
+        out=cv2.warpAffine(im,M,(1080,1920),flags=cv2.INTER_LANCZOS4,borderMode=cv2.BORDER_REFLECT); xf=int(p.get("xfade",0))
+        if i<xf and k>0:   # dissolve over the previous piece's last xf frames
+            j=k-xf+1+i; prev=cv2.imread(f"{W}/vfr/{j:05d}.jpg"); a_=(i+1)/(xf+1); a_=a_*a_*(3-2*a_)
+            cv2.imwrite(f"{W}/vfr/{j:05d}.jpg",cv2.addWeighted(prev,1-a_,out,a_,0),[cv2.IMWRITE_JPEG_QUALITY,95]); continue
+        k+=1; cv2.imwrite(f"{W}/vfr/{k:05d}.jpg",out,[cv2.IMWRITE_JPEG_QUALITY,95])
+    xf=int(p.get("xfade",0)) if tl else 0; st=start-xf/FPS; nn=n-(xf if tl else 0)
+    tl.append({"name":p["name"],"start":round(st+xf/FPS,4) if False else round(start,4),"end":round(start+nn/FPS,4),"frames":[k-nn+1,k],"face":f,"xfade_from":round(st,4)}); start+=nn/FPS
 # 4) voice: 48 kHz, exact lengths, 6 ms edge fades, spoken level matched across clips
-SR=48000; pcs=[]
-for p,t in zip(cfg["pieces"],tl):
-    n=t["frames"][1]-t["frames"][0]+1
-    L=round(n/FPS*SR)
-    if p.get("hold"): pcs.append(np.zeros(L,np.float32)); continue   # a freeze frame is silent
-    raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-t",f"{n/FPS:.5f}","-vn","-ac","1","-ar",str(SR),
+SR=48000; VT=np.zeros(round(start*SR)+SR,np.float32); pis=list(zip(cfg["pieces"],tl))
+for idx,(p,t) in enumerate(pis):
+    xf=int(p.get("xfade",0)) if idx else 0; n=t["frames"][1]-t["frames"][0]+1+xf; L=round(n/FPS*SR); s0=round((t["start"]-xf/FPS)*SR)
+    if p.get("hold"): continue   # a freeze frame is silent
+    raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{p['a']-xf/FPS}","-i",cfg["clips"][p["clip"]]["file"],"-t",f"{n/FPS:.5f}","-vn","-ac","1","-ar",str(SR),
         "-af","highpass=f=70","-f","f32le","-"],capture_output=True,check=True).stdout
     x=np.frombuffer(raw,np.float32).copy(); x=np.pad(x,(0,max(0,L-len(x))))[:L]
     fr=x[:len(x)//480*480].reshape(-1,480); r=np.sqrt((fr**2).mean(1)); act=r[r>np.percentile(r,60)]
-    x*=0.08/(act.mean()+1e-9); e=int(0.006*SR); ramp=np.linspace(0,1,e); x[:e]*=ramp; x[-e:]*=ramp[::-1]; pcs.append(x)
-v=np.clip(np.concatenate(pcs),-0.98,0.98).astype(np.float32); v.tofile(W+"/voice.f32")
+    x*=0.08/(act.mean()+1e-9)
+    fi=max(int(0.006*SR),round(xf/FPS*SR)); x[:fi]*=np.linspace(0,1,fi)
+    nx=int(pis[idx+1][0].get("xfade",0)) if idx+1<len(pis) else 0; fo=max(int(0.006*SR),round(nx/FPS*SR)); x[-fo:]*=np.linspace(1,0,fo)
+    VT[s0:s0+L]+=x[:len(VT)-s0]
+v=np.clip(VT[:round(start*SR)],-0.98,0.98).astype(np.float32); v.tofile(W+"/voice.f32")
 subprocess.run(["ffmpeg","-v","error","-y","-f","f32le","-ar",str(SR),"-ac","1","-i",W+"/voice.f32",W+"/voice.wav"],check=True)
 subprocess.run(["ffmpeg","-v","error","-y","-framerate",str(FPS),"-i",W+"/vfr/%05d.jpg","-i",W+"/voice.wav","-c:v","libx264","-crf","14","-preset","medium",
     "-pix_fmt","yuv420p","-c:a","aac","-b:a","256k","-shortest","-movflags","+faststart",W+"/cutz.mp4"],check=True)
