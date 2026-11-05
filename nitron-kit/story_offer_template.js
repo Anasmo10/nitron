@@ -1,6 +1,6 @@
 window.O = {};
-/* «عروض نيترون» highlight — one story per offer, built on the offer's own flat-lay photo (framed like a print, lilac rim).
-   The 2-piece story dims the items that were not in it. Same studio, kicker, thread line and button as «لازم يكون معك». */
+/* «عروض نيترون» highlight — one story per offer, each offer's own products, cut out of the client's flat-lay photo,
+   as one studio shot with purple «+» badges between them. Same studio, kicker, thread line and button as «لازم يكون معك». */
 MOTION.scene({ id: 'cv',
   draw(t, lt, ctx) { const { X } = ctx, O = window.O;
     X.fillStyle = '#0A0A0C'; X.fillRect(0, 0, ctx.W, ctx.H);
@@ -20,10 +20,12 @@ MOTION.scene({ id: 'cv',
       X.bezierCurveTo(900, YE, 860, 1000, 760, 1000); X.lineTo(320, 1000); X.bezierCurveTo(220, 1000, 180, YE, x1, YE); };
     X.save(); X.lineCap = 'round'; X.strokeStyle = 'rgba(199,125,219,0.22)'; X.lineWidth = 16; path(); X.stroke(); X.strokeStyle = NK.LILAC; X.lineWidth = 5; path(); X.stroke();
     X.fillStyle = NK.LILAC; if (O.first) { X.beginPath(); X.arc(960, YE, 12, 0, 7); X.fill(); } if (O.last) { X.beginPath(); X.arc(120, YE, 12, 0, 7); X.fill(); } X.restore();
-    const im = ctx.img(O.img); if (im) { const sx = 90, sy = 120, sw = 850, sh = 1010, ch = 770, cw = ch * sw / sh, cx = 540 - cw / 2, cy = 690 + (O.lines.length - 1) * 30;
-      X.save(); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 50; X.shadowOffsetY = 26; X.fillStyle = '#0A0A0C'; NK.rr(X, cx, cy, cw, ch, 36); X.fill(); X.restore();
-      X.save(); NK.rr(X, cx, cy, cw, ch, 36); X.clip(); X.drawImage(im, sx, sy, sw, sh, cx, cy, cw, ch); X.restore();
-      X.strokeStyle = 'rgba(199,125,219,0.65)'; X.lineWidth = 3; NK.rr(X, cx, cy, cw, ch, 36); X.stroke(); }
+    const gl = X.createRadialGradient(540, 1080, 20, 540, 1080, 480); gl.addColorStop(0, 'rgba(199,125,219,0.34)'); gl.addColorStop(1, 'rgba(199,125,219,0)'); X.fillStyle = gl; X.fillRect(0, 580, 1080, 1000);
+    X.save(); X.translate(540, O.floor || 1420); X.scale(1, 0.10); const cs = X.createRadialGradient(0, 0, 10, 0, 0, 420); cs.addColorStop(0, 'rgba(0,0,0,0.85)'); cs.addColorStop(1, 'rgba(0,0,0,0)'); X.fillStyle = cs; X.beginPath(); X.arc(0, 0, 420, 0, 7); X.fill(); X.restore();
+    (O.imgs || []).forEach(([k, w, cx, cy, rot]) => { const im = ctx.img(k); if (!im) return; const h = w * im.height / im.width;
+      X.save(); X.translate(cx, cy); X.rotate(rot); X.shadowColor = 'rgba(0,0,0,0.65)'; X.shadowBlur = 46; X.shadowOffsetY = 26; X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); });
+    (O.plus || []).forEach(([px, py]) => { X.save(); X.shadowColor = 'rgba(0,0,0,0.5)'; X.shadowBlur = 20; X.fillStyle = NK.PURPLE; X.beginPath(); X.arc(px, py, 44, 0, 7); X.fill(); X.restore();
+      X.strokeStyle = '#FFFFFF'; X.lineWidth = 9; X.lineCap = 'round'; X.beginPath(); X.moveTo(px - 18, py); X.lineTo(px + 18, py); X.moveTo(px, py - 18); X.lineTo(px, py + 18); X.stroke(); });
     const label = 'اسألنا عن العرض'; X.font = ctx.font('display', 900, 50); const bw = X.measureText(label).width + 120, by = 1530;
     X.save(); X.shadowColor = 'rgba(0,0,0,0.4)'; X.shadowBlur = 30; X.shadowOffsetY = 12; X.fillStyle = NK.PURPLE; NK.rr(X, 540 - bw / 2, by, bw, 108, 54); X.fill(); X.restore();
     ctx.text(X, label, 540, by + 56, { family: 'display', weight: 900, size: 50, color: '#FFFFFF' });
