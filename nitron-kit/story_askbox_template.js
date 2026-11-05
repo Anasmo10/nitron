@@ -18,8 +18,11 @@ MOTION.scene({ id: 'cv',
       X.fillStyle = 'rgba(10,10,12,0.08)'; NK.rr(X, 190, 1060, 700, 86, 22); X.fill();
       ctx.text(X, 'اكتب هون…', 540, 1110, { family: 'display', weight: 800, size: 40, color: 'rgba(10,10,12,0.45)' }); }
     ctx.text(X, 'منتج، مقاس، لون… أي شي ناقصك بالتمرين', 540, 1290, { family: 'display', weight: 800, size: 40, color: 'rgba(255,255,255,0.82)' });
-    const shelf = [['fig8', 190, 118, 1500, 0.08], ['g60', 210, 320, 1530, -0.05], ['prod', 230, 540, 1480, 0], ['g100', 230, 762, 1535, 0.05], ['red8', 200, 962, 1505, -0.08]];
-    shelf.forEach(([k, w, cx, cy, rot]) => { const im = ctx.img(k); if (!im) return; const h = w * im.height / im.width;
-      X.save(); X.translate(cx, cy + h * 0.46); X.scale(1, 0.14); const cs = X.createRadialGradient(0, 0, 4, 0, 0, w * 0.5); cs.addColorStop(0, 'rgba(0,0,0,0.8)'); cs.addColorStop(1, 'rgba(0,0,0,0)'); X.fillStyle = cs; X.beginPath(); X.arc(0, 0, w * 0.5, 0, 7); X.fill(); X.restore();
-      X.save(); X.translate(cx, cy); X.rotate(rot); X.shadowColor = 'rgba(0,0,0,0.55)'; X.shadowBlur = 30; X.shadowOffsetY = 16; X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); });
+    /* product group (client: the five-across row looked cheap): three Nitron products as one hero shot —
+       the two figure-8 straps behind, the wrist wrap in front, one floor shadow and a soft lilac glow */
+    const gl = X.createRadialGradient(540, 1520, 20, 540, 1520, 420); gl.addColorStop(0, 'rgba(199,125,219,0.30)'); gl.addColorStop(1, 'rgba(199,125,219,0)'); X.fillStyle = gl; X.fillRect(0, 1100, 1080, 820);
+    X.save(); X.translate(540, 1690); X.scale(1, 0.10); const cs = X.createRadialGradient(0, 0, 10, 0, 0, 420); cs.addColorStop(0, 'rgba(0,0,0,0.85)'); cs.addColorStop(1, 'rgba(0,0,0,0)'); X.fillStyle = cs; X.beginPath(); X.arc(0, 0, 420, 0, 7); X.fill(); X.restore();
+    const put = (k, w, cx, cy, rot) => { const im = ctx.img(k); if (!im) return; const h = w * im.height / im.width;
+      X.save(); X.translate(cx, cy); X.rotate(rot); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 40; X.shadowOffsetY = 22; X.drawImage(im, -w / 2, -h / 2, w, h); X.restore(); };
+    put('fig8', 330, 300, 1500, -0.22); put('red8', 360, 790, 1515, 0.18); put('prod', 330, 545, 1545, 0);
   } });

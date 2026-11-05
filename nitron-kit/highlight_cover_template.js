@@ -1,3 +1,4 @@
+window.HL='questions';
 /* Instagram highlight cover (story 1080×1920, icon inside the centre circle): black, purple glow, lilac ring, bold icon. */
 MOTION.scene({ id: 'cv',
   draw(t, lt, ctx) { const { X } = ctx, K = window.HL, cx = 540, cy = 960;
@@ -20,5 +21,15 @@ MOTION.scene({ id: 'cv',
       X.lineTo(-w / 2 + 90, h / 2); X.lineTo(-w / 2, 0); X.closePath(); X.fillStyle = NK.LILAC; X.fill(); X.restore();
       X.save(); X.translate(cx + 10, cy); X.rotate(-0.55); X.fillStyle = '#0A0A0C'; X.beginPath(); X.arc(-120, 0, 26, 0, 7); X.fill(); X.strokeStyle = '#FFFFFF'; X.lineWidth = 6; X.beginPath(); X.arc(-120, 0, 26, 0, 7); X.stroke();
       ctx.text(X, '%', 60, 52, { family: 'num', weight: 900, size: 190, color: '#FFFFFF', dir: 'ltr' }); X.restore();
-      X.save(); X.strokeStyle = '#FFFFFF'; X.lineWidth = 6; X.beginPath(); X.moveTo(cx - 104, cy + 54); X.quadraticCurveTo(cx - 200, cy + 40, cx - 170, cy - 90); X.stroke(); X.restore(); }
+      X.save(); X.strokeStyle = '#FFFFFF'; X.lineWidth = 6; X.beginPath(); X.moveTo(cx - 236, cy - 250); X.quadraticCurveTo(cx - 290, cy - 330, cx - 200, cy - 360); X.stroke(); X.restore(); }
+    if (K === 'questions') { // two speech bubbles: a lilac one behind, a white one in front with a purple «؟»
+      const bubble = (x, y, w, h, r, tail) => { X.beginPath(); X.moveTo(x + r, y); X.lineTo(x + w - r, y); X.quadraticCurveTo(x + w, y, x + w, y + r); X.lineTo(x + w, y + h - r);
+        X.quadraticCurveTo(x + w, y + h, x + w - r, y + h); X.lineTo(x + tail[0] + 70, y + h); X.lineTo(x + tail[0], y + h + tail[1]); X.lineTo(x + tail[0] + 10, y + h);
+        X.lineTo(x + r, y + h); X.quadraticCurveTo(x, y + h, x, y + h - r); X.lineTo(x, y + r); X.quadraticCurveTo(x, y, x + r, y); X.closePath(); };
+      X.save(); X.translate(cx + 95, cy - 120); X.rotate(0.10); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 30; X.shadowOffsetY = 14;
+      X.scale(-1, 1); bubble(-130, -95, 260, 170, 50, [150, 60]); X.fillStyle = NK.LILAC; X.fill(); X.restore();
+      X.save(); X.fillStyle = '#0A0A0C'; for (const dx of [-60, 0, 60]) { X.beginPath(); X.arc(cx + 95 + dx, cy - 125 + dx * 0.1, 15, 0, 7); X.fill(); } X.restore();
+      X.save(); X.translate(cx - 50, cy + 70); X.rotate(-0.08); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 30; X.shadowOffsetY = 14;
+      bubble(-180, -135, 360, 250, 64, [40, 80]); X.fillStyle = '#FFFFFF'; X.fill(); X.restore();
+      X.save(); X.translate(cx - 50, cy + 60); X.rotate(-0.08); ctx.text(X, '؟', 0, 118, { family: 'display', weight: 900, size: 215, color: NK.PURPLE }); X.restore(); }
   } });
