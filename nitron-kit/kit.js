@@ -139,7 +139,8 @@ function nkWallWords(t,cfg){
     for(let n=a;n<=b;n++){ const q=f&&f[n]; if(q) ys.push(q.y-0.35*q.h); } ys.sort((p,q)=>p-q);
     const ht=ys.length?ys[ys.length>>1]:380; X.font='900 '+(cfg.size||250)+'px '+FONT;
     let sz=Math.min(cfg.size||250,Math.floor((cfg.size||250)*940/X.measureText(w.text).width));
-    let y=ht+0.18*sz; if(y-0.55*sz<168){ sz=Math.max(150,Math.floor((ht+0.18*sz-168)/0.55)); y=Math.max(168+0.55*sz,ht+0.18*sz); }
+    const dr=cfg.drop===undefined?0.18:cfg.drop;   /* how far the word sinks behind the head (0.18 = house; ~0 = only the descenders, for short words the head would hide) */
+    let y=ht+dr*sz; if(y-0.55*sz<168){ sz=Math.max(150,Math.floor((ht+dr*sz-168)/0.55)); y=Math.max(168+0.55*sz,ht+dr*sz); }
     w._y=y; w._sz=sz; }
   X.save(); X.globalAlpha=Math.min(1,k*1.6)*out; const sc=1.12-0.12*ease(k); X.translate(540,w._y); X.scale(sc,sc);
   X.shadowColor='rgba(0,0,0,0.22)'; X.shadowBlur=24; X.shadowOffsetY=10; nkTxt(w.text,0,0,w._sz,w.color||ACC,'center');

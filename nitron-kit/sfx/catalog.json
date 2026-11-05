@@ -1,0 +1,209 @@
+{
+ "tick": {
+  "src": [
+   0.0,
+   0.224
+  ],
+  "dur": 0.224,
+  "peak_at": 0.198,
+  "desc": "very short bright tick"
+ },
+ "hit_a": {
+  "src": [
+   0.488,
+   1.033
+  ],
+  "dur": 0.545,
+  "peak_at": 0.125,
+  "desc": "punchy hit, low body"
+ },
+ "whoosh_in": {
+  "src": [
+   1.516,
+   2.533
+  ],
+  "dur": 1.017,
+  "peak_at": 0.826,
+  "desc": "whoosh swelling into a hit"
+ },
+ "pop": {
+  "src": [
+   2.851,
+   3.118
+  ],
+  "dur": 0.267,
+  "peak_at": 0.084,
+  "desc": "short mid pop"
+ },
+ "ding": {
+  "src": [
+   3.452,
+   4.544
+  ],
+  "dur": 1.092,
+  "peak_at": 0.012,
+  "desc": "bell tone ~2.3 kHz, instant attack"
+ },
+ "rip": {
+  "src": [
+   6.909,
+   8.439
+  ],
+  "dur": 1.53,
+  "peak_at": 0.55,
+  "desc": "crackly rip, velcro-like"
+ },
+ "hit_b": {
+  "src": [
+   10.008,
+   10.661
+  ],
+  "dur": 0.653,
+  "peak_at": 0.138,
+  "desc": "punchy hit, low body"
+ },
+ "boom_a": {
+  "src": [
+   12.393,
+   13.689
+  ],
+  "dur": 1.296,
+  "peak_at": 0.129,
+  "desc": "low boom with tail"
+ },
+ "thud_a": {
+  "src": [
+   15.578,
+   16.893
+  ],
+  "dur": 1.315,
+  "peak_at": 0.323,
+  "desc": "soft low thud"
+ },
+ "whoosh_a": {
+  "src": [
+   19.413,
+   20.294
+  ],
+  "dur": 0.881,
+  "peak_at": 0.371,
+  "desc": "short whoosh"
+ },
+ "thud_b": {
+  "src": [
+   21.917,
+   22.299
+  ],
+  "dur": 0.382,
+  "peak_at": 0.105,
+  "desc": "short thud"
+ },
+ "whoosh_big": {
+  "src": [
+   25.876,
+   28.563
+  ],
+  "dur": 2.687,
+  "peak_at": 0.933,
+  "desc": "big transition whoosh"
+ },
+ "boom_sub": {
+  "src": [
+   30.0,
+   31.886
+  ],
+  "dur": 1.886,
+  "peak_at": 0.795,
+  "desc": "sub drop / cinematic boom"
+ },
+ "riser": {
+  "src": [
+   35.395,
+   40.297
+  ],
+  "dur": 4.902,
+  "peak_at": 2.67,
+  "desc": "long swell riser"
+ },
+ "hit_c": {
+  "src": [
+   44.892,
+   45.87
+  ],
+  "dur": 0.978,
+  "peak_at": 0.198,
+  "desc": "hit with bright edge"
+ },
+ "click": {
+  "src": [
+   47.758,
+   47.876
+  ],
+  "dur": 0.118,
+  "peak_at": 0.048,
+  "desc": "tiny click"
+ },
+ "soft_whoosh": {
+  "src": [
+   49.132,
+   50.409
+  ],
+  "dur": 1.277,
+  "peak_at": 0.408,
+  "desc": "quiet airy whoosh"
+ },
+ "typing_fast": {
+  "src": [
+   53.415,
+   59.214
+  ],
+  "dur": 5.799,
+  "peak_at": 0.827,
+  "desc": "fast dense typing / clicks"
+ },
+ "typing_a": {
+  "src": [
+   60.587,
+   75.286
+  ],
+  "dur": 14.699,
+  "peak_at": 14.607,
+  "desc": "soft typing bed"
+ },
+ "typing_b": {
+  "src": [
+   75.663,
+   82.987
+  ],
+  "dur": 7.324,
+  "peak_at": 0.345,
+  "desc": "soft typing bed"
+ },
+ "typing_c": {
+  "src": [
+   83.306,
+   94.29
+  ],
+  "dur": 10.984,
+  "peak_at": 10.863,
+  "desc": "soft typing bed"
+ },
+ "typing_d": {
+  "src": [
+   102.619,
+   106.226
+  ],
+  "dur": 3.607,
+  "peak_at": 3.509,
+  "desc": "soft typing bed"
+ },
+ "flash": {
+  "src": [
+   113.132,
+   114.683
+  ],
+  "dur": 1.551,
+  "peak_at": 0.093,
+  "desc": "sparkle / flash hit, very bright"
+ }
+}

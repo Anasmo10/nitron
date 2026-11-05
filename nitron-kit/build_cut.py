@@ -12,13 +12,17 @@ reel.json
             · toplock = zoom from the top edge (pieces shown in the lower card: the head never gets cut)
             v2 default: target y = 700 → eyes sit in the reel's eye zone (upper third), never pushed down
   clip "gains": [r,g,b] overrides the wall-patch white balance (e.g. a clip with no plain wall in shot)
+  "look":  optional ffmpeg grade chain replacing the house LOOK (e.g. the dark-backdrop grade of reel #5)
+  "hires": optional working width (e.g. 1620) for 4K sources: pieces are graded at that size and the zoom
+           is resampled from it straight to 1080×1920, so a 1.2–1.4× punch-in stays sharp
 """
 EYE_Y=700
 import json, os, subprocess, sys, numpy as np, cv2
 FPS=30; WALL=np.array([212,204,193.])       # house cream-wall target (R,G,B)
 LOOK=("hqdn3d=1.5:1.5:3:3,curves=m='0/0 0.25/0.23 0.5/0.53 0.8/0.85 1/1',"
       "eq=saturation=1.12,unsharp=5:5:0.55:5:5:0")
-cfg=json.load(open(sys.argv[1])); W=os.path.abspath(sys.argv[2]); os.makedirs(W+"/vfr",exist_ok=True)
+cfg=json.load(open(sys.argv[1])); LOOK=cfg.get("look",LOOK); HW=int(cfg.get("hires",1080)); HS=HW/1080
+W=os.path.abspath(sys.argv[2]); os.makedirs(W+"/vfr",exist_ok=True)
 P=W+"/_pieces"; os.makedirs(P,exist_ok=True)
 casc=cv2.CascadeClassifier(cv2.data.haarcascades+"haarcascade_frontalface_default.xml")
 def frame_at(f,t):
@@ -41,7 +45,7 @@ for p in cfg["pieces"]:
     n=round((p["b"]-p["a"])*FPS); d=f"{P}/{p['name']}"; os.makedirs(d,exist_ok=True)
     for f in os.listdir(d): os.remove(os.path.join(d,f))
     r,g,b=gains[p["clip"]]
-    vf=f"fps={FPS},colorchannelmixer=rr={r}:gg={g}:bb={b},{LOOK},scale=1080:1920:flags=lanczos"
+    vf=f"fps={FPS},colorchannelmixer=rr={r}:gg={g}:bb={b},{LOOK},scale={HW}:{round(1920*HS)}:flags=lanczos"
     subprocess.run(["ffmpeg","-v","error","-y","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-vf",vf,"-frames:v",str(n),"-q:v","1",f"{d}/%04d.jpg"],check=True)
     have=len(os.listdir(d))
     while have<n:   # pad a short tail by repeating the last frame
@@ -49,7 +53,8 @@ for p in cfg["pieces"]:
     fc=[]
     for k in np.linspace(0,n-1,9).astype(int):
         gr=cv2.cvtColor(cv2.imread(f"{d}/{k+1:04d}.jpg"),cv2.COLOR_BGR2GRAY); r_=casc.detectMultiScale(cv2.resize(gr,(540,960)),1.1,5,minSize=(50,50))
-        if len(r_): x,y,w,h=[v*2 for v in max(r_,key=lambda q:q[2])]; fc.append((x+w/2,y+h/2,w,y-0.35*h))
+        if len(r_):   # topmost detection = the face (a big chest print can out-size it), 1080-space
+            x,y,w,h=[v*2 for v in min(r_,key=lambda q:q[1])]; fc.append((x+w/2,y+h/2,w,y-0.35*h))
     fc=np.median(np.array(fc),axis=0) if fc else np.array([540,700,300,400])
     info[p["name"]]={"n":n,"cx":float(fc[0]),"cy":float(fc[1]),"fw":float(fc[2]),"headtop":float(fc[3])}
 # 3) zoom (sub-pixel Lanczos), never uncovering an edge
@@ -67,6 +72,7 @@ for p in cfg["pieces"]:
         else: z=z0+(z1-z0)*i/max(1,n-1)
         im=cv2.imread(f"{P}/{p['name']}/{i+1:04d}.jpg")
         M=place(f["cx"],0,z,tx,0) if p.get("toplock") else place(f["cx"],f["cy"],z,tx,ty)
+        if HS!=1: M=M.copy(); M[:,:2]/=HS; im=cv2.GaussianBlur(im,(0,0),0.35*HS/z) if HS/z>1.05 else im   # hires source → 1080 out
         k+=1; cv2.imwrite(f"{W}/vfr/{k:05d}.jpg",cv2.warpAffine(im,M,(1080,1920),flags=cv2.INTER_LANCZOS4,borderMode=cv2.BORDER_REFLECT),[cv2.IMWRITE_JPEG_QUALITY,95])
     tl.append({"name":p["name"],"start":round(start,4),"end":round(start+n/FPS,4),"frames":[k-n+1,k],"face":f}); start+=n/FPS
 # 4) voice: 48 kHz, exact lengths, 6 ms edge fades, spoken level matched across clips

@@ -10,9 +10,12 @@ House sound: dark minimal trap in D minor, beat 0.35 s (bar 1.4 s), half-time fe
 Mix: house track 22 LU under the voice while he talks (K-weighted, −10 dB ducking, slow release; sound.json music_db / duck_db);\n  synth bed 12 dB under (−9 dB ducking). Speech-band carve on both.
 
 sound.json = {"drop": s, "slam": s|null, "music": "house"|"synth"|path, "music_at": s (optional), "events": [[kind, t, gain, ...args]]}
+  "lib" = the client's own effects (nitron-kit/sfx/<name>.wav, made by sfx_split.py): ["lib", t, gain, "<name>", max_dur?]
+            "t" is where the effect's loudest moment lands (so a whoosh_in peaks on the cut, not starts on it)
+  "outro_lib": "<name>" replaces the synth whoosh under the end card
   kinds: whoosh(f0,f1,dur) impact stamp(pan) pop(pan,freq) click ding power_down(dur) power_up(dur) shimmer(dur) velcro(pan,dur) stretch(pan,dur)
 """
-import json, numpy as np, subprocess, sys
+import json, numpy as np, subprocess, sys, os
 from scipy.signal import butter, sosfilt, fftconvolve
 SR=48000; W=sys.argv[1]
 caps=json.load(open(W+"/caps.json")); VEND=caps["total"]; OUT=json.load(open(W+"/sfx.json"))["outro"]
@@ -152,6 +155,13 @@ def velcro(d=0.30):        # hook-and-loop rip: dense random micro-clicks, brigh
     env=np.minimum(1,t/0.015)*np.exp(-t/(d*0.55)); return n*env/np.abs(n).max()*0.9
 def stretch(d=0.32):       # elastic wrap pulled tight: narrow noise sliding up, soft
     t=tt(d); return sweep_bp(rng.standard_normal(len(t)),280,1300,q=3.0)*np.sin(np.pi*t/d)**1.5*0.8
+LIB=os.path.join(os.path.dirname(os.path.abspath(__file__)),"sfx")
+def lib(name,maxd=None):
+    raw=subprocess.run(["ffmpeg","-v","error","-i",f"{LIB}/{name}.wav","-f","f32le","-ac","2","-ar",str(SR),"-"],capture_output=True,check=True).stdout
+    x=np.frombuffer(raw,np.float32).reshape(-1,2).astype(np.float64)
+    if maxd and len(x)>int(maxd*SR): x=x[:int(maxd*SR)].copy(); f=int(0.06*SR); x[-f:]*=np.linspace(1,0,f)[:,None]
+    pk=json.load(open(LIB+"/catalog.json"))[name]["peak_at"]
+    return x,min(pk,len(x)/SR)
 S=z()
 for e in cfg["events"]:
     k,t,g=e[0],e[1],e[2]; a=e[3:]
@@ -166,8 +176,10 @@ for e in cfg["events"]:
     elif k=="shimmer": at(S,t,shimmer(a[0] if a else 0.55),g)
     elif k=="velcro": at(S,t,velcro(a[1] if len(a)>1 else 0.30),g,a[0] if a else 0)
     elif k=="stretch": at(S,t,stretch(a[1] if len(a)>1 else 0.32),g,a[0] if a else 0)
+    elif k=="lib": x,pk=lib(a[0],a[1] if len(a)>1 else None); at(S,t-pk,x,g)
     else: raise SystemExit("unknown sfx kind: "+k)
-at(S,VEND-0.30,whoosh(0.34,600,5200),0.24)              # every outro card wipes in on the same whoosh
+if cfg.get("outro_lib"): x,pk=lib(cfg["outro_lib"]); at(S,VEND-0.05-pk,x,0.30)
+else: at(S,VEND-0.30,whoosh(0.34,600,5200),0.24)              # every outro card wipes in on the same whoosh
 S=verb(S,0.10)
 # ── duck under the voice ──
 v=np.fromfile(W+"/voice.f32",np.float32).astype(np.float64); v=np.pad(v,(0,max(0,N-len(v))))[:N]
