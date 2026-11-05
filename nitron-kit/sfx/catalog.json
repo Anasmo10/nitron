@@ -205,5 +205,45 @@
   "dur": 1.551,
   "peak_at": 0.093,
   "desc": "sparkle / flash hit, very bright"
+ },
+ "es_sub": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.021,
+  "desc": "earshot bank cut_hit/sub @Bb1 — sub hit with a kick, under reveals"
+ },
+ "es_kick": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.005,
+  "desc": "earshot bank cut_hit/kick @Bb1 — short punch on a cut"
+ },
+ "es_pop": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.043,
+  "desc": "earshot bank ui_pop/soft @F4 — rounded pop for a row or card arriving"
+ },
+ "es_pop_hi": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.044,
+  "desc": "earshot bank ui_pop/step @Bb4 — the next pop up a fourth"
+ },
+ "es_shutter": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.024,
+  "desc": "earshot bank shutter/quick — snap zoom / punch-in"
+ },
+ "es_swish": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.11,
+  "desc": "earshot bank swish/soft — a hand-drawn arrow or a soft move"
+ },
+ "es_swell": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.333,
+  "desc": "earshot bank reverse_swell/short — into the first cut"
+ },
+ "es_fall": {
+  "src": "earshot 0.4 bank (code-made, MIT)",
+  "peak_at": 0.035,
+  "desc": "earshot bank downlifter/tape 0.9 s — easing off (خفّف)"
  }
 }

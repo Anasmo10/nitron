@@ -13,6 +13,9 @@ reel.json
             v2 default: target y = 700 → eyes sit in the reel's eye zone (upper third), never pushed down
   clip "gains": [r,g,b] overrides the wall-patch white balance (e.g. a clip with no plain wall in shot)
   "look":  optional ffmpeg grade chain replacing the house LOOK (e.g. the dark-backdrop grade of reel #5)
+  piece "hold": s   = a freeze frame of the clip at `a`, held s seconds (silent) — e.g. an opening that points at the mistake
+  piece "anchor": [x,y] = the point (1080-space, source frame) the zoom holds on instead of the detected face
+  piece "tail": [z,s]   = ease into zoom z over the last s seconds (a punch-in that carries across the cut)
   "hires": optional working width (e.g. 1620) for 4K sources: pieces are graded at that size and the zoom
            is resampled from it straight to 1080×1920, so a 1.2–1.4× punch-in stays sharp
 """
@@ -42,11 +45,11 @@ for cid,c in cfg["clips"].items():
 # 2) grade + scale each piece to frames, exact frame count
 info={}
 for p in cfg["pieces"]:
-    n=round((p["b"]-p["a"])*FPS); d=f"{P}/{p['name']}"; os.makedirs(d,exist_ok=True)
+    n=round((p["hold"] if p.get("hold") else p["b"]-p["a"])*FPS); d=f"{P}/{p['name']}"; os.makedirs(d,exist_ok=True)
     for f in os.listdir(d): os.remove(os.path.join(d,f))
     r,g,b=gains[p["clip"]]
     vf=f"fps={FPS},colorchannelmixer=rr={r}:gg={g}:bb={b},{LOOK},scale={HW}:{round(1920*HS)}:flags=lanczos"
-    subprocess.run(["ffmpeg","-v","error","-y","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-vf",vf,"-frames:v",str(n),"-q:v","1",f"{d}/%04d.jpg"],check=True)
+    subprocess.run(["ffmpeg","-v","error","-y","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-vf",vf,"-frames:v",str(1 if p.get("hold") else n),"-q:v","1",f"{d}/%04d.jpg"],check=True)
     have=len(os.listdir(d))
     while have<n:   # pad a short tail by repeating the last frame
         subprocess.run(["cp",f"{d}/{have:04d}.jpg",f"{d}/{have+1:04d}.jpg"]); have+=1
@@ -56,6 +59,7 @@ for p in cfg["pieces"]:
         if len(r_):   # topmost detection = the face (a big chest print can out-size it), 1080-space
             x,y,w,h=[v*2 for v in min(r_,key=lambda q:q[1])]; fc.append((x+w/2,y+h/2,w,y-0.35*h))
     fc=np.median(np.array(fc),axis=0) if fc else np.array([540,700,300,400])
+    if p.get("anchor"): fc=np.array([p["anchor"][0],p["anchor"][1],fc[2],fc[3]],dtype=float)
     info[p["name"]]={"n":n,"cx":float(fc[0]),"cy":float(fc[1]),"fw":float(fc[2]),"headtop":float(fc[3])}
 # 3) zoom (sub-pixel Lanczos), never uncovering an edge
 def place(cx,cy,z,tx,ty):
@@ -70,6 +74,9 @@ for p in cfg["pieces"]:
         if p.get("snap"):   # hook snap: ease-out from z0 to z1 in `snap` seconds, then hold (motion on frame 0)
             k_=min(1,(i/FPS)/p["snap"]); z=z0+(z1-z0)*(1-(1-k_)**3)
         else: z=z0+(z1-z0)*i/max(1,n-1)
+        if p.get("tail"):   # ease-in punch over the last s seconds (carried across the cut by the next piece's start zoom)
+            zt,ts=p["tail"]; u=(i/FPS-(n/FPS-ts))/ts
+            if u>0: z=z+(zt-z)*min(1,u)**2
         im=cv2.imread(f"{P}/{p['name']}/{i+1:04d}.jpg")
         M=place(f["cx"],0,z,tx,0) if p.get("toplock") else place(f["cx"],f["cy"],z,tx,ty)
         if HS!=1: M=M.copy(); M[:,:2]/=HS; im=cv2.GaussianBlur(im,(0,0),0.35*HS/z) if HS/z>1.05 else im   # hires source → 1080 out
@@ -79,9 +86,11 @@ for p in cfg["pieces"]:
 SR=48000; pcs=[]
 for p,t in zip(cfg["pieces"],tl):
     n=t["frames"][1]-t["frames"][0]+1
+    L=round(n/FPS*SR)
+    if p.get("hold"): pcs.append(np.zeros(L,np.float32)); continue   # a freeze frame is silent
     raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{p['a']}","-i",cfg["clips"][p["clip"]]["file"],"-t",f"{n/FPS:.5f}","-vn","-ac","1","-ar",str(SR),
         "-af","highpass=f=70","-f","f32le","-"],capture_output=True,check=True).stdout
-    x=np.frombuffer(raw,np.float32).copy(); L=round(n/FPS*SR); x=np.pad(x,(0,max(0,L-len(x))))[:L]
+    x=np.frombuffer(raw,np.float32).copy(); x=np.pad(x,(0,max(0,L-len(x))))[:L]
     fr=x[:len(x)//480*480].reshape(-1,480); r=np.sqrt((fr**2).mean(1)); act=r[r>np.percentile(r,60)]
     x*=0.08/(act.mean()+1e-9); e=int(0.006*SR); ramp=np.linspace(0,1,e); x[:e]*=ramp; x[-e:]*=ramp[::-1]; pcs.append(x)
 v=np.clip(np.concatenate(pcs),-0.98,0.98).astype(np.float32); v.tofile(W+"/voice.f32")

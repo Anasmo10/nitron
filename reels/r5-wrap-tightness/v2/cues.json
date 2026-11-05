@@ -1,0 +1,120 @@
+{
+"fps": 30,
+"cues": [
+{
+"id": "open:title",
+"f": 0.0,
+"kind": "hit"
+},
+{
+"id": "open:release",
+"f": 15.0,
+"kind": "snap"
+},
+{
+"id": "hook:not",
+"f": 81.6,
+"kind": "hit"
+},
+{
+"id": "hook:bracelet",
+"f": 107.4,
+"kind": "hit"
+},
+{
+"id": "cut:B",
+"f": 120.0,
+"kind": "drop"
+},
+{
+"id": "card:product",
+"f": 129.6,
+"kind": "pop"
+},
+{
+"id": "step:1",
+"f": 143.1,
+"kind": "pop"
+},
+{
+"id": "step:2",
+"f": 161.1,
+"kind": "pop"
+},
+{
+"id": "step:3",
+"f": 210.9,
+"kind": "pop"
+},
+{
+"id": "cut:C",
+"f": 225.0,
+"kind": "hit"
+},
+{
+"id": "wall:move",
+"f": 258.3,
+"kind": "hit"
+},
+{
+"id": "arc:wrist",
+"f": 278.1,
+"kind": "whoosh"
+},
+{
+"id": "wall:resist",
+"f": 296.1,
+"kind": "hit"
+},
+{
+"id": "wall:works",
+"f": 317.7,
+"kind": "bell"
+},
+{
+"id": "cut:C2",
+"f": 329.01,
+"kind": "snap"
+},
+{
+"id": "wall:numb",
+"f": 357.0,
+"kind": "hit"
+},
+{
+"id": "wall:loosen",
+"f": 384.0,
+"kind": "drop"
+},
+{
+"id": "cut:D",
+"f": 402.6,
+"kind": "whoosh"
+},
+{
+"id": "wall:brace",
+"f": 432.0,
+"kind": "hit"
+},
+{
+"id": "cut:D2",
+"f": 447.99,
+"kind": "snap"
+},
+{
+"id": "strike",
+"f": 456.0,
+"kind": "hit"
+},
+{
+"id": "outro:wipe",
+"f": 477.99,
+"kind": "whoosh"
+},
+{
+"id": "outro:logo",
+"f": 489.0,
+"kind": "hit"
+}
+]
+}

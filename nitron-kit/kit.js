@@ -241,14 +241,65 @@ function nkGlassList(t,cfg){
   if(t<cfg.s-0.05||t>cfg.e) return; const out=1-pr(t,cfg.e-0.20,cfg.e); if(out<=0) return;
   const x0=cfg.x, w=cfg.w, h=cfg.rowH||76, gap=cfg.gap||16; let y=cfg.y; X.save(); X.globalAlpha*=out;
   cfg.rows.forEach(r=>{ const k=nkK(t,r.at-0.04,0.26);
-    if(k>0){ X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.translate((1-ease(k))*-30,0); const res=r.mark==='result', mx=x0+w-h/2, my=y+h/2, fs=r.size||Math.round(h*0.42);
+    if(k>0){ X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.translate((1-ease(k))*-30,0); const res=r.mark==='result', mx=x0+w-h/2, my=y+h/2, fs0=r.size||Math.round(h*0.42);
+      X.font='900 '+fs0+'px '+FONT; const fs=Math.min(fs0,Math.floor(fs0*(res?w-48:w-h-36)/X.measureText(r.text).width));   /* the text always fits its pill */
       if(res){ X.save(); X.shadowColor='rgba(0,0,0,0.30)'; X.shadowBlur=30; X.shadowOffsetY=10; X.fillStyle=ACC; rr(x0,y,w,h,h/2); X.fill(); X.restore();
         X.strokeStyle='rgba(255,255,255,0.55)'; X.lineWidth=2; rr(x0+1,y+1,w-2,h-2,h/2-1); X.stroke(); nkTxt(r.text,x0+w/2,my+2,fs,'#FFFFFF','center'); }
       else { glassPane(x0,y,w,h,h/2,{});
         if(r.mark==='img'){ X.fillStyle='#FFFFFF'; X.beginPath(); X.arc(mx,my,h/2-6,0,7); X.fill(); X.save(); X.beginPath(); X.arc(mx,my,h/2-8,0,7); X.clip(); nkProductArt(r.img,mx,my+2,(h-14)*0.86); X.restore(); }
+        else if(r.mark==='num'){ const rd=(h/2-9)*(0.6+0.4*ease(pr(k,0.2,1))); X.fillStyle=ACC; X.beginPath(); X.arc(mx,my,rd,0,7); X.fill();
+          nkTxt(String(r.n),mx,my+3,Math.round(h*0.40),'#FFFFFF','center'); }   /* a step number (١ ٢ ٣), not a ✓: steps are an order, not a verdict */
         else nkMarkDot(mx,my,h/2-9,r.mark!=='no',pr(k,0.3,1));
         nkTxt(r.text,mx-h/2-12,my+2,fs,r.mark==='no'?'rgba(255,255,255,0.72)':'#FFFFFF','right');
         if(r.strike) nkStrike(t,r.strike,r.text,mx-h/2-12,my+3,fs); }
       X.restore(); }
     y+=h+gap; });
   X.restore(); }
+
+
+/* ═══ kit v2.2 (reel #5 v2, client brief 5 Nov: "a stronger opening, motion that serves the message") ═══ */
+
+/* SHADE: a soft black gradient behind a title so it reads over a busy shot (no box, no glow). */
+function nkShade(t,cfg){ if(t<cfg.s||t>cfg.e) return; const k=pr(t,cfg.s,cfg.s+0.12)*(1-pr(t,cfg.e-0.25,cfg.e)); if(k<=0) return;
+  const g=X.createLinearGradient(0,cfg.y0,0,cfg.y1); g.addColorStop(0,'rgba(10,10,12,'+(cfg.a||0.62)+')'); g.addColorStop(1,'rgba(10,10,12,0)');
+  X.save(); X.globalAlpha=k; X.fillStyle=g; X.fillRect(0,Math.min(cfg.y0,cfg.y1),W,Math.abs(cfg.y1-cfg.y0)); X.restore(); }
+
+/* RING: a light-purple ellipse that draws itself around the thing he is talking about (the mistake, the product).
+   cfg = {at, e, cx, cy, rx, ry, rot, dur} — one stroke, no fill, no glow. */
+function nkRing(t,cfg){ if(t<cfg.at||t>cfg.e) return; const k=ease(pr(t,cfg.at,cfg.at+(cfg.dur||0.34))), out=1-pr(t,cfg.e-0.18,cfg.e); if(k<=0||out<=0) return;
+  X.save(); X.globalAlpha=out; X.translate(cfg.cx,cfg.cy); X.rotate(cfg.rot||0); const sc=1.06-0.06*k; X.scale(sc,sc);
+  X.strokeStyle=cfg.color||ACCTXT||'#C77DDB'; X.lineWidth=cfg.lw||9; X.lineCap='round';
+  X.shadowColor='rgba(0,0,0,0.45)'; X.shadowBlur=14; X.shadowOffsetY=4;
+  const a0=-Math.PI*0.62; X.beginPath(); X.ellipse(0,0,cfg.rx,cfg.ry,0,a0,a0+Math.PI*2*k*1.04); X.stroke(); X.restore(); }
+
+/* GESTURE ARC: a curved arrow that draws the movement he asks for (bend the wrist back), beside his own hand.
+   cfg = {at, e, cx, cy, r, a0, a1 (radians, canvas angles), dur} — the head lands at a1. */
+function nkArc(t,cfg){ if(t<cfg.at||t>cfg.e) return; const k=ease(pr(t,cfg.at,cfg.at+(cfg.dur||0.40))), out=1-pr(t,cfg.e-0.18,cfg.e); if(k<=0||out<=0) return;
+  const a1=cfg.a0+(cfg.a1-cfg.a0)*k, dir=Math.sign(cfg.a1-cfg.a0)||1, col=cfg.color||ACCTXT||'#C77DDB', lw=cfg.lw||12;
+  X.save(); X.globalAlpha=out; X.strokeStyle=col; X.fillStyle=col; X.lineWidth=lw; X.lineCap='round';
+  X.shadowColor='rgba(0,0,0,0.45)'; X.shadowBlur=14; X.shadowOffsetY=4;
+  X.beginPath(); X.arc(cfg.cx,cfg.cy,cfg.r,cfg.a0,a1,dir<0); X.stroke();
+  const hx=cfg.cx+cfg.r*Math.cos(a1), hy=cfg.cy+cfg.r*Math.sin(a1), tg=a1+dir*Math.PI/2, hs=lw*2.6*Math.min(1,k*3);
+  X.beginPath(); X.moveTo(hx+Math.cos(tg)*hs,hy+Math.sin(tg)*hs);
+  X.lineTo(hx+Math.cos(tg+2.5)*hs*0.9,hy+Math.sin(tg+2.5)*hs*0.9); X.lineTo(hx+Math.cos(tg-2.5)*hs*0.9,hy+Math.sin(tg-2.5)*hs*0.9); X.closePath(); X.fill();
+  X.restore(); }
+
+/* REVEAL TITLE: each line writes in right→left behind a soft wipe (the way Arabic is read), rising 18 px; no bounce,
+   no scale slam; an optional purple bar sweeps under the line; the block lifts and fades out at e.
+   lines = [{text, at, size, color, bar}] · cfg = {s, e, y, maxW, gap} */
+function nkReveal(t,cfg){ if(t<cfg.s||t>cfg.e) return; let y=cfg.y; const ko=pr(t,cfg.e-0.20,cfg.e);
+  cfg.lines.forEach(l=>{ const sz0=l.size||150; X.font='900 '+sz0+'px '+FONT;
+    const sz=Math.min(sz0,Math.floor(sz0*(cfg.maxW||820)/X.measureText(l.text).width)); X.font='900 '+sz+'px '+FONT;
+    const tw=X.measureText(l.text).width, k=eio(pr(t,l.at,l.at+0.32));
+    if(k>0){ const pad=sz*0.35, feather=sz*0.9, xr=540+tw/2+pad, xl=xr-(tw+2*pad+feather)*k;
+      X.save(); X.globalAlpha*=(1-ko)*Math.min(1,k*2);
+      const g=X.createLinearGradient(xl,0,xl+feather,0); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(0,0,0,1)');
+      const c=document.createElement('canvas'); c.width=W; c.height=Math.ceil(sz*2.2); const cx=c.getContext('2d'), oy=sz*1.25;
+      cx.font='900 '+sz+'px '+FONT; cx.textAlign='center'; cx.textBaseline='middle'; cx.direction='rtl'; cx.fillStyle=l.color||'#FFFFFF';
+      cx.fillText(l.text,540,oy); cx.globalCompositeOperation='destination-in'; cx.fillStyle=g; cx.fillRect(xl,0,W-xl,c.height);
+      X.shadowColor='rgba(0,0,0,0.65)'; X.shadowBlur=30; X.shadowOffsetY=8;
+      X.drawImage(c,0,y-oy+(1-k)*18-ko*24); X.restore();
+      if(l.bar){ const kb=eio(pr(t,l.at+0.24,l.at+0.54))*(1-ko); if(kb>0){
+        X.save(); X.fillStyle=ACC; rr(540+tw/2-tw*kb,y+sz*0.55-ko*24,tw*kb,12,6); X.fill(); X.restore(); } } }
+    y+=sz*(cfg.gap||1.12); });
+}

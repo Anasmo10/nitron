@@ -119,8 +119,12 @@ if HOUSE and os.path.exists(HOUSE):
                        capture_output=True,check=True).stdout
     H=np.frombuffer(raw,np.float32).reshape(-1,2).astype(np.float64); H=np.pad(H,((0,max(0,N-len(H))),(0,0)))[:N]
     k=np.clip((np.arange(N)/SR-(DROP-0.35))/0.35,0,1)[:,None]          # muffled under the hook, opens on the first cut
-    H=filt(H,'low',750,4)*(1-k)+H*k
+    H=filt(H,'low',cfg.get("intro_lp",750),4)*(1-k)+H*k                 # "intro_lp": 2400 keeps the hook's music present, 750 = far away
+    for t0,d0,db in cfg.get("stop_down",[]):                            # dip the music d0 s before a hit and slam it back on the hit
+        a_,b_=int((t0-d0)*SR),int(t0*SR); g_=np.ones(N); r_=np.linspace(0,1,max(1,b_-a_))
+        g_[a_:b_]=10**(db*np.sin(np.pi/2*np.clip(r_*1.6,0,1))/20); H*=g_[:,None]
     H=filt(H,'high',28); H=H-0.45*filt(H,'band',[900,4200])            # leave the speech band to his voice
+    if cfg.get("music_low_db"): H=H+(10**(cfg["music_low_db"]/20)-1)*filt(H,'low',100,2)   # fuller bottom (below the voice)
     fi=int(0.12*SR); H[:fi]*=np.linspace(0,1,fi)[:,None]
     fo=int(1.4*SR); H[N-fo:]*=np.linspace(1,0,fo)[:,None]**1.5          # fades out over the end of the outro card
     M=H; HOUSE_USED=True; print(f"house track: {os.path.basename(HOUSE)} from {off:.2f}s (beat on the drop at {DROP:.2f}s)")
