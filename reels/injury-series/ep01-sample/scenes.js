@@ -113,7 +113,7 @@ const INJ_CREDIT='الفيديو: @اسم_الحساب';
 function credit(t){ if(t>T_P) return; const k=ik(t,0.3,0.3)*(1-pr(t,T_P-0.25,T_P)); if(k<=0) return;
   X.save(); X.globalAlpha=k; X.shadowColor='rgba(0,0,0,0.6)'; X.shadowBlur=12; X.font='800 26px '+FONT; X.fillStyle='#FFFFFF'; X.textAlign='left'; X.textBaseline='middle'; X.direction='rtl';
   X.fillText(INJ_CREDIT,52,282); X.restore(); }
-SCENE_LIST.push(['credit',credit]);
+/* EP01: the footage is the client's own, so no credit line (client, 8 Nov) */
 
 /* 6) end card: white, NITRON logo, series tag */
 function injShimmer(t,s,soft){ const S=soft||1; X.save(); X.fillStyle='#FFFFFF'; X.fillRect(0,0,W,H); const u=t-s;
