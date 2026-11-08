@@ -101,6 +101,20 @@ SCENE_LIST.push(['hookTag',hookTag]);
 SCENE_LIST.push(['titleCard',titleCard]);
 SCENE_LIST.push(['flashes',flashes]);
 
+
+/* sources — every medical claim carries its source on screen, at the moment it is made (series rule) */
+const INJ_SRC=[{s:T_M+0.2,e:null,text:'المصادر: AANS · Physio-pedia'}];
+function srcLine(t){ INJ_SRC.forEach(c=>{ const ce=c.e||VEND-0.05; if(t<c.s||t>ce) return; const k=ik(t,c.s,0.3)*(1-pr(t,ce-0.2,ce)); if(k<=0) return;
+  X.save(); X.globalAlpha=k*0.9; X.font='700 26px Inter, '+FONT; X.fillStyle='rgba(199,125,219,0.95)'; X.textAlign='center'; X.textBaseline='middle'; X.direction='rtl';
+  X.fillText(c.text,540,1585); X.restore(); }); }
+SCENE_LIST.push(['srcLine',srcLine]);
+/* footage credit under the REAL FOOTAGE tag — the original creator, always named */
+const INJ_CREDIT='الفيديو: @اسم_الحساب';
+function credit(t){ if(t>T_P) return; const k=ik(t,0.3,0.3)*(1-pr(t,T_P-0.25,T_P)); if(k<=0) return;
+  X.save(); X.globalAlpha=k; X.shadowColor='rgba(0,0,0,0.6)'; X.shadowBlur=12; X.font='800 26px '+FONT; X.fillStyle='#FFFFFF'; X.textAlign='left'; X.textBaseline='middle'; X.direction='rtl';
+  X.fillText(INJ_CREDIT,52,282); X.restore(); }
+SCENE_LIST.push(['credit',credit]);
+
 /* 6) end card: white, NITRON logo, series tag */
 function injShimmer(t,s,soft){ const S=soft||1; X.save(); X.fillStyle='#FFFFFF'; X.fillRect(0,0,W,H); const u=t-s;
   for(const [x0,y0,r,ph] of [[260,640,620,0],[820,1240,680,1.7]]){ const x=x0+Math.sin(u*0.9+ph)*60, y=y0+Math.cos(u*0.7+ph)*50;
@@ -117,4 +131,5 @@ outro=function(t){ const s=VEND; if(t<s) return; X.save(); X.fillStyle='#0A0A0C'
   const k1=ik(t,s+0.15,0.4); if(k1>0&&LOGO.naturalWidth){ const lw=640, lh=lw*LOGO.naturalHeight/LOGO.naturalWidth; X.globalAlpha=k1; X.drawImage(LOGO,540-lw/2,860-lh/2-(1-k1)*14,lw,lh); }
   const k2=ik(t,s+0.45,0.35); if(k2>0){ X.globalAlpha=1; X.fillStyle=PURPLE; rr(540-210*k2,990,420*k2,10,5); X.fill(); }
   const k3=ik(t,s+0.6,0.35); if(k3>0){ X.globalAlpha=k3; injLatin('INJURY BREAKDOWN',540,1068,34,LIL,'center',800,6); injLatin('EP 01 / 10',540,1122,26,'rgba(255,255,255,0.6)','center',700,4); }
+  const k4=ik(t,s+0.8,0.35); if(k4>0){ X.globalAlpha=k4*0.85; nkTxt('المصادر',540,1330,30,LIL,'center'); injLatin('AANS — Low Back Strain and Sprain',540,1385,24,'rgba(255,255,255,0.75)','center',600); injLatin('Physio-pedia — Lumbar Strain',540,1425,24,'rgba(255,255,255,0.75)','center',600); }
   X.restore(); injFlash(t,s); };
