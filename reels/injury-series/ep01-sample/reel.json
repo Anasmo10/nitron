@@ -1,0 +1,95 @@
+{
+ "clips": {
+  "hook": {
+   "file": "/home/user/work/inj1/sdr/hook.mov",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "v2": {
+   "file": "/home/user/work/inj1/sdr/v2.mov",
+   "gains": [
+    1.172,
+    1.184,
+    1.237
+   ]
+  },
+  "v3": {
+   "file": "/home/user/work/inj1/sdr/v3.mov",
+   "gains": [
+    1.123,
+    1.133,
+    1.212
+   ]
+  },
+  "white": {
+   "file": "/home/user/work/inj1/sdr/white.mov",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  }
+ },
+ "look": "curves=m='0/0 0.5/0.53 0.85/0.92 1/1',eq=saturation=1.02,unsharp=5:5:0.4:5:5:0",
+ "pieces": [
+  {
+   "name": "H",
+   "clip": "hook",
+   "a": 0.0,
+   "b": 3.0,
+   "zoom": [
+    1.0,
+    1.05
+   ],
+   "target": [
+    540,
+    null
+   ]
+  },
+  {
+   "name": "P",
+   "clip": "v2",
+   "a": 0.95,
+   "b": 3.9,
+   "zoom": [
+    1.04,
+    1.07
+   ],
+   "target": [
+    540,
+    700
+   ]
+  },
+  {
+   "name": "M",
+   "clip": "v3",
+   "a": 1.85,
+   "b": 4.84,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ]
+  },
+  {
+   "name": "M2",
+   "clip": "white",
+   "a": 0.0,
+   "b": 1.3,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ]
+  }
+ ]
+}
