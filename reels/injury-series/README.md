@@ -23,9 +23,14 @@
   - The cold open is graded harder, with −14% saturation and a vignette.
 - **Lighting pass** (client, 8 Nov: «a lot of adjustments to the lighting»):
   - **Presenter** (`nitron-kit/relight.py` on the cut-out): exposure +3%, an S-curve with a highlight roll-off, warm skin mids and cool lilac shadows. A soft key from camera left shapes his face, with the far side a touch darker and light falling off down the body. Clarity stays inside the cut-out, and a lilac rim light from behind (strongest on the right and on his hair) ties him to the shimmer.
+  - **Presenter colour** (`nitron-kit/cleancool.py --level A`, after `relight.py`). Client, 8 Nov: «اللون الأصفر كثير، بدي بشرة أنقى ولون أبرد وشكل أوضح»; option A chosen over the colder B.
+    - Lab b* ×0.85 −4 on the whole person, plus 12% more on skin, and a* −10% on skin. Face b* goes from about +27…+32 to +16…+20, the sweater from +16 to +9.
+    - Skin is cleaned with a bilateral filter, keeping 35% of the fine texture, so it never looks plastic.
+    - A fine unsharp mask on the eyes, brows, beard, hair and clothes, kept light on the skin.
+    - Only the person changes: the backdrop and graphics keep their colours.
   - **Backdrop** (`presenterBg`): falls off to dark lilac-grey at the edges, and he casts a soft contact shadow (blur 30 px, 18%, offset right and down), so he sits in the space instead of looking pasted on.
   - **Cold open** (`nitron-kit/regrade_hook.py`): CLAHE opens the crushed shadows (his dark skin was lost in the black trousers), the highlights roll off, the red plates come down 22%, the shadows go cool, with a soft top light and a vignette.
-  - **DaVinci:** `nitron-kit/luts/nitron-injury-presenter.cube` holds the global part of the presenter grade (Rec.709). The key light, rim light and shadow are local, so in Resolve they are Power Windows, not a LUT.
+  - **DaVinci:** `nitron-kit/luts/nitron-injury-presenter.cube` holds the global part of the presenter grade (Rec.709), including the option-A cooler balance. The key light, rim light, shadow and skin cleaning are local, so in Resolve they are Power Windows and a skin qualifier, not a LUT.
 - **Fine grain over the final** (`noise=alls=4`).
 - **Chapter indicator:** ١ ٢ ٣ at the top of the dark chapters, echoing the intro's three questions.
 - **Lilac light sweep (right→left)** between chapters, plus a slow 1.8% camera drift in each chapter.
