@@ -94,7 +94,10 @@ function spine(t){ if(t<T_M||t>=T_M4) return; const t0=T_M;
   lab(t0+1.75, SP.x+20, SP.top+40, 75, SP.top-30, 'L1 – L5', 'الفقرات القطنية','left'); }
 
 /* the presenter's backdrop: his white cloth is replaced by the series' white + purple shimmer (person cut out per frame) */
-function presenterBg(t){ if(!((t>=T_P&&t<T_M)||(t>=T_P6&&t<VEND))) return; injShimmer(t,T_P-1.2,0.75); if(PRS_OK) X.drawImage(PRS,0,0,W,H); }
+function presenterBg(t){ if(!((t>=T_P&&t<T_M)||(t>=T_P6&&t<VEND))) return; injShimmer(t,T_P-1.2,0.75);
+  /* lighting (8 Nov): the backdrop falls off to the edges and he casts a soft shadow on it, so he sits in the space */
+  const v=X.createRadialGradient(540,760,280,540,900,1250); v.addColorStop(0,'rgba(40,10,52,0)'); v.addColorStop(1,'rgba(40,10,52,0.24)'); X.fillStyle=v; X.fillRect(0,0,W,H);
+  if(PRS_OK){ X.save(); X.filter='blur(30px) brightness(0)'; X.globalAlpha=0.18; X.drawImage(PRS,28,22,W,H); X.restore(); X.drawImage(PRS,0,0,W,H); } }
 SCENE_LIST.push(['presenterBg',presenterBg,'video']);
 SCENE_LIST.push(['medBg',medBg,'video']);
 SCENE_LIST.push(['spine',spine]);

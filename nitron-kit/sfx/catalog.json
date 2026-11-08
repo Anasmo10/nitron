@@ -280,5 +280,45 @@
   "src": "earshot 0.4 bank whoosh_big/thump_deep",
   "peak_at": 0.254,
   "desc": "low whoosh into a deep thump — the end card landing"
+ },
+ "es_trailer_hit": {
+  "src": "earshot 0.4 bank impact/deep",
+  "peak_at": 0.081,
+  "desc": "cinematic trailer boom, 6 s low tail — the cold open and the big flashes"
+ },
+ "es_classic_hit": {
+  "src": "earshot 0.4 bank impact/classic",
+  "peak_at": 0.113,
+  "desc": "cinematic impact with a long tail — a flash in the middle of the film"
+ },
+ "es_shepard": {
+  "src": "earshot 0.4 bank riser/shepard @C3 2.7 s",
+  "peak_at": 2.661,
+  "desc": "low Shepard-tone tension riser, peaks on the first flash"
+ },
+ "es_riser_dark": {
+  "src": "earshot 0.4 bank riser/dark 1.6 s",
+  "peak_at": 1.318,
+  "desc": "short dark riser into a flash"
+ },
+ "es_sink": {
+  "src": "earshot 0.4 bank downlifter/sub_sink @Ab3",
+  "peak_at": 0.077,
+  "desc": "low downlifter: the air settling after an impact"
+ },
+ "es_thump_airy": {
+  "src": "earshot 0.4 bank whoosh_big/thump_airy",
+  "peak_at": 0.154,
+  "desc": "air whoosh into a soft low thump — a chapter change or a check mark"
+ },
+ "es_sleeve": {
+  "src": "earshot 0.4 bank whoosh_fast/sleeve",
+  "peak_at": 0.157,
+  "desc": "soft dark air movement — a caption or label arriving (instead of a pop)"
+ },
+ "es_sting": {
+  "src": "earshot 0.4 bank pro_logo_sting/swell_sting",
+  "peak_at": 0.469,
+  "desc": "warm swell sting — the end card"
  }
 }
