@@ -18,6 +18,7 @@
 - A cause the footage doesn't show is said as «من أشيع أسبابها».
 
 ## Sound
+- **Never cut the voice** (client, 8 Nov). Every sentence the presenter says plays to its end. Correct a figure on screen with its source, never by trimming his words.
 - **Music:** Nitron music, muffled under the cold open, opening at the first flash, −20 LU under speech.
 - **Effects:**
   - Flash and sub hit on each section change.

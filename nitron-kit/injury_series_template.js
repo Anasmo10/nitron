@@ -4,7 +4,7 @@
    (#C77DDB) glow, Cairo 900 + Inter, monochrome purple anatomy, the same end card.
    H 0–3.0 injury footage (muted, caption cropped out) · flash · P 3.0–5.93 presenter + title card
    M 5.93–10.23 white medical canvas: «شو صار؟», lumbar spine + erector spinae, strain zone, labels · end card. */
-const T_P=3.0, T_P2=7.9, T_M=10.833, T_M4=13.4, T_M5=17.567, T_M5B=22.0, T_P6=23.1, PURPLE='#76028A', LIL='#C77DDB', INJ_INK='#0A0A0C', LOGO_D=nkUse('logo_dark.png');
+const T_P=3.0, T_P2=7.9, T_M=10.833, T_M4=13.4, T_M5=17.567, T_M5B=22.8, T_P6=23.5, PURPLE='#76028A', LIL='#C77DDB', INJ_INK='#0A0A0C', LOGO_D=nkUse('logo_dark.png');
 SCENES=[{s:0,e:T_M,m:R_FULL,nocap:true},{s:T_M,e:T_P6,m:R_FULL},{s:T_P6,e:99,m:R_FULL,nocap:true}];
 nkNoBarUntil(99);
 const INJ_EP={n:'01',name:'Lumbar Strain',ar:'شدّ عضلات أسفل الظهر'};
@@ -171,7 +171,7 @@ function goodNews(t){ if(t<T_M5-0.05||t>=T_P6) return; X.save(); X.globalAlpha=1
 SCENE_LIST.push(['goodNews',goodNews]);
 
 /* P6: the takeaway, on the white glass card (his words) */
-function takeaway(t){ if(t<T_P6) return; const k=ik(t,nkS(16,1)-0.1,0.4), k2=ik(t,nkS(17,1)-0.05,0.35), out=1-pr(t,VEND-0.2,VEND); if(k<=0||out<=0) return;
+function takeaway(t){ if(t<T_P6) return; const k=ik(t,nkS(17,1)-0.1,0.4), k2=ik(t,nkS(18,1)-0.05,0.35), out=1-pr(t,VEND-0.2,VEND); if(k<=0||out<=0) return;
   const x=70,y=1180+(1-k)*60,w=940,h=260; X.save(); X.globalAlpha=k*out;
   X.shadowColor='rgba(118,2,138,0.25)'; X.shadowBlur=60; X.shadowOffsetY=18; X.fillStyle='rgba(255,255,255,0.94)'; rr(x,y,w,h,36); X.fill(); X.shadowColor='transparent';
   X.fillStyle=PURPLE; rr(x+w-18,y+34,8,h-68,4); X.fill();
