@@ -260,5 +260,25 @@
   "src": "earshot 0.4 bank whoosh_big/cape",
   "peak_at": 0.459,
   "desc": "wide whoosh for the end card"
+ },
+ "es_rev_dark": {
+  "src": "earshot 0.4 bank reverse_swell/dark 1.2 s",
+  "peak_at": 0.831,
+  "desc": "dark, low reverse swell that peaks on a cut or flash — cinematic, no cymbal sparkle"
+ },
+ "es_imp_deep": {
+  "src": "earshot 0.4 bank pro_impact/deep",
+  "peak_at": 0.213,
+  "desc": "deep cinematic impact with a long low tail — on a flash or a chapter cut"
+ },
+ "es_wind": {
+  "src": "earshot 0.4 bank pro_whoosh_big/windy 1.0 s apex 0.5",
+  "peak_at": 0.498,
+  "desc": "soft dark air whoosh — a quiet chapter change"
+ },
+ "es_thump_deep": {
+  "src": "earshot 0.4 bank whoosh_big/thump_deep",
+  "peak_at": 0.254,
+  "desc": "low whoosh into a deep thump — the end card landing"
  }
 }

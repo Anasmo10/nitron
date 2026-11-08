@@ -35,22 +35,18 @@
 - Everything sits inside the 1:1 grid square.
 
 ## Sound
+Dark and cinematic, like a medical documentary. Client, 8 Nov, on the v3 pops, dings and shimmers: «very childish».
 - **Signature transition** (every purple flash):
-  - `es_flash_in`: a reverse cymbal peaking on the flash.
-  - `es_sub` at B♭1.
-  - `es_shine`: a short shimmer in key, F5.
-- **Between chapters:** `es_swish`.
-- **Labels and chips:** soft pops.
-- **Every ✓:** a ding.
-- **End card:** `es_whoosh_big` + `es_shine`.
+  - `es_rev_dark`: a low reverse swell whose peak lands on the flash.
+  - `es_imp_deep`: a deep impact on the same frame, with a long low tail.
+- **Cold open:** one `es_imp_deep` on frame 1.
+- **Between chapters:** `es_wind`, a soft, dark air whoosh.
+- **End card:** `es_thump_deep` (`outro_lib`), a low whoosh into a deep thump.
+- **Nothing on labels, chips or ✓ marks.** No pops, dings, shimmers, cymbals, risers or anything bright. The SFX bed keeps under 2% of its energy above 3 kHz.
+- **Levels:** `sfx_gain` 0.30. Each flash pair at 0.34, the chapter whooshes at 0.24.
 - **Music arc (`music_auto`):** −3 dB under the cold open, +1 dB at the first flash, −1 dB through the explanation, +1.5 to +2.5 dB at the good news and the end card. It never drops out.
-- **Never cut the voice** (client, 8 Nov). Every sentence the presenter says plays to its end. Correct a figure on screen with its source, never by trimming his words.
 - **Music:** Nitron music, muffled under the cold open, opening at the first flash, −20 LU under speech.
-- **Effects:**
-  - Flash and sub hit on each section change.
-  - Soft pops for labels and chips.
-  - A ding for every ✓.
-  - No other effects.
+- **Never cut the voice** (client, 8 Nov). Every sentence the presenter says plays to its end. Correct a figure on screen with its source, never by trimming his words.
 
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
