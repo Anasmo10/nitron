@@ -1,24 +1,23 @@
-window.EP = { n: '01', ar: 'شدّ أسفل الظهر', en: 'LUMBAR STRAIN', dx: -15, dy: 340, sc: 1.12, ring: [657, 1012, 135, 100, -0.2] };
-/* NITRON — INJURY BREAKDOWN · series thumbnail (one template for all 10 episodes).
-   The real injury frame, graded, sliding out of black; the injured spot circled in lilac (the series' highlight);
-   series line + episode pill on top, Arabic injury name big, English name under it. Everything inside the 1:1 grid square. */
+/* NITRON — INJURY BREAKDOWN · series cover, v2 (client, 8 Nov: «ما تنزع الهوية البصرية تبع الصفحة», no presenter, no footage frame).
+   The page's dark product-hero cover: black stage + Nitron purple spotlight; tag INJURY BREAKDOWN · EP nn (lilac, letter-spaced);
+   line 1 white, line 2 lilac with the purple bar; the hero is the injured area drawn in brand colours (nitron-kit/injury_hero.py → assets/prod.png).
+   Spacing fixed after the client's note «الكلام فايت ببعضه»: tag 480, line 1 650, line 2 830 (150 px), bar 888, hero w 430 at cy 1190.
+   Everything sits inside the 1:1 square (y 420–1500); the logo goes under it. Per episode: change COVER (l1, l2, tag) and redraw the hero. */
+window.COVER = { l1: 'شدّ عضلات', l2: 'أسفل الظهر', w: 430, cy: 1190, rot: 0, tag: 'INJURY BREAKDOWN · EP 01' };
 MOTION.scene({ id: 'cv',
-  draw(t, lt, ctx) { const { X } = ctx, E = window.EP;
+  draw(t, lt, ctx) { const { X } = ctx, C = window.COVER;
     X.fillStyle = '#0A0A0C'; X.fillRect(0, 0, ctx.W, ctx.H);
-    const im = ctx.img('shot'); if (im) { const w = 1080 * (E.sc || 1); X.drawImage(im, E.dx || 0, E.dy, w, w * im.height / im.width); }
-    const top = X.createLinearGradient(0, E.dy - 10, 0, E.dy + 420); top.addColorStop(0, 'rgba(10,10,12,1)'); top.addColorStop(1, 'rgba(10,10,12,0)'); X.fillStyle = top; X.fillRect(0, 0, 1080, E.dy + 420);
-    X.fillStyle = '#0A0A0C'; X.fillRect(0, 0, 1080, E.dy);
-    const bot = X.createLinearGradient(0, 1080, 0, 1920); bot.addColorStop(0, 'rgba(10,10,12,0)'); bot.addColorStop(0.45, 'rgba(10,10,12,0.88)'); bot.addColorStop(1, 'rgba(10,10,12,1)'); X.fillStyle = bot; X.fillRect(0, 1080, 1080, 840);
-    const vg = X.createRadialGradient(540, 960, 300, 540, 960, 1050); vg.addColorStop(0, 'rgba(10,10,12,0)'); vg.addColorStop(1, 'rgba(10,10,12,0.75)'); X.fillStyle = vg; X.fillRect(0, 0, 1080, 1920);
-    const pg = X.createRadialGradient(540, 420, 20, 540, 420, 620); pg.addColorStop(0, 'rgba(118,2,138,0.55)'); pg.addColorStop(1, 'rgba(118,2,138,0)'); X.fillStyle = pg; X.fillRect(0, 0, 1080, 1100);
-    const [rx, ry, ra, rb, rot] = E.ring;   /* the injured spot: soft lilac glow + one clean ring */
-    const gl = X.createRadialGradient(rx, ry, 10, rx, ry, ra * 1.6); gl.addColorStop(0, 'rgba(199,125,219,0.45)'); gl.addColorStop(1, 'rgba(199,125,219,0)'); X.fillStyle = gl; X.fillRect(rx - 260, ry - 260, 520, 520);
-    X.save(); X.translate(rx, ry); X.rotate(rot); X.strokeStyle = NK.LILAC; X.lineWidth = 9; X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 16; X.beginPath(); X.ellipse(0, 0, ra, rb, 0, 0, 7); X.stroke(); X.restore();
-    X.font = '800 34px Inter'; try { X.letterSpacing = '8px'; } catch (e) {}
-    ctx.text(X, 'INJURY BREAKDOWN', 540, 470, { family: 'num', weight: 800, size: 34, color: NK.LILAC, dir: 'ltr' }); try { X.letterSpacing = '0px'; } catch (e) {}
-    const pw = 150; X.fillStyle = NK.PURPLE; NK.rr(X, 540 - pw / 2, 515, pw, 58, 29); X.fill();
-    ctx.text(X, 'EP ' + E.n, 540, 545, { family: 'num', weight: 800, size: 30, color: '#FFFFFF', dir: 'ltr' });
-    ctx.text(X, E.ar, 540, 1300, { family: 'display', weight: 900, size: 136, color: '#FFFFFF', shadow: { color: 'rgba(0,0,0,0.6)', blur: 30, y: 10 } });
-    ctx.text(X, E.en, 540, 1428, { family: 'num', weight: 800, size: 58, color: NK.LILAC, dir: 'ltr' });
-    const logo = ctx.img('logo'); if (logo) { const w = 300, h = w * logo.height / logo.width; X.drawImage(logo, 540 - w / 2, 1640 - h / 2, w, h); }
+    const sp = X.createRadialGradient(540, 820, 40, 540, 1000, 900); sp.addColorStop(0, 'rgba(118,2,138,0.6)'); sp.addColorStop(0.5, 'rgba(75,1,88,0.22)'); sp.addColorStop(1, 'rgba(10,10,12,0)'); X.fillStyle = sp; X.fillRect(0, 0, ctx.W, ctx.H);
+    const fl = X.createLinearGradient(0, 1240, 0, 1920); fl.addColorStop(0, 'rgba(40,30,50,0)'); fl.addColorStop(0.15, 'rgba(40,30,50,0.5)'); fl.addColorStop(1, 'rgba(10,10,12,1)'); X.fillStyle = fl; X.fillRect(0, 1240, 1080, 680);
+    const ring = (a0, a1) => { X.save(); X.translate(540, C.cy + 40); X.rotate(-0.10); X.strokeStyle = NK.LILAC; X.lineWidth = 11; X.lineCap = 'round';
+      X.shadowColor = 'rgba(0,0,0,0.5)'; X.shadowBlur = 16; X.shadowOffsetY = 6; X.beginPath(); X.ellipse(0, 0, 345, 112, 0, a0, a1); X.stroke(); X.restore(); };
+    const img = ctx.img('prod'); if (img) { const w = C.w, h = w * img.height / img.width, cy = C.cy;
+      const gl = X.createRadialGradient(540, cy, 20, 540, cy, w * 0.75); gl.addColorStop(0, 'rgba(199,125,219,0.42)'); gl.addColorStop(1, 'rgba(199,125,219,0)'); X.fillStyle = gl; X.fillRect(0, cy - w, 1080, 2 * w);
+      X.save(); X.translate(540, cy + h * 0.47); X.scale(1, 0.12); const cs = X.createRadialGradient(0, 0, 10, 0, 0, w * 0.5); cs.addColorStop(0, 'rgba(0,0,0,0.85)'); cs.addColorStop(1, 'rgba(0,0,0,0)'); X.fillStyle = cs; X.beginPath(); X.arc(0, 0, w * 0.5, 0, 7); X.fill(); X.restore();
+      X.save(); X.translate(540, cy); X.rotate(C.rot); X.shadowColor = 'rgba(0,0,0,0.6)'; X.shadowBlur = 50; X.shadowOffsetY = 30; X.drawImage(img, -w / 2, -h / 2, w, h); X.restore(); }
+    if (C.tag) { X.save(); try { X.letterSpacing = '6px'; } catch (e) {} ctx.text(X, C.tag, 540, 480, { family: 'num', weight: 800, size: 30, color: NK.LILAC, dir: 'ltr' }); X.restore(); }
+    ctx.text(X, C.l1, 540, 650, { family: 'display', weight: 900, size: 128, color: '#FFFFFF', shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
+    ctx.text(X, C.l2, 540, 830, { family: 'display', weight: 900, size: 150, color: NK.LILAC, shadow: { color: 'rgba(0,0,0,0.5)', blur: 30, y: 10 } });
+    X.font = ctx.font('display', 900, 150); const bw = X.measureText(C.l2).width * 0.62; X.fillStyle = NK.PURPLE; NK.rr(X, 540 - bw / 2, 888, bw, 12, 6); X.fill();
+    const logo = ctx.img('logo'); if (logo) { const w = 330, h = w * logo.height / logo.width; X.drawImage(logo, 540 - w / 2, 1600 - h / 2, w, h); }
   } });

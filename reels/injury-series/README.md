@@ -35,14 +35,13 @@
 - **Chapter indicator:** ١ ٢ ٣ at the top of the dark chapters, echoing the intro's three questions.
 - **Lilac light sweep (right→left)** between chapters, plus a slow 1.8% camera drift in each chapter.
 
-## Thumbnail (`nitron-kit/injury_thumbnail_template.js`)
-- The real injury frame, graded, rising out of black.
-- The injured spot circled in lilac with a soft glow.
-- Top: «INJURY BREAKDOWN» and an «EP nn» pill.
-- Bottom: the Arabic injury name (white, 136) and the English name (lilac).
-- The logo sits below.
-- Per episode, set `window.EP = {n, ar, en, dx, dy, sc, ring:[x,y,rx,ry,rot]}` and swap `assets/shot.jpg`.
-- Everything sits inside the 1:1 grid square.
+## Thumbnail / cover (`nitron-kit/injury_thumbnail_template.js`)
+Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break the page's look («ما تنزع الهوية البصرية تبع الصفحة»), and must not show the presenter.
+- **Style:** the page's dark product-hero cover, the same family as «قدّيش لازم تشدّ المشد؟» and «تحدي القبضة». A black stage, a Nitron purple spotlight, the logo under the square.
+- **Text:** the tag `INJURY BREAKDOWN · EP nn` (lilac, letter-spaced), line 1 in white (128 px), line 2 in lilac (150 px), then the purple bar. EP01: «شدّ عضلات» / «أسفل الظهر».
+- **Hero:** the injured area drawn in brand colours by `nitron-kit/injury_hero.py` (EP01: lumbar spine, purple discs, lilac back muscle, glowing strain at L4–L5). No footage frame and no presenter.
+- **Spacing** (client: «الكلام فايت ببعضه»): tag y 480, line 1 650, line 2 830, bar 888, hero w 430 at cy 1190. Nothing touches, and everything sits in the 1:1 square (y 420–1500).
+- **Delivery:** `cover.jpg`, the crops sheet (9:16 · 4:5 · 1:1), and the video with the cover as its first 0.1 s.
 
 ## Sound
 Cinematic, like a trailer or a medical documentary: low, big, dark. Client, 8 Nov: v3's pops, dings and shimmers were «very childish», v4 was too bare («use a sound effect cinematic mode»).
