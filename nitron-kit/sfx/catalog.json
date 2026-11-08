@@ -245,5 +245,20 @@
   "src": "earshot 0.4 bank (code-made, MIT)",
   "peak_at": 0.035,
   "desc": "earshot bank downlifter/tape 0.9 s — easing off (خفّف)"
+ },
+ "es_flash_in": {
+  "src": "earshot 0.4 bank reverse_swell/cymbal",
+  "peak_at": 0.518,
+  "desc": "reverse cymbal swell that peaks on the purple flash"
+ },
+ "es_shine": {
+  "src": "earshot 0.4 bank pro_shimmer/m3 @F5",
+  "peak_at": 0.11,
+  "desc": "short bright shimmer tail after the flash (in key)"
+ },
+ "es_whoosh_big": {
+  "src": "earshot 0.4 bank whoosh_big/cape",
+  "peak_at": 0.459,
+  "desc": "wide whoosh for the end card"
  }
 }

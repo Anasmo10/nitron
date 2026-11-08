@@ -127,6 +127,8 @@ if HOUSE and os.path.exists(HOUSE):
     if cfg.get("music_low_db"): H=H+(10**(cfg["music_low_db"]/20)-1)*filt(H,'low',100,2)   # fuller bottom (below the voice)
     fi=int(0.12*SR); H[:fi]*=np.linspace(0,1,fi)[:,None]
     fo=int(1.4*SR); H[N-fo:]*=np.linspace(1,0,fo)[:,None]**1.5          # fades out over the end of the outro card
+    if cfg.get("music_auto"):   # "music_auto": [[t, dB], ...] — the music's arc across the story (smooth, never a drop-out)
+        K=np.array(cfg["music_auto"],float); tt_=np.arange(N)/SR; H*=(10**(np.interp(tt_,K[:,0],K[:,1])/20))[:,None]
     M=H; HOUSE_USED=True; print(f"house track: {os.path.basename(HOUSE)} from {off:.2f}s (beat on the drop at {DROP:.2f}s)")
 else:
     print("house track not found — synthesised bed (put the track at nitron-kit/music/nitron_music.wav)")

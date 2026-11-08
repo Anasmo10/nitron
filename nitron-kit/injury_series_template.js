@@ -45,8 +45,9 @@ function medBg(t){ if(t<T_M-0.05||t>=T_P6) return; X.save(); X.fillStyle='#0A0A0
 
 /* 5) lumbar spine (side view) + erector spinae, monochrome purple; strain zone at L4–L5 */
 const SP={x:230,w:180,top:470,bh:104,disc:26};   // vertebral bodies; posterior (back) is to the right
+function injDrift(t,s0,e0){ const z=1+0.018*pr(t,s0,e0); X.translate(540,900); X.scale(z,z); X.translate(-540,-900); }
 function spine(t){ if(t<T_M||t>=T_M4) return; const t0=T_M;
-  X.save(); X.globalAlpha=1-pr(t,T_M4-0.25,T_M4);
+  X.save(); X.globalAlpha=1-pr(t,T_M4-0.18,T_M4); injDrift(t,T_M,T_M4);
   const hd=ik(t,t0+0.05,0.35);   // header
   X.save(); X.globalAlpha*=hd; injLatin('WHAT HAPPENED',540,260,26,LIL,'center',800,4); nkTxt('شو صار؟',540,350,92,'#FFFFFF','center'); X.restore();
   const lv=['L1','L2','L3','L4','L5'];
@@ -88,9 +89,9 @@ function spine(t){ if(t<T_M||t>=T_M4) return; const t0=T_M;
     X.globalAlpha=k2; const tx=R?lx-8:lx+8; if(la) injLatin(la,tx,ly-70,30,'#FFFFFF',R?'right':'left',800);
     nkTxt(ar,tx,ly-28,40,LIL,R?'right':'left'); X.restore(); };
   const czs=SP.top+3*(SP.bh+SP.disc)+16+68;
-  lab(t0+1.15, mx+30, SP.top+60, 1045, SP.top-30, 'Erector Spinae', 'عضلات أسفل الظهر','right');
-  lab(t0+1.45, mx+20, czs, 1045, czs+40, '', 'هون صار الشدّ','right');
-  lab(t0+1.75, SP.x+20, SP.top+40, 60, SP.top-30, 'L1 – L5', 'الفقرات القطنية','left'); }
+  lab(t0+1.15, mx+30, SP.top+60, 1025, SP.top-30, 'Erector Spinae', 'عضلات أسفل الظهر','right');
+  lab(t0+1.45, mx+20, czs, 1025, czs+40, '', 'هون صار الشدّ','right');
+  lab(t0+1.75, SP.x+20, SP.top+40, 75, SP.top-30, 'L1 – L5', 'الفقرات القطنية','left'); }
 
 /* the presenter's backdrop: his white cloth is replaced by the series' white + purple shimmer (person cut out per frame) */
 function presenterBg(t){ if(!((t>=T_P&&t<T_M)||(t>=T_P6&&t<VEND))) return; injShimmer(t,T_P-1.2,0.75); if(PRS_OK) X.drawImage(PRS,0,0,W,H); }
@@ -135,7 +136,8 @@ function lifter(cx,good,k,glow){ const g=1300; X.save(); X.globalAlpha*=k; X.lin
   const col=good?LIL:'rgba(255,255,255,0.55)';
   X.fillStyle='rgba(199,125,219,0.10)'; X.fillRect(cx-170,g,340,4);   // floor
   let hip,knee,ank,sh,head,bar;
-  if(good){ ank=[cx-20,g-4]; knee=[cx+25,g-115]; hip=[cx-70,g-178]; sh=[cx+72,g-300]; head=[cx+110,g-326]; bar=[cx+40,g-46]; }
+  if(good){ const u=ease(lifter.u||0), L=(a,b)=>[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u];
+    ank=[cx-20,g-4]; knee=L([cx+25,g-115],[cx-2,g-128]); hip=L([cx-70,g-178],[cx-22,g-250]); sh=L([cx+72,g-300],[cx+8,g-392]); head=L([cx+110,g-326],[cx+16,g-432]); bar=L([cx+40,g-46],[cx+16,g-215]); }
   else    { ank=[cx-30,g-4]; knee=[cx-36,g-122]; hip=[cx-58,g-238]; sh=[cx+92,g-258]; head=[cx+128,g-236]; bar=[cx+72,g-46]; }
   X.strokeStyle=col; X.lineWidth=7; X.beginPath(); X.arc(bar[0],bar[1],46,0,7); X.stroke(); X.fillStyle=col; X.beginPath(); X.arc(bar[0],bar[1],10,0,7); X.fill();   // plate (behind)
   X.lineWidth=16; X.beginPath(); X.moveTo(ank[0]+42,ank[1]); X.lineTo(...ank); X.lineTo(...knee); X.lineTo(...hip); X.stroke();                     // foot, shin, thigh
@@ -144,12 +146,12 @@ function lifter(cx,good,k,glow){ const g=1300; X.save(); X.globalAlpha*=k; X.lin
   X.fillStyle=col; X.beginPath(); X.arc(...head,32,0,7); X.fill();
   if(glow>0){ const gx=good?cx-20:cx-10, gy=good?g-225:g-300, gl=X.createRadialGradient(gx,gy,6,gx,gy,90); gl.addColorStop(0,`rgba(199,125,219,${0.6*glow})`); gl.addColorStop(1,'rgba(199,125,219,0)'); X.fillStyle=gl; X.fillRect(gx-100,gy-100,200,200); }
   X.restore(); }
-function technique(t){ if(t<T_M4-0.05||t>=T_M5) return; X.save(); X.globalAlpha=1-pr(t,T_M5-0.25,T_M5);
-  chapter(t,T_M4,T_M5,'HOW TO PROTECT YOURSELF','كيف تحمي حالك؟');
+function technique(t){ if(t<T_M4-0.15||t>=T_M5) return; X.save(); X.globalAlpha=1-pr(t,T_M5-0.18,T_M5); injDrift(t,T_M4,T_M5);
+  chapter(t,T_M4-0.12,T_M5,'HOW TO PROTECT YOURSELF','كيف تحمي حالك؟');
   const kL=ik(t,T_M4+0.25,0.35), kR=ik(t,nkS(10,3)-0.1,0.35), kOK=ik(t,nkS(12,1)-0.05,0.3), kUp=ik(t,nkS(11,1)-0.05,0.35);
   lifter(300,false,kL,kL*(0.7+0.3*Math.sin(t*6)));
   if(kL>0){ X.save(); X.globalAlpha*=kL; nkMarkDot(300,1215,26,false,1); nkTxt('ضهر مقوّس',300,1290,46,'rgba(255,255,255,0.72)','center'); X.restore(); }
-  lifter(790,true,kR,0);
+  lifter.u=pr(t,nkS(11,1),nkS(11,1)+1.0); lifter(790,true,kR,0); lifter.u=0;
   if(kUp>0){ X.save(); X.globalAlpha*=kUp; X.strokeStyle=LIL; X.fillStyle=LIL; X.lineWidth=7; X.lineCap='round';   // drive from the legs
     const y0=1130, y1=1130-170*kUp; X.beginPath(); X.moveTo(960,y0); X.lineTo(960,y1); X.stroke(); X.beginPath(); X.moveTo(960,y1-18); X.lineTo(944,y1+4); X.lineTo(976,y1+4); X.closePath(); X.fill(); X.restore(); }
   if(kR>0){ X.save(); X.globalAlpha*=kR; nkMarkDot(790,1215,26,true,kOK); nkTxt('ضهر مستقيم',790,1290,46,LIL,'center'); X.restore(); }
@@ -157,8 +159,8 @@ function technique(t){ if(t<T_M4-0.05||t>=T_M5) return; X.save(); X.globalAlpha=
 SCENE_LIST.push(['technique',technique]);
 
 /* M5: the good news — no surgery, and a ring that fills to 90 % (AANS: more than 90 % recover fully within a month) */
-function goodNews(t){ if(t<T_M5-0.05||t>=T_P6) return; X.save(); X.globalAlpha=1-pr(t,T_P6-0.25,T_P6);
-  chapter(t,T_M5,T_P6,'GOOD NEWS','خبر حلو');
+function goodNews(t){ if(t<T_M5-0.15||t>=T_P6) return; X.save(); X.globalAlpha=1-pr(t,T_P6-0.25,T_P6); injDrift(t,T_M5,T_P6);
+  chapter(t,T_M5-0.12,T_P6,'GOOD NEWS','خبر حلو');
   const kS=ik(t,nkS(14,4)-0.05,0.3); if(kS>0){ X.save(); X.globalAlpha*=kS; X.translate(0,(1-kS)*20); const w=470,h=84,x=540-w/2,y=450;
     glassPane(x,y,w,h,h/2,{}); nkMarkDot(x+w-h/2,y+h/2,h/2-12,true,pr(kS,0.3,1)); nkTxt('ما بدها عملية',x+w-h-14,y+h/2+3,42,'#FFFFFF','right'); X.restore(); }
   const kR=pr(t,nkS(15,0)-0.05,nkS(15,0)+0.9), kI=ik(t,nkS(15,0)-0.1,0.3);
@@ -177,6 +179,21 @@ function takeaway(t){ if(t<T_P6) return; const k=ik(t,nkS(17,1)-0.1,0.4), k2=ik(
   X.fillStyle=PURPLE; rr(x+w-18,y+34,8,h-68,4); X.fill();
   nkTxt('ارفع الوزن برجليك',x+w-48,y+92,70,INJ_INK,'right'); X.globalAlpha=k*out*k2; nkTxt('مو بضهرك',x+w-48,y+188,70,PURPLE,'right'); X.restore(); }
 SCENE_LIST.push(['takeaway',takeaway]);
+
+function chapterDots(t){ if(t<T_M||t>=T_P6) return; const k=ik(t,T_M+0.1,0.3)*(1-pr(t,T_P6-0.25,T_P6)); if(k<=0) return;
+  const done=t<nkS(7,1)?1:(t<T_M4?2:(t<T_M5?3:4));   // ١ شو صار · ٢ ليش صار («لأنه») · ٣ كيف تحمي حالك · then all done
+  X.save(); X.globalAlpha=k; ['١','٢','٣'].forEach((n,i)=>{ const x=540+(1-i)*64, on=i+1<done, cur=i+1===done, r=cur?20:16;
+    X.fillStyle=on?PURPLE:(cur?LIL:'rgba(255,255,255,0.14)'); X.beginPath(); X.arc(x,170,r,0,7); X.fill();
+    if(i<2){ X.fillStyle=on?'rgba(199,125,219,0.6)':'rgba(255,255,255,0.14)'; X.fillRect(x-48,168,32,4); }
+    nkTxt(n,x,174,cur?24:20,(on||cur)?'#FFFFFF':'rgba(255,255,255,0.5)','center'); }); X.restore(); }
+SCENE_LIST.push(['chapterDots',chapterDots]);
+function sweep(t,at){ const u=(t-at+0.22)/0.5; if(u<0||u>1) return; const x=1180-1380*ease(u);   // right → left, the way the series reads
+  X.save(); X.globalCompositeOperation='lighter'; const g=X.createLinearGradient(x-170,0,x+170,0);
+  g.addColorStop(0,'rgba(199,125,219,0)'); g.addColorStop(0.5,`rgba(199,125,219,${0.42*Math.sin(Math.PI*u)})`); g.addColorStop(1,'rgba(199,125,219,0)');
+  X.fillStyle=g; X.fillRect(x-170,0,340,H); X.restore(); }
+function sweeps(t){ sweep(t,T_M4); sweep(t,T_M5); }
+SCENE_LIST.push(['sweeps',sweeps]);
+
 
 /* 6) end card: white, NITRON logo, series tag */
 function injShimmer(t,s,soft){ const S=soft||1; X.save(); X.fillStyle='#FFFFFF'; X.fillRect(0,0,W,H); const u=t-s;

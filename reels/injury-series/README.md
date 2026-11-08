@@ -17,7 +17,33 @@
 - Every medical claim shows its source on screen while it's said, and again on the end card.
 - A cause the footage doesn't show is said as «من أشيع أسبابها».
 
+## Picture
+- **Cinematic grade on live action:**
+  - Lifted, slightly purple-cool blacks, warm soft highlights, saturation −5%, gentle contrast.
+  - The cold open is graded harder, with −14% saturation and a vignette.
+- **Fine grain over the final** (`noise=alls=4`).
+- **Chapter indicator:** ١ ٢ ٣ at the top of the dark chapters, echoing the intro's three questions.
+- **Lilac light sweep (right→left)** between chapters, plus a slow 1.8% camera drift in each chapter.
+
+## Thumbnail (`nitron-kit/injury_thumbnail_template.js`)
+- The real injury frame, graded, rising out of black.
+- The injured spot circled in lilac with a soft glow.
+- Top: «INJURY BREAKDOWN» and an «EP nn» pill.
+- Bottom: the Arabic injury name (white, 136) and the English name (lilac).
+- The logo sits below.
+- Per episode, set `window.EP = {n, ar, en, dx, dy, sc, ring:[x,y,rx,ry,rot]}` and swap `assets/shot.jpg`.
+- Everything sits inside the 1:1 grid square.
+
 ## Sound
+- **Signature transition** (every purple flash):
+  - `es_flash_in`: a reverse cymbal peaking on the flash.
+  - `es_sub` at B♭1.
+  - `es_shine`: a short shimmer in key, F5.
+- **Between chapters:** `es_swish`.
+- **Labels and chips:** soft pops.
+- **Every ✓:** a ding.
+- **End card:** `es_whoosh_big` + `es_shine`.
+- **Music arc (`music_auto`):** −3 dB under the cold open, +1 dB at the first flash, −1 dB through the explanation, +1.5 to +2.5 dB at the good news and the end card. It never drops out.
 - **Never cut the voice** (client, 8 Nov). Every sentence the presenter says plays to its end. Correct a figure on screen with its source, never by trimming his words.
 - **Music:** Nitron music, muffled under the cold open, opening at the first flash, −20 LU under speech.
 - **Effects:**
