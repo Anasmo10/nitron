@@ -18,8 +18,8 @@ page = f"""<!doctype html><html><head><meta charset="utf-8"><style>
 body{{width:1080px;height:1350px;overflow:hidden;position:relative;background:#0A0A0C;font-family:Cairo,sans-serif;color:#fff;direction:rtl}}
 .spot{{position:absolute;inset:0;background:radial-gradient(ellipse 75% 50% at 35% 48%,rgba(118,2,138,.55),rgba(75,1,88,.18) 55%,rgba(10,10,12,0) 80%)}}
 .tag{{position:absolute;top:60px;left:0;right:0;text-align:center;font-family:Inter;font-weight:800;font-size:24px;letter-spacing:6px;color:#C77DDB;direction:ltr}}
-.t1{{position:absolute;top:104px;left:0;right:0;text-align:center;font-weight:900;font-size:58px;white-space:nowrap}}
-.t2{{position:absolute;top:206px;left:0;right:0;text-align:center;font-weight:900;font-size:112px;line-height:1.15;color:#C77DDB;white-space:nowrap}}
+.t1{{position:absolute;top:104px;left:0;right:0;text-align:center;font-weight:900;font-size:{spec.get("s1", 58)}px;white-space:nowrap}}
+.t2{{position:absolute;top:{206 + round((112 - spec.get("s2", 112)) * 0.55)}px;left:0;right:0;text-align:center;font-weight:900;font-size:{spec.get("s2", 112)}px;line-height:1.15;color:#C77DDB;white-space:nowrap}}
 .bar{{position:absolute;top:358px;left:390px;width:300px;height:12px;border-radius:6px;background:#76028A}}
 .hero{{position:absolute;left:76px;top:408px;width:{spec.get("hw", 290)}px}}
 .rows{{position:absolute;top:408px;right:70px;width:620px;display:flex;flex-direction:column;gap:14px}}
