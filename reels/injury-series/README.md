@@ -43,6 +43,19 @@ Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break t
 - **Spacing** (client: «الكلام فايت ببعضه»): tag y 480, line 1 650, line 2 830, bar 888, hero w 430 at cy 1190. Nothing touches, and everything sits in the 1:1 square (y 420–1500).
 - **Delivery:** `cover.jpg`, the crops sheet (9:16 · 4:5 · 1:1), and the video with the cover as its first 0.1 s.
 
+## Awareness post (one per episode, `nitron-kit/awareness_carousel.py`)
+Six 4:5 slides (1080×1350) in the dark cover style, with the injury hero on the cover. The content follows the house content principles.
+- **Slides:**
+  1. A hook that contradicts a belief (EP01: «انشدّ ظهرك بالتمرين؟ / التخت مو الحل»).
+  2. What happened, as a situation they live, with the cause said as «من أشيع أسبابه».
+  3. The good-news number, exactly as the source says it (EP01: +90% within a month, AANS).
+  4. What to do: ✓ and ✕ rows.
+  5. When to see a doctor, plus «هالمعلومات للتوعية، ومو بديل عن الطبيب».
+  6. One thing to try at their first lift, and the send CTA.
+- **Sources:** every slide that makes a medical claim prints its source at the bottom. The caption repeats the source and the disclaimer.
+- **Numbering:** use «٤ — …» with a dash, never «٤ · …»: next to Arabic digits the dot reads as a zero (٤٠). The counter is in Latin digits (`1 / 6`), so it can't be read backwards.
+- **EP01 files:** `ep01/awareness.json` (content) and `ep01/awareness-caption.txt` (caption).
+
 ## Sound
 Cinematic, like a trailer or a medical documentary: low, big, dark. Client, 8 Nov: v3's pops, dings and shimmers were «very childish», v4 was too bare («use a sound effect cinematic mode»).
 - **Cold open:** `es_trailer_hit`, a trailer boom with a 6 s low tail, on frame 1. Under it, `es_shepard`, a low Shepard-tone tension riser that peaks on the first flash.
