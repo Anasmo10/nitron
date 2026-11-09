@@ -48,7 +48,8 @@ Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break t
 - **Layout, top to bottom:**
   - The tag, then the hook in two lines (white 58 px, lilac 112 px) and the purple bar.
   - The injury hero on the left, beside three ✓/✕ glass rows.
-  - A glass box: «روح عالدكتور فوراً إذا:» with the warning signs as chips, then the two-week line.
+  - A glass box: «روح عالدكتور فوراً إذا:» with the warning signs as chips (emergencies only).
+  - A separate, calmer box with an «i» mark: «وراجع دكتور إذا الوجع ما خفّ خلال أسبوعين.» (client, 9 Nov: «مو نفس الشيء». Never put a non-urgent line under the «فوراً» heading.)
   - The source, the disclaimer and the logo at the foot.
 - **Spacing:** keep a clear gap between the two title lines (t1 top 104, t2 top 206) and between the rows and the box. The client has twice asked for text that doesn't touch.
 - **EP01 files:** `ep01/awareness-post.json` (content); the caption is `ep01/awareness-caption.txt`.
