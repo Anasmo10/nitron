@@ -28,7 +28,7 @@ body{{width:1080px;height:1350px;overflow:hidden;position:relative;background:#0
 .mk.ok{{background:#76028A;color:#fff}}.mk.no{{background:#0A0A0C;border:3px solid #C77DDB;color:#C77DDB}}.mk.al{{background:#C77DDB;color:#0A0A0C}}
 .mk.sm{{width:40px;height:40px;font-size:22px}}
 .rt{{font-weight:800;font-size:37px;line-height:1.3}}.rs{{font-weight:600;font-size:27px;line-height:1.4;color:rgba(255,255,255,.72)}}
-.bottom{{position:absolute;top:808px;left:70px;right:70px;display:flex;flex-direction:column;gap:14px}}
+.bottom{{position:absolute;top:{spec.get("bt", 808)}px;left:70px;right:70px;display:flex;flex-direction:column;gap:14px}}
 .alert{{padding:18px 32px 22px;border-radius:40px;background:linear-gradient(160deg,rgba(199,125,219,.16),rgba(118,2,138,.10));border:2px solid rgba(199,125,219,.7)}}
 .ah{{font-weight:900;font-size:40px;margin-bottom:10px}}
 .chips{{display:flex;flex-wrap:wrap;gap:12px}}
