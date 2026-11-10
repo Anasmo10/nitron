@@ -52,7 +52,7 @@ def relight(bgr, a, f):
     band = (a * (1 - cv2.GaussianBlur(a, (0, 0), 9))).clip(0, 1) * 2.2
     band = cv2.GaussianBlur(band.clip(0, 1), (0, 0), 2)
     side = (0.35 + 0.65 * ((xx - fx) / (0.45 * W) + 0.3)).clip(0.25, 1) + 0.5 * (yy < fy - 0.2 * fw)
-    rim = (band * side.clip(0, 1.2) * 0.75)[..., None]
+    rim = (band * side.clip(0, 1.2) * (0.0 if "--no-rim" in sys.argv else 0.75))[..., None]   # --no-rim: the set adds its own (stage_composite.py)
     out = 1 - (1 - out.clip(0, 1)) * (1 - rim * LIL)
     return out.clip(0, 1)
 
