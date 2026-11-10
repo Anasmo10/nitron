@@ -14,5 +14,8 @@ def dissolve(c,n):          # c = first frame of the incoming shot, n = frames e
         out=(1-w)*cur+w*first if f<c else (1-w)*last+w*cur
         cv2.imwrite(f'{W}/{f:05d}.jpg',out.clip(0,255).astype(np.uint8),[cv2.IMWRITE_JPEG_QUALITY,95])
     print('dissolve at frame',c,'±',n)
+for f in os.listdir(BK): shutil.copy(f'{BK}/{f}',f'{W}/{f}')    # start from the hard-cut originals every time
 dissolve(145,6)                     # footage → Ahmad
-for c in (230,727,880): dissolve(c,3)   # take → take
+dissolve(230,2)                     # the one take → take cut that is on screen (his head is 17 px apart there): a 4-frame settle
+# the other two take changes (P7→P8, P8→P9) are hidden under the prevention canvas: his head is 120–140 px apart at those cuts,
+# and a dissolve there showed two faces

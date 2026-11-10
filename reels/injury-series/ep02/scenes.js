@@ -16,7 +16,9 @@ function injLatin(s,x,y,size,col,al,w,ls){ X.save(); X.font=(w||800)+' '+size+'p
   if(ls){ try{ X.letterSpacing=ls+'px'; }catch(e){} } X.direction='ltr'; X.fillText(s,x,y); X.restore(); }
 const ik=(t,a,d)=>ease(pr(t,a,a+(d||0.3)));
 const nkQ=(c,i)=>nkS(c+1,i);   /* card 0 is the hook's on-screen lead line; the spoken cards start at 1 */
-const CAN_IN=t=>ease(pr(t,T_CAN,T_CAN+0.45))*(1-ease(pr(t,T_P7,T_P7+0.45)));   /* the canvas dissolves in over Ahmad and out again: no cut */
+const CAN1=t=>ease(pr(t,T_CAN,T_CAN+0.45))*(1-ease(pr(t,T_P7,T_P7+0.45)));
+const CAN2=t=>ease(pr(t,T_P8-0.45,T_P8))*(1-ease(pr(t,T_P9,T_P9+0.45)));   /* the prevention canvas: in over the end of P7, out after the cut to P9 (both take changes are hidden under it) */
+const CAN_IN=t=>Math.max(CAN1(t),CAN2(t));   /* the canvas dissolves in over Ahmad and out again: no cut */
 
 /* ink: an SVG path drawn line by line (the «شلون يشتغل» look), then filled */
 const INKC={};
@@ -49,18 +51,17 @@ function orbitDraw(t,items,front,s0,e0){ if(t<s0||t>=e0) return; const out=1-pr(
       X.save(); X.globalAlpha*=Math.min(1,k*1.6); X.translate(x,y+(1-ease(k))*18); glassPane(-w/2,-h/2,w,h,h/2,{}); X.fillStyle=LIL; X.beginPath(); X.arc(-w/2+fs*0.75,0,6,0,7); X.fill(); injLatin(it.text,fs*0.3,2,fs,'#FFFFFF','center',800); X.restore(); }
     else nkGlassPill(x,y,it.text,k,it.size||46);
     X.restore(); }); }
-const TIPS=()=>[{text:'زيد الوزن بوعي',at:nkQ(24,0)},{text:'بدون تهوّر',at:nkQ(25,0)},{text:'لا تتجاهل الألم',at:nkQ(27,0)}];
 const STUDIES=()=>[{text:'AAOS · OrthoInfo',at:nkQ(31,0)-0.1,lat:true,size:32},{text:'Br J Sports Med · 2009',at:nkQ(31,0)+1.0,lat:true,size:32},{text:'Cook & Purdam',at:nkQ(31,0)+2.1,lat:true,size:32}];
-function ahmadBack(t){ if(t<T_P2||t>=VEND) return; if(t>=T_CAN+0.5&&t<T_P7) return;
+function ahmadBack(t){ if(t<T_P2||t>=VEND) return; if((t>=T_CAN+0.5&&t<T_P7)||(t>=T_P8&&t<T_P9)) return;
   /* P7: the question on the wall behind his head */
-  if(t>=T_P7&&t<T_P8){ const k=ik(t,T_P7+0.35,0.4), out=1-pr(t,T_P8-0.3,T_P8); if(k>0&&out>0){ X.save(); X.globalAlpha=k*out*CAN_OUT(t); X.shadowColor='rgba(0,0,0,0.45)'; X.shadowBlur=30;
+  if(t>=T_P7&&t<T_P8){ const k=ik(t,T_P7+0.35,0.4), out=1-pr(t,T_P8-0.5,T_P8-0.2); if(k>0&&out>0){ X.save(); X.globalAlpha=k*out*CAN_OUT(t); X.shadowColor='rgba(0,0,0,0.45)'; X.shadowBlur=30;
       nkTxt('كيف تحمي',540,250+(1-k)*30,150,'#FFFFFF','center'); nkTxt('حالك؟',540,422+(1-k)*30,170,LIL,'center'); X.restore(); } }
-  orbitDraw(t,TIPS(),false,T_P8,T_P9); orbitDraw(t,STUDIES(),false,T_P9,VEND);
+  orbitDraw(t,STUDIES(),false,T_P9,VEND);
   /* he is redrawn over whatever passed behind him, except inside the soft dissolves between takes (they are baked into the frames) */
-  const inDis=t<T_P2+0.22||[T_P3,T_P8,T_P9].some(c=>Math.abs(t-c)<0.12);
+  const inDis=t<T_P2+0.22||Math.abs(t-T_P3)<0.09;
   if(PRS_OK&&!inDis) X.drawImage(PRS,0,0,W,H); }
 const CAN_OUT=t=>ease(pr(t,T_P7,T_P7+0.45));   /* the canvas leaves AFTER the cut to P7, so only P7's frames show through */
-function ahmadFront(t){ if(t<T_P8||t>=VEND) return; orbitDraw(t,TIPS(),true,T_P8,T_P9); orbitDraw(t,STUDIES(),true,T_P9,VEND); }
+function ahmadFront(t){ if(t<T_P9||t>=VEND) return; orbitDraw(t,STUDIES(),true,T_P9,VEND); }
 
 /* 3) P2: the injury's name on liquid glass, qualified (series rule: no diagnosis without confirmation) */
 function titleCard(t){ if(t<T_P2||t>T_P3+0.3) return; const k=ik(t,nkQ(3,0)-0.1,0.4), out=1-pr(t,T_P3-0.05,T_P3+0.3); if(k<=0||out<=0) return;
@@ -148,7 +149,25 @@ function feels(t){ if(t<T_P6-0.1||t>=T_P7+0.45) return; const a=ik(t,T_P6+0.05,0
   const k1=ik(t,nkQ(19,0)-0.1,0.3), k2=ik(t,nkQ(19,1)-0.1,0.3); nkGlassPill(330,1250,'تمارين الصدر',k1,42); nkGlassPill(760,1250,'تمارين الكتف',k2,42);
   X.restore(); }
 
-function chapterDots(t){ const a=CAN_IN(t); if(a<=0) return; const done=t<T_P4?1:2;
+/* 7b) how to protect yourself, shown not told: weight added in small steady steps (✓) next to one reckless jump (✕), then the pain reminder */
+const PRT={good:'M110 1000 H190 V950 H270 V900 H350 V850 H430 V800 H505', bad:'M585 1000 H760 V640 H965'};
+function protect(t){ if(t<T_P8-0.45||t>=T_P9+0.45) return; const a=CAN2(t); if(a<=0) return; X.save(); X.globalAlpha=a; injDrift(t,T_P8,T_P9);
+  chapter(t,T_P8-0.3,T_P9+1,'HOW TO PROTECT YOURSELF','كيف تحمي حالك؟');
+  const aS=nkQ(23,1), aOK=nkQ(24,1), aJ=nkQ(25,0), aX=nkQ(25,1), aP=nkQ(26,0);
+  X.save(); X.strokeStyle='rgba(255,255,255,0.20)'; X.lineWidth=4; X.lineCap='round'; X.beginPath(); X.moveTo(90,1006); X.lineTo(520,1006); X.moveTo(575,1006); X.lineTo(985,1006); X.stroke(); X.restore();
+  const kS=pr(t,aS-0.1,aS+1.25); inkd(PRT.good,kS,LIL,8);
+  [[150,1000,0.60,0.06],[230,950,0.68,0.28],[310,900,0.76,0.50],[390,850,0.84,0.72],[467,800,0.92,0.93]].forEach(([x,y,s,at])=>{ const k=ease(pr(kS,at-0.07,at+0.05)); if(k>0){ X.save(); X.globalAlpha*=k; dumbbell(x,y-30-(1-k)*12,s,'#FFFFFF'); X.restore(); } });
+  const kJ=pr(t,aJ-0.05,aJ+0.42); inkd(PRT.bad,kJ,'rgba(255,255,255,0.78)',8);
+  { const k=ease(pr(kJ,0.05,0.2)); if(k>0){ X.save(); X.globalAlpha*=k; dumbbell(672,1000-30,0.62,'#FFFFFF'); X.restore(); } }
+  { const k=ease(pr(kJ,0.85,1)); if(k>0){ const wob=0.16*Math.sin((t-aJ)*15)*Math.max(0,1-(t-aJ-0.42)/1.4); X.save(); X.globalAlpha*=k; X.translate(862,640-52); X.rotate(wob); dumbbell(0,-(1-k)*18,1.75,'#FFFFFF'); X.restore(); } }
+  const kOK=ik(t,aOK-0.05,0.3); if(kOK>0){ X.save(); X.globalAlpha*=kOK; nkMarkDot(400,1100,24,true,pr(kOK,0.3,1)); nkTxt('بوعي',360,1103,56,LIL,'right'); X.restore(); }
+  const kX=ik(t,aX-0.05,0.3); if(kX>0){ X.save(); X.globalAlpha*=kX; nkMarkDot(872,1100,24,false,1); nkTxt('تهوّر',832,1103,56,'rgba(255,255,255,0.78)','right'); X.restore(); }
+  const kP=ik(t,aP-0.05,0.35); if(kP>0){ const pulse=0.55+0.45*Math.sin((t-aP)*6.5); X.save(); X.globalAlpha*=kP;
+    const gl=X.createRadialGradient(540,1232,10,540,1232,300); gl.addColorStop(0,`rgba(199,125,219,${0.30*pulse})`); gl.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=gl; X.fillRect(200,1090,680,290);
+    X.restore(); X.save(); nkGlassPill(540,1232,'الألم إنذار… مو تحدّي',kP,50);   /* not his words again (the caption carries those): what they mean */ X.restore(); }
+  X.restore(); }
+
+function chapterDots(t){ const a=CAN_IN(t); if(a<=0) return; const done=t<T_P4?1:(t<T_P7+1?2:3);
   X.save(); X.globalAlpha=a; ['١','٢','٣'].forEach((n,i)=>{ const x=540+(1-i)*64, on=i+1<done, cur=i+1===done, r=cur?20:16;
     X.fillStyle=on?PURPLE:(cur?LIL:'rgba(255,255,255,0.14)'); X.beginPath(); X.arc(x,170,r,0,7); X.fill();
     if(i<2){ X.fillStyle=on?'rgba(199,125,219,0.6)':'rgba(255,255,255,0.14)'; X.fillRect(x-48,168,32,4); }
@@ -173,6 +192,7 @@ SCENE_LIST.push(['medBg',medBg,'video']);
 SCENE_LIST.push(['shoulder',shoulder]);
 SCENE_LIST.push(['why',why]);
 SCENE_LIST.push(['feels',feels]);
+SCENE_LIST.push(['protect',protect]);
 SCENE_LIST.push(['chapterDots',chapterDots]);
 SCENE_LIST.push(['hookTag',hookTag]);
 SCENE_LIST.push(['hookWords',hookWords]);
