@@ -83,6 +83,27 @@ Cinematic, like a trailer or a medical documentary: low, big, dark. Client, 8 No
 - **Music:** Nitron music, muffled under the cold open, opening at the first flash, −20 LU under speech.
 - **Never cut the voice** (client, 8 Nov). Every sentence the presenter says plays to its end. Correct a figure on screen with its source, never by trimming his words.
 
+## EP02 changes (client, 10 Nov), now the series default
+- **Presenter backdrop:** a realistic dark gym generated on Higgsfield (kling_omni_image, 0.5 credit), with purple LED accents and **no products and no shelf**. The first try, a shelf wall with products, was rejected: the products came out the size of his head. The room must be far behind him (back wall about 8 m), camera at chest height, everything small and softly out of focus.
+- **Cut-out:** `kf_matte.py` (BiRefNet-portrait on every 6th frame) + `propmatte.py` (carry + unmix against the cloth). The full matte on every frame is too slow on the cloud machine (about 25 s a frame).
+- **Placing him:** `stage_composite.py --face_x 0.52 --face_y 0.30 --face_w 0.34 --blur 5`, one fixed transform per take, body to the bottom edge. Run `relight.py --no-rim` and `cleancool.py --level A` first.
+- **Transitions:** few and smooth. No purple flash and no hard cut. Footage → presenter and take → take are short dissolves baked into the frames (`ep02/bake.py`); the canvas dissolves in and out over him (0.45 s). The canvas leaves *after* the cut to the next take, so only that take shows through.
+- **Motion graphics first:** when he explains something, leave him and show it. The injured part is drawn in ink, line by line (SVG paths, `inkd()`), then it moves. Then a graph or figure per point, on the same dark canvas.
+- **Around him:** tips and source names orbit his chest on an ellipse (`orbitDraw`): the back half is drawn before the presenter layer, the front half after. One turn in 6.5 s, a new chip starts front-right on its word.
+- **Sound effects:** only where something happens. EP02 has 5 in the whole film: a swell + hit when the arm gives way, soft air into the drawing and back, a thump on the end card. Nothing on captions, chips, labels or chapter changes (client: «مو كل ما أحمد تنفّس بتحطّلي ساوند إفكت»).
+- **Hook:** the injury clip starts after its burnt-in caption ends (no inpainting needed), slows to 40% at the moment (motion-interpolated) and pushes in to 1.34×; his «لحظة… شوفوا هون» is laid over it.
+- **Diagnosis wording:** the footage shows a sudden failure and he names a tendinopathy, so the title card carries «على الأغلب · من شكل الحركة». His voice is never cut.
+- **Same face height in every take:** the takes were framed differently, so anchoring the body to the bottom edge left his face at 0.30, 0.35 and 0.41 of the frame, and the dissolves between takes showed him jump. Put the face centre at y 730 (0.38·H, the reel's eye zone) in every take: move the placed layer down, and enlarge the one take that has the least body below the face (`ep02/reshift.py`). Check with a face detector per take before rendering.
+- **Instagram's zones** (`08_safe_check.js` must be all ✅ before delivery):
+  - Nothing below y 1500, and nothing in the right column x ≥ 950 between y 1100 and 1750.
+  - So: the source capsule sits at y 1450–1494 (under the caption, above the belt), title cards end at x 930 and y 1480, labels never go to the right edge, and orbit chips start near the centre.
+  - Text over the presenter always sits on a dark capsule or glass (his jacket is light).
+- **First half second:** an on-screen line from frame 4 («ركّز على كتفه»), kept as caption card 0 so the checker sees it; the spoken cards start at 1 (`nkQ`).
+- **Voice-over laid over footage:** cut it with `-ss` *before* `-i`. With `-ss` after the input, an `afade` out is timed on the source clock and silences the whole cut (EP02's hook words were silent until the final check caught it). Always measure the voice track around a laid-over line before delivery.
+- **Never over his head:** measure the hair line from the placed presenter layer (EP02: never above y 390) and keep rows and notes above it.
+- **Words that orbit him must not touch each other or leave the frame:** each chip rides its own ring (three stacked), radius 335 px.
+- **Scene names:** never reuse engine globals (`INK`, `label`, `BG`, `ACC`…): the scene script then fails silently and only captions render. Run `ep02`'s `jscheck.js` idea (load compose.html, print page errors) before a render.
+
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
 - `reels/injury-series/ep01/`: cut list, scenes, captions, sound plan.
