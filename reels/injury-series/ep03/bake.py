@@ -1,6 +1,6 @@
 """EP03: the two soft dissolves baked into ep/vfr (no hard cut anywhere in the film):
   frame 106  the leg-press footage → Ahmad, ±6 frames
-  frame 531  P3 → P4, ±3 frames, on top of the push-in made by camera.py (his face is already matched there)
+  frame 531  P3 → P4: the push-in made by camera.py ends with his face matched, then its last frame fades off the next 3 frames
 Every other take change is hidden under a canvas. Run after camera.py; safe to run again (it keeps the un-dissolved frames)."""
 import cv2, numpy as np, shutil, os, sys
 W='/home/user/work/ep3/ep/vfr'; BK='/home/user/work/ep3/ep/vfr_cut'; os.makedirs(BK,exist_ok=True)
@@ -17,5 +17,10 @@ def dissolve(c,n):
         out=(1-w)*cur+w*first if f<c else (1-w)*last+w*cur
         cv2.imwrite(f'{W}/{f:05d}.jpg',out.clip(0,255).astype(np.uint8),[cv2.IMWRITE_JPEG_QUALITY,95])
     print('dissolve at frame',c,'±',n)
+def settle(c,n):          # one-sided: the outgoing shot's last frame (already matched to the incoming face by camera.py) fades off the first n frames
+    last=rd(c-1)
+    for j,f in enumerate(range(c,c+n)):
+        w=(n-j)/(n+1); cv2.imwrite(f'{W}/{f:05d}.jpg',(w*last+(1-w)*rd(f)).clip(0,255).astype(np.uint8),[cv2.IMWRITE_JPEG_QUALITY,95])
+    print('settle after frame',c,'over',n)
 for f in os.listdir(BK): shutil.copy(f'{BK}/{f}',f'{W}/{f}')
-dissolve(106,6); dissolve(531,3)
+dissolve(106,6); settle(531,3)   # a two-sided dissolve at 531 showed the next take's face early, off to one side of the moving one

@@ -1,9 +1,9 @@
 """EP03: the one take change that is on screen (P3 → P4, his question close to the lens) becomes a camera push-in.
 Client: «الانتقالات ضروري تكون سموز وخفيفة». A cut between a medium shot and a close-up of the same man jumps; a dissolve
 shows two faces. So the last 8 frames of P3 (after his last word) move as one camera: he and the gym scale up until his
-face is exactly where and as large as it is in the first frame of P4, with a little blur along the move; P4's gym is
+face is exactly where and as large as it is in the first frame of P4, blurred along the move; P4's gym is
 scaled by the same factor, so the room is continuous across the cut. bake.py then lays a 6-frame dissolve on the cut.
-Reads ep/bt/person (placed RGBA) and the gym plate; rewrites ep/vfr for frames Z0..CUT-1 (P3 tail) and CUT..P4END."""
+A linear blur along the move stands in for the shutter. Reads ep/bt/person (placed RGBA) and the gym plate; rewrites ep/vfr for frames Z0..CUT-1 (P3 tail) and CUT..P4END."""
 import cv2, numpy as np, sys
 W='/home/user/work/ep3/ep'; H_,W_=1920,1080; CUT=531; Z0=523; P4END=573
 casc=cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
@@ -31,8 +31,13 @@ for j,i in enumerate(range(Z0,CUT)):
     pm=np.dstack([im[...,:3]*im[...,3:],im[...,3:]])*edge
     M=np.float32([[z,0,c[0]-z*f3[0]],[0,z,c[1]-z*f3[1]]]); pm=cv2.warpAffine(pm,M,(W_,H_),flags=cv2.INTER_LINEAR,borderMode=cv2.BORDER_CONSTANT,borderValue=0)
     comp=bgz(z)*(1-pm[...,3:])+pm[...,:3]
-    if prev is not None and u>0.08: comp=0.72*comp+0.28*prev      # a touch of the last frame: the move reads as motion, not steps
-    prev=comp; put(i,comp)
+    if prev is not None:                                          # motion blur along the move (about a 180° shutter): it reads as a camera move, not as steps
+        d=c-prev; L=int(np.hypot(*d)*0.55)|1
+        if L>=5:
+            kern=np.zeros((L,L),np.float32); h=L//2; ux,uy=d/max(np.hypot(*d),1e-6)
+            for t_ in np.linspace(-h,h,2*L): kern[int(round(h+uy*t_)),int(round(h+ux*t_))]=1
+            comp=cv2.filter2D(comp,-1,kern/kern.sum(),borderType=cv2.BORDER_REPLICATE)
+    prev=c.copy(); put(i,comp)
 for i in range(CUT,P4END+1):
     im=person(i); put(i,bgz(k)*(1-im[...,3:])+im[...,:3]*im[...,3:])
 print('push-in on frames',Z0,'–',CUT-1,'· P4 gym scaled',round(k,3))
