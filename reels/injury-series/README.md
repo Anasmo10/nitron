@@ -112,6 +112,28 @@ Cinematic, like a trailer or a medical documentary: low, big, dark. Client, 8 No
 - **Words that orbit him must not touch each other or leave the frame:** each chip rides its own ring (three stacked), radius 335 px.
 - **Scene names:** never reuse engine globals (`INK`, `label`, `BG`, `ACC`…): the scene script then fails silently and only captions render. Run `ep02`'s `jscheck.js` idea (load compose.html, print page errors) before a render.
 
+## EP03 changes (client, 11 Nov), now the series default
+Brief: «مشان يطلع الفيديو viral بدي منك تحدد هدف هاد الفيديو واهتم بالهوك… الكتابة لازم تكون مدروسة الأماكن، لا تعمل تشتيت للمتابع… كبّر أحمد بحيث يكون هو فعلاً جوّا الفريم… المصادر بشكل دائري تلتف حول أحمد… الانتقالات سموز وخفيفة… لا تبالغ بالأصوات».
+- **One goal per episode, decided before the cut.** EP03: saves and shares (everyone knows someone who loads past what he is ready for). The message is his last line, «سلامتك أهم من الوزن الذي ترفعه»; the end card asks for the share («ابعتها لصاحبك اللي بيحمّل فوق طاقته»).
+- **Hook:** the injury happens inside the first second (EP03: 0.9 s). His hook line is laid over the footage as a voice-over, cut with its own rhythm untouched.
+- **Injury clip that comes inside a news template** (`ep03/hook.py`): crop to the real footage only (EP03: 426×376 of a 426×640 frame; the outlet's mark and caption box fall outside), never inpaint. Show it as a full-width cinema band on a dark, blurred, purple-tinted copy of itself. Hook words go in the band above the picture, the «REAL FOOTAGE» tag and the credit in the band below, nothing on the picture. Credit the person who filmed it.
+- **Slow motion on the moment:** real time to the instant he gives way, 30% through the collapse (120 fps motion-interpolated source, checked frame by frame for warping), back to real time on the aftermath, with a 1.0 → 1.3 push-in on the injured joint.
+- **Ahmad bigger, and inside the frame** (`ep03/prep3.py`). In EP02 he was scaled *down* to place him, so the edges of the raw frame, where his shoulders and arms are cut, showed inside the picture («عم يطلع من الفريم»). Rule: frame every on-camera take from the 4K original so that the scaled raw frame covers the output on the left, right and bottom. Face width 0.42·W (Haar box), centre at (540, 730). Above his head the raw frame may end: the cloth is smeared upward before the matte. A take shot too close to reach that size stays as shot (scale 1.0).
+- **One thing to read at a time.**
+  - The hook's first words leave when the second line arrives.
+  - A canvas whose rows are his own words has no caption (`nocap`): EP03's prevention rows, his question (drawn above his head, where the frame is free), and his last line on glass.
+  - On camera with the sources orbiting: only the caption and the orbit. No rows above his head, no source capsule (the orbit is the source).
+  - One label per drawing. EP03 names the tendon, then the word «تمزّق» lands under it, so the two read as one line.
+- **Sources orbit him** while he gives the treatment (`orbitDraw`): ring centre y 1075, rx 335, ry 90, lifts −70 / 5 / 80, one turn in 5.5 s. With the bigger framing the front half stays between his chin (y 985) and the caption (from y 1320).
+- **Take changes:** every one but one is hidden under a canvas. The one on screen (medium shot → his question, close to the lens) is a camera push-in (`ep03/camera.py`): after his last word, the last 8 frames of the outgoing take scale and move, he and the gym together, until his face is where and as large as it is in the first frame of the next take; the next take's gym is scaled by the same factor; then a 6-frame dissolve (`ep03/bake.py`). Measure both faces at the cut.
+- **The product** (client: «صورة المشد بدك تحطّه لما يذكر المشد»): its photo on a glass card at chest-left the moment he says its name (clear of his mic hand, ending 40 px above the caption), then alone on the next canvas with what it is (✓) and what it is not (✕).
+- **A caption card must never read as a promise on its own.** His sentence is «ما بيعني أبداً إنه بيمنع التمزّقات»; the last card is «أبداً إنه بيمنع التمزّقات», never «إنه بيمنع التمزّقات» alone.
+- **Diagnosis:** when the press has reported it, the title card says «بحسب التقارير الصحفية عن الحادثة» and the end card lists the reports (EP03: Milenio, Uno TV, Feb 2026). «على الأغلب · من شكل الحركة» is only for a diagnosis read off the footage.
+- **Numbers from sources:** only those the source page states. EP03's sources give no recovery time in the summaries that were checked, so none is shown; his own «أشهر» is supported by the athlete's statement in the press.
+- **Sound:** five effects in the film. A swell and a hit when he gives way, soft air into the first two canvases, a low thump when the tendon tears in the drawing, a thump on the end card. Nothing on captions, rows, chips or the product.
+- **Cover:** the bent knee in ink with the torn tendon ringed (`ep03/cover-hero.html`), «تمزّق وتر» / «العضلة الرباعية», tag `INJURY BREAKDOWN · EP 03`.
+- **Sources (EP03):** AAOS OrthoInfo, Quadriceps Tendon Tear and Safe Exercise · Cleveland Clinic, Quadriceps Tendon Tear · Mayo Clinic, Weight training · Sharif et al., Phys Ther Sport 2017;28:44–52 (knee sleeves). They were confirmed from search summaries: the pages themselves do not open from the cloud session.
+
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
 - `reels/injury-series/ep01/`: cut list, scenes, captions, sound plan.

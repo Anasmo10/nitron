@@ -1,0 +1,19 @@
+{"clips": {
+  "hook":  {"file": "/home/user/work/ep3/sdr/hook.mov",  "gains": [1,1,1]},
+  "c7386": {"file": "/home/user/work/ep3/sdr/c7386.mov", "gains": [1,1,1]},
+  "c7398": {"file": "/home/user/work/ep3/sdr/c7398.mov", "gains": [1,1,1]},
+  "c7399": {"file": "/home/user/work/ep3/sdr/c7399.mov", "gains": [1,1,1]},
+  "c7406": {"file": "/home/user/work/ep3/sdr/c7406.mov", "gains": [1,1,1]},
+  "c7411": {"file": "/home/user/work/ep3/sdr/c7411.mov", "gains": [1,1,1]},
+  "c7415": {"file": "/home/user/work/ep3/sdr/c7415.mov", "gains": [1,1,1]},
+  "c7416": {"file": "/home/user/work/ep3/sdr/c7416.mov", "gains": [1,1,1]}},
+ "look": "eq=saturation=1.0",
+ "pieces": [
+  {"name": "H",  "clip": "hook",  "a": 0.0,  "b": 3.5,   "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P2", "clip": "c7386", "a": 1.22, "b": 6.50,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P3", "clip": "c7398", "a": 1.97, "b": 10.86, "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P4", "clip": "c7399", "a": 0.97, "b": 2.40,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P5", "clip": "c7406", "a": 1.33, "b": 5.94,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P6", "clip": "c7411", "a": 1.05, "b": 5.57,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P7", "clip": "c7415", "a": 1.06, "b": 5.00,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P8", "clip": "c7416", "a": 0.80, "b": 4.44,  "zoom": [1.0, 1.0], "target": [540, null]}]}

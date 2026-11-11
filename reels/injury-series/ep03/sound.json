@@ -1,0 +1,3 @@
+{"drop": 3.5, "slam": null, "intro_lp": 600, "music_db": -20.0, "duck_db": 9.0, "sfx_gain": 0.3, "outro_lib": "es_thump_deep",
+ "events": [["lib", 0.93, 0.24, "es_rev_dark"], ["lib", 0.93, 0.30, "es_imp_deep"], ["lib", 6.53, 0.18, "es_wind"], ["lib", 8.84, 0.15, "es_thump_airy"], ["lib", 18.9, 0.16, "es_wind"]],
+ "music_auto": [[0, -3], [3.1, -3], [3.5, 0.5], [6.4, 0], [13.0, -1], [18.6, -1], [23.7, 0], [32.2, 0.5], [35.6, 2], [40, 2]]}
