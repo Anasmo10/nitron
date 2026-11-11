@@ -28,6 +28,8 @@ for piece,groups,disp,hot in CARDS:
         cards.append({'s':round(ws[0]['s']-0.1,3),'e':round(ws[-1]['e']+0.25,3),'w':ws,'piece':piece})
 for a,b in zip(cards,cards[1:]):
     if a['e']>b['s']-0.03 or a['piece']==b['piece']: a['e']=round(min(a['e'] if a['piece']!=b['piece'] else 99,b['s']-0.03),3)
+for c in cards:
+    if c['piece']=='P3': c['e']=round(min(c['e'],P['P4']['start']-0.27),3)   # the last caption of P3 leaves before the push-in to his question starts
 for c in cards: c.pop('piece')
 json.dump({'total':round(tl['total'],3),'cards':cards},open(W+'/caps.json','w'),ensure_ascii=False,indent=1)
 T={'T_'+k:P[k]['start'] for k in ('P2','P3','P4','P5','P6','P7','P8')}
