@@ -53,6 +53,9 @@ Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break t
   - The source, the disclaimer and the logo at the foot.
 - **Spacing:** keep a clear gap between the two title lines (t1 top 104, t2 top 206) and between the rows and the box. The client has twice asked for text that doesn't touch.
 - **EP01 files:** `ep01/awareness-post.json` (content); the caption is `ep01/awareness-caption.txt`.
+- **EP02 files:** `ep02/awareness-post.json` and `ep02/awareness-caption.txt` (rotator cuff).
+- **Title pattern** (client's pick on EP01): line 1 asks about the feeling in white («وجع بكتفك لما ترفع إيدك؟»), line 2 is always «شو لازم تعمل؟» in lilac.
+- **Warning signs:** only what a named source lists, under the condition it gives. EP02's urgent signs apply after an injury (Mayo Clinic), so the heading says «بعد إصابة؟». The calm line gives no number of days when the source gives none.
 
 ## Awareness carousel (only when asked, `nitron-kit/awareness_carousel.py`)
 Six 4:5 slides (1080×1350) in the dark cover style, with the injury hero on the cover. The content follows the house content principles.
