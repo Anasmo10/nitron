@@ -52,9 +52,12 @@ Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break t
   - The source, the disclaimer and the logo at the foot.
 - **Spacing:** keep a clear gap between the two title lines (t1 top 104, t2 top 206) and between the rows and the box. The client has twice asked for text that doesn't touch.
 - **EP01 files:** `ep01/awareness-post.json` (content); the caption is `ep01/awareness-caption.txt`.
-- **EP02 files:** `ep02/awareness-post-A.json`, `ep02/awareness-post-B.json` and `ep02/awareness-caption.txt` (rotator cuff).
-- **Second design family** (`nitron-kit/awareness_post2.py`, client asked for a new design on 11 Nov): `steps` = title beside a large hero, three numbered glass steps, recovery line, doctor box; `versus` = hero badge, centred title, «غلط» column next to «صح» column, recovery line, doctor box. Don't reuse one episode's post layout for the next without asking.
-- **Title pattern** (client's pick on EP01): line 1 asks about the feeling in white («وجع بكتفك لما ترفع إيدك؟»), line 2 is always «شو لازم تعمل؟» in lilac.
+- **EP02 files:** `ep02/awareness-post.json` (layout `focus`) and `ep02/awareness-caption.txt` (rotator cuff).
+- **Default layout from EP02 on: `focus`** (`nitron-kit/awareness_post2.py`). Client, 11 Nov, on the denser designs: «في تشتت واضح ومعلومات كتيرة بصورة واحدة، ما بيعرف المشاهد شو بده يقرا».
+  - Four levels only, each a clear step down in size: the headline, the injury hero beside three numbered steps of two or three words (no boxes, no sub-lines), one doctor line on a glass capsule, the foot.
+  - Everything else (recovery time, each warning sign, the lifting tip) goes in the caption, not on the image.
+  - No product on an awareness post unless the client asks for one. He asked for the wrap, then dropped it the same day («المشد ماله لازمه»); the layout still takes an optional `product` band.
+  - The `steps` and `versus` layouts stay in the script but were not chosen.
 - **Warning signs:** only what a named source lists. No number of days when the source gives none. The condition a source attaches (EP02: Mayo's urgent signs follow an injury) goes in the caption, not into a separate group on the image.
 
 ## Awareness carousel (only when asked, `nitron-kit/awareness_carousel.py`)

@@ -1,0 +1,25 @@
+{
+ "layout": "focus",
+ "tag": "INJURY BREAKDOWN",
+ "hero": "<ep02/cover-hero.html rendered to PNG>",
+ "logo": "<logo mark: top 200 px of logo.png>",
+ "l1": "وجع بكتفك لما ترفع إيدك؟",
+ "l2": "شو لازم تعمل؟",
+ "steps": [
+  {
+   "n": "١",
+   "t": "وقّف عالوجع"
+  },
+  {
+   "n": "٢",
+   "t": "ريّح كتفك"
+  },
+  {
+   "n": "٣",
+   "t": "ارجع بالتدريج"
+  }
+ ],
+ "doctor_line": "الوجع عم يزيد أو ما عم تقدر تحرّك كتفك؟ راجع دكتور.",
+ "src": "AAOS OrthoInfo · Mayo Clinic",
+ "disc": "هالمعلومات للتوعية، ومو بديل عن الطبيب."
+}
