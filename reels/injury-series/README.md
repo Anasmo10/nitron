@@ -48,14 +48,14 @@ Client, 8 Nov: the footage-frame thumbnail was rejected. Covers must not break t
 - **Layout, top to bottom:**
   - The tag, then the hook in two lines (white 58 px, lilac 112 px) and the purple bar.
   - The injury hero on the left, beside three ✓/✕ glass rows.
-  - A glass box: «روح عالدكتور فوراً إذا:» with the warning signs as chips (emergencies only).
-  - A separate, calmer box with an «i» mark: «وراجع دكتور إذا الوجع ما خفّ خلال أسبوعين.» (client, 9 Nov: «مو نفس الشيء». Never put a non-urgent line under the «فوراً» heading.)
+  - **One doctor box, one style.** Every reason to see a doctor is a chip in the same list under one heading with no «فوراً» (EP02: «لا تأجّل الدكتور إذا:»). Never split the doctor advice into an urgent box and a differently styled line or box. The client flagged this on EP01 («مو نفس الشيء», then «ليش هنن مو نفس التصنيف») and again on EP02 («the same mistake again»): the earlier reading, that he wanted them separated, was wrong.
   - The source, the disclaimer and the logo at the foot.
 - **Spacing:** keep a clear gap between the two title lines (t1 top 104, t2 top 206) and between the rows and the box. The client has twice asked for text that doesn't touch.
 - **EP01 files:** `ep01/awareness-post.json` (content); the caption is `ep01/awareness-caption.txt`.
-- **EP02 files:** `ep02/awareness-post.json` and `ep02/awareness-caption.txt` (rotator cuff).
+- **EP02 files:** `ep02/awareness-post-A.json`, `ep02/awareness-post-B.json` and `ep02/awareness-caption.txt` (rotator cuff).
+- **Second design family** (`nitron-kit/awareness_post2.py`, client asked for a new design on 11 Nov): `steps` = title beside a large hero, three numbered glass steps, recovery line, doctor box; `versus` = hero badge, centred title, «غلط» column next to «صح» column, recovery line, doctor box. Don't reuse one episode's post layout for the next without asking.
 - **Title pattern** (client's pick on EP01): line 1 asks about the feeling in white («وجع بكتفك لما ترفع إيدك؟»), line 2 is always «شو لازم تعمل؟» in lilac.
-- **Warning signs:** only what a named source lists, under the condition it gives. EP02's urgent signs apply after an injury (Mayo Clinic), so the heading says «بعد إصابة؟». The calm line gives no number of days when the source gives none.
+- **Warning signs:** only what a named source lists. No number of days when the source gives none. The condition a source attaches (EP02: Mayo's urgent signs follow an injury) goes in the caption, not into a separate group on the image.
 
 ## Awareness carousel (only when asked, `nitron-kit/awareness_carousel.py`)
 Six 4:5 slides (1080×1350) in the dark cover style, with the injury hero on the cover. The content follows the house content principles.
