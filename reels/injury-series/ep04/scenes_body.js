@@ -191,7 +191,7 @@ function takeaway(t){ if(t<T_P4||t>=VEND) return; const k=ik(t,WS.P4[0]-0.1,0.4)
   const x=100,y=1150+(1-k)*60,w=830,h=108+222*g; X.save(); X.globalAlpha=k*out; glassPane(x,y,w,h,40,{}); X.fillStyle=PURPLE; rr(x+w-20,y+30,8,h-60,4); X.fill();
   nkTxt('وآخر شي… تذكّر',x+w-54,y+56,34,LIL,'right',1,800);
   if(k2>0){ X.save(); X.globalAlpha*=k2; nkTxt('الوزن اللي بتقدر ترفعه',x+w-52,y+150+(1-k2)*16,66,'#FFFFFF','right'); X.restore(); }
-  if(k3>0){ X.save(); X.globalAlpha*=k3; nkTxt('مش ضروري يكون اللي بتتحكم فيه بأمان',x+w-52,y+254+(1-k3)*14,46,LIL,'right'); X.restore(); }
+  if(k3>0){ X.save(); X.globalAlpha*=k3; nkTxt('مش ضروري يكون اللي بتتحكم فيه بأمان',x+w-52,y+254+(1-k3)*14,36,LIL,'right');   /* 36 px: the line stays inside the card */ X.restore(); }
   X.restore(); }
 
 /* sources: every medical claim shows where it came from, while it is said */
