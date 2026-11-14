@@ -78,6 +78,7 @@ def decide(i):
     dec=cv2.GaussianBlur(np.clip((d0-T_same)/(T_diff-T_same),0,1),(0,0),5)
     db=(np.clip((dec-0.35)/0.3,0,1)>0.5).astype(np.uint8); K9=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
     db=cv2.morphologyEx(cv2.morphologyEx(db,cv2.MORPH_OPEN,K9),cv2.MORPH_CLOSE,K9); dec=cv2.GaussianBlur(db.astype(np.float32),(0,0),1.5)
+    if '--decide' not in sys.argv: return a.astype(np.float16)     # off: around his hair it turned the soft wisps into a solid white cap of cloth (client, EP04 v3)
     return (a*(1-plat)+dec*plat).astype(np.float16)
 AD={i:decide(i) for i in ids}; print('decided',len(AD),flush=True)
 # 3c) the same part of him must not come and go: a region that most of the 12 frames around this one have (each moved
