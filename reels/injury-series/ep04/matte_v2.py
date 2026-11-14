@@ -7,9 +7,14 @@ python3 matte_v2.py <first> <last> [--test i,j]      one take at a time (the cam
                frame by optical flow first (a fast hand keeps its fingers).
   2. plate     the white backdrop itself, per pixel: the median of that pixel over the frames where he is clearly
                not there. This is what the white cloth is for.
-  3. clean     wherever a frame is the same as the plate (within the cloth's own noise), it is backdrop, whatever the
+  3. clean     (only with --plate-cut: on EP04 it bit notches out of the cream hoodie, and the wide-frame cut had already
+               left the cloth out) wherever a frame is the same as the plate (within the cloth's own noise), it is backdrop, whatever the
                model said. Only regions that touch the known backdrop are removed, so a spot of the cream hoodie that
                happens to match the cloth (their colours are within 1%) is never cut out of his body.
+  3b. decide   a wide region the model is unsure of (alpha 0.12–0.88 over more than a thin edge) is decided by the
+               backdrop: unlike the cloth → him, like it → backdrop (the hood's grey lining came and went)
+  3c. steady   where he moves slowly, each pixel takes the majority of the 31 frames around it (moved onto this frame by
+               optical flow): a part of him is in or out for a run of frames, never flickering (the hood's lining)
   4. colour    in the soft edge, the cloth's own colour is taken out of the pixel (F = (I − (1−a)·B)/a, with B = the
                plate), so no white fringe is left on the dark gym.
 Writes ep/bt/p_raw/NNNNN.png (RGBA) for relight.py → cleancool.py → stage_composite.py."""
@@ -57,17 +62,36 @@ def extend(I,a):
     bg=((a<0.02)&REL).astype(np.float32); num=cv2.GaussianBlur(np.where(REL[...,None],plate,I)*bg[...,None],(0,0),25); den=cv2.GaussianBlur(bg,(0,0),25)[...,None]
     return np.where(REL[...,None],plate,np.where(den>0.02,num/np.maximum(den,1e-4),np.median(plate[REL],axis=0)))
 K3=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(7,7))
-for i in (TEST or ids):
+def decide(i):
     I=src(i).astype(np.float32); a=AM[i].copy()
-    # 3) backdrop wherever the frame equals the plate, in regions that touch the known backdrop
-    d=np.abs(cv2.GaussianBlur(I,(0,0),1.2)-plate).max(2); same=np.clip((T_diff-d)/(T_diff-T_same),0,1)*REL
-    S=(same>0.5).astype(np.uint8); S=cv2.morphologyEx(S,cv2.MORPH_OPEN,K3)
-    n,lab=cv2.connectedComponents(S,connectivity=8)
-    known=cv2.dilate(((a<0.08)&REL).astype(np.uint8),K3)
-    touch=np.unique(lab[(known>0)&(S>0)]); keep=np.isin(lab,touch[touch>0])
-    cut=cv2.GaussianBlur((keep*same).astype(np.float32),(0,0),1.0)
-    removed=float(((a>0.5)&(cut>0.5)).sum())
-    a=a*(1-cut)
+    # 3) backdrop wherever the frame equals the plate, in regions that touch the known backdrop (off by default, see above)
+    if '--plate-cut' in sys.argv:
+        d=np.abs(cv2.GaussianBlur(I,(0,0),1.2)-plate).max(2); same=np.clip((T_diff-d)/(T_diff-T_same),0,1)*REL
+        S=cv2.morphologyEx((same>0.5).astype(np.uint8),cv2.MORPH_OPEN,K3); n,lab=cv2.connectedComponents(S,connectivity=8)
+        known=cv2.dilate(((a<0.08)&REL).astype(np.uint8),K3); touch=np.unique(lab[(known>0)&(S>0)]); keep=np.isin(lab,touch[touch>0])
+        a=a*(1-cv2.GaussianBlur((keep*same).astype(np.float32),(0,0),1.0))
+    # 3b) where the model hesitates over a wide area (not a thin edge like hair), decide it by the backdrop, area by area:
+    #     unlike the cloth → him (the hood's grey lining behind his neck), like the cloth → backdrop
+    B0=extend(I,a); d0=np.abs(cv2.GaussianBlur(I,(0,0),1.5)-B0).max(2)
+    unc=((a>0.12)&(a<0.88)).astype(np.uint8); plat=cv2.morphologyEx(unc,cv2.MORPH_OPEN,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9)))
+    plat=cv2.GaussianBlur(cv2.dilate(plat,K3).astype(np.float32),(0,0),2.0)
+    dec=cv2.GaussianBlur(np.clip((d0-T_same)/(T_diff-T_same),0,1),(0,0),5)
+    db=(np.clip((dec-0.35)/0.3,0,1)>0.5).astype(np.uint8); K9=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9))
+    db=cv2.morphologyEx(cv2.morphologyEx(db,cv2.MORPH_OPEN,K9),cv2.MORPH_CLOSE,K9); dec=cv2.GaussianBlur(db.astype(np.float32),(0,0),1.5)
+    return (a*(1-plat)+dec*plat).astype(np.float16)
+AD={i:decide(i) for i in ids}; print('decided',len(AD),flush=True)
+# 3c) the same part of him must not come and go: a region that most of the 12 frames around this one have (each moved
+#     onto it by optical flow) is kept on this frame too (the hood's lining was in on most frames, out on a few)
+N=int(os.environ.get('VOTE','0'))               # long vote off by default: with conflicting runs it left ragged partial edges
+for k,i in enumerate(TEST or ids):
+    I=src(i).astype(np.float32); kk=ids.index(i)
+    nb=[warp(AD[j].astype(np.float32),j,i) for j in ids[max(0,kk-N):kk+N+1] if j!=i]
+    a=AD[i].astype(np.float32)
+    if N and len(nb)>=4:
+        j2=ids[min(len(ids)-1,kk+1)] if kk+1<len(ids) else ids[kk-1]
+        f=dis.calc(small(src(i)),small(src(j2)),None); mag=cv2.resize(np.hypot(f[...,0],f[...,1]),(1080,1920))*2
+        slow=cv2.GaussianBlur((mag<3).astype(np.float32),(0,0),6)          # the long vote only where he moves slowly (hood, head); a fast hand keeps the short window
+        a=a*(1-slow)+np.median(np.stack(nb+[a]),axis=0)*slow
     a=np.clip((a-0.03)/0.94,0,1)
     # 4) take the cloth's colour out of the soft edge
     B=extend(I,a); A=a[...,None]
@@ -76,5 +100,5 @@ for i in (TEST or ids):
     F=I*(1-edge)+F*edge
     out=np.dstack([F.clip(0,255),a*255]).astype(np.uint8)
     cv2.imwrite(f'{OUT}/{i:05d}.png' if not TEST else f'/home/user/work/ep4/samp/v2_{i}.png',out,[cv2.IMWRITE_PNG_COMPRESSION,3])
-    if TEST or i%40==0: print(i,'backdrop pixels the model had kept and the plate removed:',int(removed),flush=True)
+    if TEST or k%40==0: print(i,'written',flush=True)
 print('v2 matte',A0,A1,'done',flush=True)
