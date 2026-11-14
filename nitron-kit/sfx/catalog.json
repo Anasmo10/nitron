@@ -320,5 +320,10 @@
   "src": "earshot 0.4 bank pro_logo_sting/swell_sting",
   "peak_at": 0.469,
   "desc": "warm swell sting — the end card"
+ },
+ "es_crack": {
+  "src": "earshot bank fit/hit/bamboo_tok + knock/snap + cut_hit/punch, layered",
+  "peak_at": 0.058,
+  "desc": "a dry bone-like crack over a short low punch: a bone breaking in a drawing"
  }
 }

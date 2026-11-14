@@ -137,6 +137,24 @@ Brief: «مشان يطلع الفيديو viral بدي منك تحدد هدف ه
 - **Cover:** the bent knee in ink with the torn tendon ringed (`ep03/cover-hero.html`), «تمزّق وتر» / «العضلة الرباعية», tag `INJURY BREAKDOWN · EP 03`.
 - **Sources (EP03):** AAOS OrthoInfo, Quadriceps Tendon Tear and Safe Exercise · Cleveland Clinic, Quadriceps Tendon Tear · Mayo Clinic, Weight training · Sharif et al., Phys Ther Sport 2017;28:44–52 (knee sleeves). They were confirmed from search summaries: the pages themselves do not open from the cloud session.
 
+## Fact-check report with every episode (client, 14 Nov: standing rule for the whole series)
+Client: «بكل فيديو ابعتلك ياه تتأكد من كامل المعلومات وتذكر كامل الأبحاث اللي ذكرت جوّا الفيديو، ما ناقص أي شيء، وإذا في معلومات خاطئة علّم عليها مشان أنا أتوخّى الحذر».
+- Deliver `epNN/fact-check.md` (Arabic, also copied to `deliver-v2/`) with every episode, beside the video.
+- **Every sentence the presenter says,** one per row: ✅ correct / ⚠️ incomplete or wrong (and how it was corrected on screen) / ❓ cannot be verified, each with its source.
+- **Every on-screen text he did not say,** with its source, including what the drawings imply (for example «both bones broken» in a drawing when the footage cannot tell).
+- **Every source named in the video, in full:** organisation, page or paper title, year if any, link.
+- **What to watch before posting:** unknown footage owner, claims with no evidence, wrong lines left in his voice (they are corrected on screen, never cut).
+- Say how the sources were checked (search summaries; the pages themselves do not open from the cloud session).
+
+## EP04 changes (client, 14 Nov)
+- **The hook when the source has a graphic over the action** (EP04: a large skeleton image over the wide shot): use the clean replay at the end of the clip instead (`ep04/hook.py`), cropped above the caption box. Slow it to 25% on the break, push in on the joint, and put a lilac ring that follows the limb where it breaks, with one small glass label («الساعد»).
+- **Realistic motion graphics** («بدنا واقعية أكثر»): a radiograph rendered from physics (`ep04/xray.py`). Each bone is a hollow tube seen in projection: brightness = how much bone the beam crosses, so the cortex edges glow and the core is darker; the ends are spongy (trabecular texture); metal saturates; soft tissue is a faint glow with soft edges. It ships as layers (forearm, hand, dumbbell, fixation plates, cast), and the scene moves them: the hand and dumbbell tilt about the wrist, the forearm splits along a jagged line and angulates, the plates and the cast fade in. It is shown on a «film» on the dark canvas, revealed by a scan line, and labelled «رسم توضيحي» in the corner (a realistic X-ray must never pass for the patient's own).
+- Higgsfield image generation now refuses on the account's free plan («Requires basic plan or higher»): no credits were spent. Render anatomy in code instead.
+- **Ahmad's sources are 1080×1920 now** (EP03's were 4K): the bigger framing is kept to face width 0.40·W (about ×1.15), so he stays sharp (`ep04/prep4.py`).
+- **Take change Ahmad → Ahmad with a small offset** (EP04: 38 px, 6% size): a 6-frame settle (`ep04/settle.py`), with him and the room moving together (the room moves less: depth), then P3's last frame fades off P4's first 3 frames.
+- **Sound:** four effects plus the end card. A swell and hit on the real break, soft air into the canvas, and a dry crack when the bones break in the drawing. `nitron-kit/sfx/es_crack` is layered from earshot's bamboo tok, wood snap and short punch (the wav is local only).
+- **Wrong lines in his voice:** «ستتطلّب جبيرة» (most adult forearm fractures need surgery; a cast only for one bone not out of place, AAOS) and «لستّ أشهر» (Cleveland Clinic: at least a few months, depending on the fracture). Both are corrected on glass cards over the X-ray while he says them, with the source capsule.
+
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
 - `reels/injury-series/ep01/`: cut list, scenes, captions, sound plan.

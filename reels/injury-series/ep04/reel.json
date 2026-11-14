@@ -1,0 +1,11 @@
+{"clips": {
+  "hook":  {"file": "/home/user/work/ep4/sdr/hook.mov",  "gains": [1,1,1]},
+  "c7455": {"file": "/home/user/work/ep4/sdr/c7455.mov", "gains": [1,1,1]},
+  "c7460": {"file": "/home/user/work/ep4/sdr/c7460.mov", "gains": [1,1,1]},
+  "c7461": {"file": "/home/user/work/ep4/sdr/c7461.mov", "gains": [1,1,1]}},
+ "look": "eq=saturation=1.0",
+ "pieces": [
+  {"name": "H",  "clip": "hook",  "a": 0.0,  "b": 4.4667, "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P2", "clip": "c7455", "a": 0.92, "b": 11.62,  "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P3", "clip": "c7460", "a": 1.12, "b": 8.75,   "zoom": [1.0, 1.0], "target": [540, null]},
+  {"name": "P4", "clip": "c7461", "a": 0.72, "b": 6.40,   "zoom": [1.0, 1.0], "target": [540, null]}]}
