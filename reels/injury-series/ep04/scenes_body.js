@@ -21,7 +21,7 @@ function injLatin(s,x,y,size,col,al,w,ls){ X.save(); X.font=(w||800)+' '+size+'p
   if(ls){ try{ X.letterSpacing=ls+'px'; }catch(e){} } X.direction='ltr'; X.fillText(s,x,y); X.restore(); }
 const ik=(t,a,d)=>ease(pr(t,a,a+(d||0.3)));
 /* one canvas: in over Ahmad before «والتانية», out after the cut to P3 once «أشهر» is said (the take change is under it) */
-const CAN=t=>ease(pr(t,T_CIN,T_CIN+0.45))*(1-ease(pr(t,T_COUT,T_COUT+0.45)));
+const CAN=t=>ease(pr(t,T_CIN,T_CIN+0.2))*(1-ease(pr(t,T_COUT,T_COUT+0.2)));   /* 6 frames: a long blend over him read as blurred frames */
 function rtlLine(parts,cx,y,size,ks){ X.save(); X.font='900 '+size+'px '+FONT; X.textBaseline='middle'; X.direction='rtl'; X.textAlign='right';
   const sp=size*0.26, ws=parts.map(p=>{ X.font='900 '+(p[2]||size)+'px '+FONT; return X.measureText(p[0]).width; }), tot=ws.reduce((a,b)=>a+b,0)+sp*(parts.length-1); let x=cx+tot/2;
   parts.forEach((p,i)=>{ const k=ks?ks[i]:1; if(k>0){ X.save(); X.globalAlpha*=k; X.font='900 '+(p[2]||size)+'px '+FONT; X.fillStyle=p[1]; X.fillText(p[0],x,y+(1-k)*16); X.restore(); } x-=ws[i]+sp; }); X.restore(); return tot; }

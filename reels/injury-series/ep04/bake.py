@@ -20,4 +20,5 @@ def settle(c,n):
         w=(n-j)/(n+1); cv2.imwrite(f'{W}/{f:05d}.jpg',(w*last+(1-w)*rd(f)).clip(0,255).astype(np.uint8),[cv2.IMWRITE_JPEG_QUALITY,95])
     print('settle after frame',c,'over',n)
 for f in os.listdir(BK): shutil.copy(f'{BK}/{f}',f'{W}/{f}')
-dissolve(135,6); settle(685,3)
+dissolve(135,2)   # 4 frames: a long blend of the soft replay with him read as blurred frames (client, EP04 v2)
+# no fade at 685: the faces are matched by settle.py, a fade there only blurred 3 frames

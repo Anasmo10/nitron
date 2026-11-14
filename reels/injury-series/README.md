@@ -172,6 +172,14 @@ Now (`ep04/ml_raw.py`, `ep04/matte_v2.py`, `ep04/ahmad4v2.sh`):
 - **The model:** BiRefNet-lite (about 15 s a frame here) was clean on the last two takes. On the first take it took the hood's grey lining behind his neck in and out, in runs of a few frames. A long majority vote over 13 or 31 frames only left ragged half-edges, so it is off. BiRefNet-portrait (about 27 s a frame, the model in the client's skill) kept the lining in on every frame checked. Use portrait wherever a hood or collar shows behind the neck.
 - **Checks on the delivered file (v2):** 932 frames, 30 fps, 31.07 s; −15.0 LUFS, peak −1.8 dBFS; `08_safe_check.js` all ✅. v1 was deleted from `deliver-v2/`.
 
+## Blends read as blurred frames (client, 14 Nov, on EP04 v2: «كم فريم أكل هوا بالتغبيش»)
+- **Measured on v2:** the cut itself was sharp (sharper than the source after grading). The soft frames were all blends: 12 frames from the soft replay into him, 13 frames of canvas fading in over him and again out, and a 3-frame fade at the matched take change.
+- **Now:**
+  - footage → presenter: a 4-frame dissolve
+  - a canvas over him: in and out in 0.2 s (6 frames)
+  - a face-matched take change: no fade at all
+- **Check every delivery with a per-frame sharpness scan** (Laplacian variance against the 9 frames around). In v3 the only dips are 2–3 frames at each canvas edge and in the 4-frame dissolve.
+
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
 - `reels/injury-series/ep01/`: cut list, scenes, captions, sound plan.
