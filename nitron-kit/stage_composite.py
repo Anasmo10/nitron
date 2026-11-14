@@ -1,7 +1,7 @@
 """Nitron kit — put a cut-out presenter into a generated set (e.g. a Higgsfield background) so it reads as one photograph.
 python3 stage_composite.py <person RGBA png or dir> <background image> <out jpg or dir>
         [--face_x 0.52 --face_y 0.30 --face_w 0.34] [--blur 5] [--person-out dir] [--first N --last M]
-        [--scale 0.94 --dy 60 --dx 0]   (used only when no --face_w is given)
+        [--scale 0.94 --dy 60 --dx 0]   (used only when no --face_w is given)   [--wrap 0.35]  set bleed into the edge
 
 Client, 10 Nov: Ahmad's white cloth replaced by a realistic Nitron gym, «والإضاءة تناسب كل الفيديوهات». Per frame:
   1. set      background scaled to cover 1080×1920, a touch of lens blur (depth of field: he is sharp, the room is not)
@@ -19,6 +19,7 @@ import sys, os, glob, numpy as np, cv2
 def arg(k, d, cast=float): return cast(sys.argv[sys.argv.index(k) + 1]) if k in sys.argv else d
 P, BG, OUT = sys.argv[1], sys.argv[2], sys.argv[3]
 SC, DY, DX, BL = arg("--scale", 0.94), arg("--dy", 60), arg("--dx", 0), arg("--blur", 2.2)
+WRAP = arg("--wrap", 0.35)   # how much of the blurred set bleeds into his edge; 0.15 keeps a clean cut (EP04 v2: «القص بيغبش»)
 FACE = [arg("--face_x", 0), arg("--face_y", 0), arg("--face_w", 0)]
 POUT = arg("--person-out", "", str); F0, F1 = arg("--first", 0, int), arg("--last", 10**9, int)
 W, H = 1080, 1920
@@ -69,7 +70,7 @@ def comp(rgba8, T):
     rim = (band * side * topw * 0.30)[..., None]
     F = 1 - (1 - F) * (1 - rim * (0.55 * PURPLE + 0.45 * LIL))
     edge = np.clip(a * (1 - cv2.GaussianBlur(a, (0, 0), 4)) * 2.0, 0, 1)[..., None]
-    F = F * (1 - 0.35 * edge) + wrapsrc * 0.35 * edge
+    F = F * (1 - WRAP * edge) + wrapsrc * WRAP * edge
     out = set_ * (1 - a[..., None]) + F * a[..., None]
     person = np.dstack([np.clip(F, 0, 1), a])
     return (np.clip(out + GRAIN, 0, 1) * 255 + 0.5).astype(np.uint8), (person * 255 + 0.5).astype(np.uint8)

@@ -156,6 +156,19 @@ Client: «بكل فيديو ابعتلك ياه تتأكد من كامل الم�
 - **Sound:** four effects plus the end card. A swell and hit on the real break, soft air into the canvas, and a dry crack when the bones break in the drawing. `nitron-kit/sfx/es_crack` is layered from earshot's bamboo tok, wood snap and short punch (the wav is local only).
 - **Wrong lines in his voice:** «ستتطلّب جبيرة» (most adult forearm fractures need surgery; a cast only for one bone not out of place, AAOS) and «لستّ أشهر» (Cleveland Clinic: at least a few months, depending on the fracture). Both are corrected on glass cards over the X-ray while he says them, with the source capsule.
 
+## The cut-out (client, 14 Nov, on EP04 v1: «القص مو نضيف كتير، بيغبش… التفريغ أبداً مو نضيف، عم تروح وتجي الخلفية البيضاء. أنا ليش عامل لك إياها على خلفية بيضاء؟ مشان يكون القص نضيف»)
+What was wrong in v1 (and in EP02–EP03, which used the same chain):
+- **The cloth came and went.** BiRefNet ran on every 6th frame and optical flow carried it to the frames between. The model was run on the *enlarged* frame, where the cloth beside his arm touches the frame edge, so some key frames took that strip for his body and others did not.
+- **The edges were soft.** The set's blur bled 35% into his edge (`stage_composite` wrap), on top of the carry.
+
+Now (`ep04/ml_raw.py`, `ep04/matte_v2.py`, `ep04/ahmad4v2.sh`):
+1. **Cut on the wide original frame,** before it is enlarged and cropped, then enlarge and crop the alpha exactly like the picture. On the original, the cloth beside him is a clear strip of backdrop and the model cuts it away (tested on the same frames: the strip stayed in every cut of the enlarged frame, and went in every cut of the original).
+2. **BiRefNet on every second frame.** The frame between is the average of its two neighbours, moved onto it by optical flow. Then a 3-frame median, its neighbours moved onto the frame by flow first, so a fast hand keeps its fingers.
+3. **The backdrop plate:** per take, the median of each pixel over the frames where he is clearly not there. Wherever a frame equals the plate within the cloth's own noise, it is backdrop. Only regions that touch the known backdrop are removed: the cream hoodie and the cloth are within 1% in colour, so colour alone would cut holes in him.
+4. **The cloth's colour comes out of the edge** with the plate as the known background: F = (I − (1−a)·B)/a.
+5. **A thin edge wrap:** `stage_composite.py --wrap 0.15`.
+- Time on this cloud CPU: about 15 s a frame for BiRefNet-lite at 1024 (BiRefNet-portrait about 23 s, same result on these frames).
+
 ## Files
 - `nitron-kit/injury_series_template.js`: the scene system (EP01 values).
 - `reels/injury-series/ep01/`: cut list, scenes, captions, sound plan.
