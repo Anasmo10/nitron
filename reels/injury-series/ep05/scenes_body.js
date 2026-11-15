@@ -226,7 +226,7 @@ SCENE_LIST.push(['takeaway',takeaway]);
 SCENE_LIST.push(['srcLine',srcLine]);
 
 /* end card: fades in (no flash): the one thing to do with this video, the logo, the series tag, the sources */
-outro=function(t){ const s=VEND; if(t<s-0.35) return; const a=ease(pr(t,s-0.35,s+0.1)); X.save(); X.globalAlpha=a; X.fillStyle='#0A0A0C'; X.fillRect(0,0,W,H); const u=t-s;
+outro=function(t){ const s=VEND; if(t<s) return; const a=ease(pr(t,s,s+0.3));   /* after his last word, never over it (and never over the video: Instagram's right column) */ X.save(); X.globalAlpha=a; X.fillStyle='#0A0A0C'; X.fillRect(0,0,W,H); const u=t-s;
   for(const [x0,y0,r,ph] of [[420,820,700,0],[700,1100,620,1.7]]){ const x=x0+Math.sin(u*0.9+ph)*50, y=y0+Math.cos(u*0.7+ph)*40;
     const g=X.createRadialGradient(x,y,20,x,y,r); g.addColorStop(0,'rgba(118,2,138,0.42)'); g.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=g; X.fillRect(0,0,W,H); }
   const k0=ik(t,s+0.1,0.4); if(k0>0){ X.globalAlpha=k0; nkTxt('ابعتها لصاحبك',540,560+(1-k0)*16,96,'#FFFFFF','center'); nkTxt('اللي بيلعب بنش بلا سبوتر',540,668+(1-k0)*16,56,LIL,'center'); }

@@ -6,6 +6,9 @@ python3 matte5.py <take> <first reel frame> <last reel frame>
   2. frame   the alpha is enlarged, padded and cropped exactly like the picture (frames.json, prep5.py).
   3. colour  in the soft edge the cloth's own colour is taken out of the pixel (F = (I − (1−a)·B)/a, B = the cloth pushed
              inward from the clear backdrop), so no white fringe is left on the dark gym.
+  4. close   thin cracks inside him (a fast hand's motion blur) below the hair, and the notches the sleeve print bit out of
+             his arms at the frame's sides.
+  5. unsure  a wide unsure area below the head is decided by the pixel's colour against the cloth (motion blur over it).
   No plate cut and no area decision (EP04: they bit notches out of a hoodie and turned hair wisps into a white cap).
 Writes ep/bt/p_raw/NNNNN.png (RGBA, reel frame numbers) for relight.py → cleancool.py → stage_composite.py."""
 import sys, os, json, math, numpy as np, cv2
@@ -39,6 +42,7 @@ def to_reel(a):
     a=cv2.resize(a,(FR['Ws'],FR['Hs']),interpolation=cv2.INTER_CUBIC)
     if FR['pt']: a=np.vstack([np.repeat(a[:1],FR['pt'],axis=0),a])
     return a[FR['yoff']:FR['yoff']+1920,FR['xoff']:FR['xoff']+1080]
+K9=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(9,9)); K21=cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(21,21))
 def extend(I,a):
     bg=(a<0.02).astype(np.float32); num=cv2.GaussianBlur(I*bg[...,None],(0,0),25); den=cv2.GaussianBlur(bg,(0,0),25)[...,None]
     med=np.median(I[bg>0],axis=0) if bg.sum()>1000 else np.array([200,200,200],np.float32)
@@ -47,8 +51,20 @@ for f in range(F0,F1+1):
     k=K(f); nb=[AL[k]]+[warp(AL[j],j,k) for j in (k-1,k+1) if j in AL]
     a=np.median(np.stack(nb),axis=0) if len(nb)==3 else AL[k]
     a=np.clip((to_reel(a).clip(0,1)-0.03)/0.94,0,1)
+    # 4. close thin cracks: a fast hand's motion blur left hairline gaps inside the fingers (P3 frame 478); below the hair only,
+    #    so the hair keeps its own soft edge. At the frame's sides the sleeve print (white letters) bit notches out of the arm.
+    cl=cv2.morphologyEx(a,cv2.MORPH_CLOSE,K9); a[560:]=np.maximum(a[560:],cl[560:])
+    for x0,x1 in ((0,70),(1010,1080)):
+        ce=cv2.morphologyEx(a[:,max(0,x0-30):min(1080,x1+30)],cv2.MORPH_CLOSE,K21)[:,(x0-max(0,x0-30)):(x0-max(0,x0-30))+(x1-x0)]; a[:,x0:x1]=np.maximum(a[:,x0:x1],ce)
     I=cv2.imread(f'{W}/vfr_src/{f:05d}.jpg').astype(np.float32)
-    Bk=extend(I,a); A=a[...,None]
+    Bk=extend(I,a)
+    # 5. where the model is unsure over an area (a fast hand's motion blur over the cloth, P3 frame 480), the pixel's own
+    #    colour decides: the cloth's colour → backdrop, unlike it → him. Below the head only (the hair keeps the model's soft
+    #    edge, EP04 v3) and away from the frame's sides (the sleeve's white print is cloth-coloured).
+    d=np.abs(cv2.GaussianBlur(I,(0,0),1.2)-Bk).max(2); un=((a>0.06)&(a<0.94)).astype(np.float32)
+    keep=np.clip((d-14)/(42-14),0,1); zone=np.zeros_like(a); zone[600:,90:990]=1; zone=cv2.GaussianBlur(zone,(0,0),12)
+    a=a*(1-un*zone*(1-keep))
+    A=a[...,None]
     Fc=np.clip((I-(1-A)*Bk)/np.maximum(A,0.12),0,255)
     edge=cv2.GaussianBlur(((a>0.01)&(a<0.985)).astype(np.float32),(0,0),1.0)[...,None]
     Fc=I*(1-edge)+Fc*edge
