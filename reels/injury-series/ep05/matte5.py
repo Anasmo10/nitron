@@ -29,11 +29,12 @@ def warp(a,fr,to):
     if (fr,to) not in FL:
         f=dis.calc(small(raw(to)),small(raw(fr)),None); FL[(fr,to)]=cv2.resize(f,(1080,1920))*2
     f=FL[(fr,to)]; return cv2.remap(a,gx+f[...,0],gy+f[...,1],cv2.INTER_LINEAR,borderMode=cv2.BORDER_REPLICATE)
-ks=list(range(K(F0)-1,K(F1)+2)); AL={}
+NRAW=len(os.listdir(f'{B}/raw/{n}'))
+ks=[k for k in range(K(F0)-1,K(F1)+2) if 0<=k<NRAW]; AL={}       # never past the take's last frame (v1: a crash there left the last 6 frames uncut)
 for k in ks:
     a=ml(k)
     if a is None:
-        nb=[(j,ml(j)) for j in (k-1,k+1) if ml(j) is not None]
+        nb=[(j,ml(j)) for j in (k-1,k+1) if 0<=j<NRAW and ml(j) is not None]
         a=np.mean([warp(x,j,k) for j,x in nb],axis=0) if nb else None
     if a is not None: AL[k]=a
 miss=[K(f) for f in range(F0,F1+1) if K(f) not in AL]

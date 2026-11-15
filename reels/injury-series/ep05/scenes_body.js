@@ -1,23 +1,23 @@
 /* ═══ NITRON — INJURY BREAKDOWN · EP 05 «Barbell Drop · Bench Press» ═══
    Client, 14 Nov: Ahmad cut out frame by frame with no trace of the cloth; the hook is only the moment the bar falls on
    the man (everything after it cut, every text on the source removed); the Nitron look throughout.
-   H    the bench press, slowed while the bar rolls out of his hands, a ring on his grip · Ahmad's «ثلثين الإصابات اللي بتوصل
-        للإسعاف بتكون لأنه الوزن وقع على صاحبه» over it, with its study (Kerr et al., Am J Sports Med 2010: 65.5%)
-   P2   Ahmad: the episode's name on glass → the X-ray canvas: a lateral radiograph of a hand pressing the bar.
-        ١ no thumb round the bar (the closed thumb shown as a ghost) · ٢ the wrist folds back under the load ·
-        ٣ a slippery grip: the bar rolls out of the open side of the hand and falls
+   H    the bench press FULL SCREEN, slowed while the bar rolls out of his hands, the camera pushing in on the injury; no
+        box, no words over it, no tags (v3, client: «بدنا شي يشدّه، يركّز على الإصابة») · his «ثلثين الإصابات اللي بتوصل للإسعاف
+        بتكون لأنه الوزن وقع على صاحبه» over it, in the glass captions only
+   P2   Ahmad: the episode's name on glass → the grip canvas: a 3D render of a hand pressing the bar (v2; v1's X-ray was
+        refused: «ما بدنا إكس راي… اعمل رندر المسكة، رندر البار»).
+        ١ no thumb round the bar (the closed thumb shown as a lilac ghost) · ٢ the wrist folds back under the load ·
+        ٣ a slippery grip (sweat on the palm): the bar rolls out of the open side of the hand and falls
    P3   Ahmad (after the cut under the canvas): his two checks above his head, the sources orbit him
-   P4   (under the protection canvas) the real spotter lifting the bar off him + the neck-compression deaths on record;
-        then the wrist wrap (BIMute) the moment he names it
+   P4   (under the protection canvas) a spotter drawn in the same ink taking the bar off him + the neck-compression deaths on record;
+        then the SBD wrist wraps the moment he names them
    P5   his last line on glass (no caption) → end card.
-   The T_*, WS/WE, XG and RING constants above this line come from gen5.py. */
+   The T_*, WS/WE constants above this line come from gen5.py. */
 const PURPLE='#76028A', LIL='#C77DDB';
-SCENES=[{s:0,e:T_C1IN+0.3,m:R_FULL,nocap:true},{s:T_C1IN+0.3,e:T_P3,m:R_FULL},{s:T_P3,e:T_C2IN+0.1,m:R_FULL,nocap:true},{s:T_C2IN+0.1,e:T_P5,m:R_FULL},{s:T_P5,e:99,m:R_FULL,nocap:true}];
+SCENES=[{s:0,e:T_P2,m:R_FULL},{s:T_P2,e:T_C1IN+0.3,m:R_FULL,nocap:true},{s:T_C1IN+0.3,e:T_P3,m:R_FULL},{s:T_P3,e:T_C2IN+0.1,m:R_FULL,nocap:true},{s:T_C2IN+0.1,e:T_P5,m:R_FULL},{s:T_P5,e:99,m:R_FULL,nocap:true}];
 nkNoBarUntil(99);
 const INJ_EP={n:'05',name:'Barbell Drop · Bench Press',ar:'سقوط البار بالبنش برس'};
-const XR={fore:nkUse('x5_fore.png'),hand:nkUse('x5_hand.png'),toff:nkUse('x5_thumb_off.png'),ton:nkUse('x5_thumb_on.png'),bar:nkUse('x5_bar.png')};
-const BIM=nkUse('bimute.png');
-const SPOT=[]; for(let i=0;i<99;i++) SPOT.push(nkUse('spot/'+String(i).padStart(3,'0')+'.jpg'));
+const BIM=nkUse('sbd.png');   /* the SBD wrist wraps (client, 15 Nov: «ذكرنا مشد الـSBD… حط لي مشد الميوت؟») */
 function injLatin(s,x,y,size,col,al,w,ls){ X.save(); X.font=(w||800)+' '+size+'px Inter, '+FONT; X.fillStyle=col; X.textAlign=al||'center'; X.textBaseline='middle';
   if(ls){ try{ X.letterSpacing=ls+'px'; }catch(e){} } X.direction='ltr'; X.fillText(s,x,y); X.restore(); }
 const ik=(t,a,d)=>ease(pr(t,a,a+(d||0.3)));
@@ -30,7 +30,6 @@ function rtlLine(parts,cx,y,size,ks){ X.save(); X.font='900 '+size+'px '+FONT; X
   parts.forEach((p,i)=>{ const k=ks?ks[i]:1; if(k>0){ X.save(); X.globalAlpha*=k; X.font='900 '+(p[2]||size)+'px '+FONT; X.fillStyle=p[1]; X.fillText(p[0],x,y+(1-k)*16); X.restore(); } x-=ws[i]+sp; }); X.restore(); return tot; }
 function tinted(img,col){ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; const g=c.getContext('2d');
   g.drawImage(img,0,0); g.globalCompositeOperation='source-in'; g.fillStyle=col; g.fillRect(0,0,c.width,c.height); return c; }
-let TH_OFF=null, TH_ON=null;
 
 /* 1) the hook: his words in the band above the picture; the tag and the study just above the band; a label on the ring */
 function hookWords(t){ if(t>T_P2) return; const out=1-pr(t,T_P2-0.4,T_P2-0.12); if(out<=0) return;
@@ -92,8 +91,6 @@ const FILM={x:214,y:488,w:652,h:820};
 function medBg(t){ const a=CANA(t); if(a<=0) return; X.save(); X.globalAlpha=a; X.fillStyle='#0A0A0C'; X.fillRect(0,0,W,H);
   const g=X.createRadialGradient(560,900,40,560,900,900); g.addColorStop(0,'rgba(118,2,138,0.50)'); g.addColorStop(0.55,'rgba(75,1,88,0.16)'); g.addColorStop(1,'rgba(10,10,12,0)'); X.fillStyle=g; X.fillRect(0,0,W,H);
   X.fillStyle='rgba(199,125,219,0.10)'; for(let yy=420;yy<1640;yy+=48) for(let xx=60;xx<1040;xx+=48){ X.beginPath(); X.arc(xx,yy,2.2,0,7); X.fill(); }
-  if(CAN1(t)>0){ X.globalAlpha=CAN1(t); X.save(); X.shadowColor='rgba(118,2,138,0.55)'; X.shadowBlur=60; X.fillStyle='rgba(5,6,12,0.96)'; rr(FILM.x,FILM.y,FILM.w,FILM.h,26); X.fill(); X.restore();
-    X.strokeStyle='rgba(199,125,219,0.32)'; X.lineWidth=2; rr(FILM.x,FILM.y,FILM.w,FILM.h,26); X.stroke(); }
   X.restore(); }
 function chapter(t,s0,e0,lat,ar){ if(t<s0||t>=e0) return 0; const k=ik(t,s0+0.05,0.35)*(1-pr(t,e0-0.25,e0)); X.save(); X.globalAlpha*=k;
   injLatin(lat,540,260,26,LIL,'center',800,4); nkTxt(ar,540,350,92,'#FFFFFF','center'); X.restore(); return k; }
@@ -104,53 +101,106 @@ function injLabel(t,at,px,py,lx,ly,la,ar,al,out){ const k1=ik(t,at,0.25)*(out===
   X.globalAlpha*=k2/Math.max(0.001,Math.min(1,k1*1.5)); const tx=R?lx-8:lx+8; if(la) injLatin(la,tx,ly-70,30,'#FFFFFF',R?'right':'left',800);
   nkTxt(ar,tx,ly-28,40,LIL,R?'right':'left'); X.restore(); }
 
-/* 5) the radiograph, moving. Layer space 1000×1400 → screen: scale 1.3 */
-const XS=1.3, XO=[-136,-50];     /* the hand and the bar fill the film; the forearm runs out of its bottom edge */
-const L2S=(x,y)=>[XO[0]+x*XS, XO[1]+y*XS];
-const PV=XG.wrist, B0=XG.bar;
-function rot(p,th){ const dx=p[0]-PV[0], dy=p[1]-PV[1]; return [PV[0]+dx*Math.cos(th)+dy*Math.sin(th), PV[1]-dx*Math.sin(th)+dy*Math.cos(th)]; }
-function xrState(t){ const a1=WS.P2[9]-0.1, a2=WS.P2[13]-0.15, a2e=WE.P2[17], a3=WS.P2[21]-0.05;
-  const th=0.55*ease(pr(t,a2,a2e));
-  const slip=ease(pr(t,a3,a3+0.26)), tOut=a3+0.26;
-  let bar=rot([B0[0]+92*slip,B0[1]+72*slip],th);
-  if(t>tOut){ const u=t-tOut, p0=rot([B0[0]+92,B0[1]+72],th); bar=[p0[0]+260*u, p0[1]+120*u+0.5*5200*u*u]; }
-  return {th,bar,a1,a2,a2e,a3,tOut,thumb:ik(t,a1,0.3)*(1-pr(t,a2-0.2,a2+0.1)),strain:ik(t,a2+0.3,0.5)*(1-pr(t,a3+0.4,a3+0.9)),
-          sweat:ik(t,WS.P2[18]-0.1,0.4)*(1-pr(t,tOut,tOut+0.2)),load:ik(t,WS.P2[16]-0.15,0.3)*(1-pr(t,a3-0.1,a3+0.15))}; }
-function xray(t){ const a=CAN1(t); if(a<=0||t<T_C1IN) return; const S=xrState(t);
-  if(!TH_OFF&&XR.toff.naturalWidth){ TH_OFF=tinted(XR.toff,'#C77DDB'); TH_ON=tinted(XR.ton,'#C77DDB'); }
-  const scan=ease(pr(t,T_C1IN+0.2,T_C1IN+0.95)), sy=FILM.y+FILM.h*scan;
-  X.save(); X.globalAlpha=a; X.beginPath(); rr(FILM.x+3,FILM.y+3,FILM.w-6,FILM.h-6,23); X.clip();
-  X.save(); X.beginPath(); X.rect(0,0,W,sy); X.clip();
-  X.translate(XO[0],XO[1]); X.scale(XS,XS); X.globalCompositeOperation='lighter';
-  const flick=0.96+0.04*Math.sin(t*37)*Math.sin(t*11); X.globalAlpha=a*flick;
-  X.drawImage(XR.fore,0,0);
-  X.save(); X.translate(PV[0],PV[1]); X.rotate(-S.th); X.translate(-PV[0],-PV[1]);
-    X.drawImage(XR.hand,0,0); X.globalAlpha=a*flick*0.8; X.drawImage(XR.toff,0,0);
-    if(S.thumb>0&&TH_OFF){ const pulse=0.55+0.25*Math.sin((t-S.a1)*7); X.globalAlpha=a*S.thumb*pulse; X.drawImage(TH_OFF,0,0);
-      const kg=ik(t,S.a1+0.45,0.35)*(1-pr(t,S.a2-0.2,S.a2+0.1)); if(kg>0&&TH_ON){ X.globalAlpha=a*kg*(0.30+0.10*Math.sin(t*5)); X.drawImage(TH_ON,0,0); } }
-    /* sweat on the palm: small glints where the hand meets the bar */
-    if(S.sweat>0){ X.globalCompositeOperation='lighter'; [[505,600],[512,648],[520,690],[568,592],[604,628],[530,566],[596,676]].forEach((p,i)=>{ const tw_=0.5+0.5*Math.sin(t*9+i*1.7);
-      const g=X.createRadialGradient(p[0],p[1],1,p[0],p[1],16); g.addColorStop(0,`rgba(255,255,255,${0.95*S.sweat*tw_})`); g.addColorStop(0.4,`rgba(199,125,219,${0.5*S.sweat*tw_})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.globalAlpha=a; X.fillStyle=g; X.fillRect(p[0]-16,p[1]-16,32,32); }); }
+/* 5) the grip, drawn in the series' ink (client, 15 Nov: «نفس الرسم القديم اللي كنا نرسم فيه… ما بدنا نطلع عن هوية نايترون…
+   اتأكد من البار نفسه بالأول، بعدين أكّد على الإيد، إنه ماسكة صحيح للبار، ما تحط الإيد جوّا البار، ومو يمسكه مطرح ما بينحط
+   الوزن»). First the whole barbell, front view, line by k5line, its grip zones (the knurling, between the collars) in lilac;
+   then into the right-hand grip, seen from the side along the bar: the bar's section first, then the forearm and the palm
+   against it, the fingers round it, the thumb. Nothing crosses the bar: every finger runs outside its outline.
+   ١ the thumb beside the bar, not round it (the closed thumb as a dashed lilac ghost) · ٢ the wrist folds back under the
+   load · ٣ sweat: the bar rolls out of the open side of the hand and falls. */
+function k5len(pts){ let L=0; for(let i=1;i<pts.length;i++) L+=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); return L; }
+function k5part(pts,k){ if(k>=1) return pts; const L=k5len(pts)*Math.max(0,k), o=[pts[0]]; let acc=0;
+  for(let i=1;i<pts.length;i++){ const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); if(acc+d>=L){ const u=(L-acc)/Math.max(d,1e-6); o.push([pts[i-1][0]+(pts[i][0]-pts[i-1][0])*u,pts[i-1][1]+(pts[i][1]-pts[i-1][1])*u]); return o; } acc+=d; o.push(pts[i]); } return o; }
+function k5line(pts,k,w,col){ if(k<=0) return; const p=k5part(pts,k); X.save(); X.lineCap='round'; X.lineJoin='round'; X.strokeStyle=col; X.lineWidth=w; X.beginPath(); p.forEach((q,i)=>i?X.lineTo(q[0],q[1]):X.moveTo(q[0],q[1])); X.stroke(); X.restore(); }
+const K5INK='rgba(236,230,242,0.92)', K5FILL='#241c2b';
+function k5tube(pts,k,w,hot){ if(k<=0) return; k5line(pts,k,w+8,hot?LIL:K5INK); k5line(pts,k,w,K5FILL); }     /* an outlined limb, drawn along its length */
+function k5shape(pts,k,hot,fa){ if(k<=0) return; X.save(); X.lineJoin='round'; const P_=new Path2D(); pts.forEach((q,i)=>i?P_.lineTo(q[0],q[1]):P_.moveTo(q[0],q[1])); P_.closePath();
+  const f=Math.max(0,(k-0.6)/0.4)*(fa===undefined?1:fa); if(f>0){ X.globalAlpha*=f; X.fillStyle=K5FILL; X.fill(P_); X.globalAlpha/=f; }
+  const L=k5len(pts.concat([pts[0]])); X.strokeStyle=hot?LIL:K5INK; X.lineWidth=4; X.setLineDash([L*Math.min(1,k)+0.01,L+10]); X.stroke(P_); X.restore(); }
+function k5circ(cx,cy,r,k,fill,col,lw){ if(k<=0) return; X.save(); if(fill&&k>0.6){ X.globalAlpha*=Math.min(1,(k-0.6)/0.4); X.fillStyle=fill; X.beginPath(); X.arc(cx,cy,r,0,7); X.fill(); X.restore(); X.save(); }
+  X.strokeStyle=col||K5INK; X.lineWidth=lw||4; X.lineCap='round'; X.beginPath(); X.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+2*Math.PI*Math.min(1,k)); X.stroke(); X.restore(); }
+/* phase A: the whole barbell, front view — the bar first (client: «اتأكد من البار نفسه بالأول»), its grip zones on the knurling */
+function barbell(t,k0,a,wa){ if(a<=0) return; const y=830, kk=u=>pr(t,k0+u[0],k0+u[1]); wa=(wa===undefined?1:wa);
+  X.save(); X.globalAlpha*=a;
+  k5tube([[214,y],[866,y]],kk([0,0.35]),18,false);
+  for(const sd of [-1,1]){ const cx=540, m=x=>cx+sd*(x-cx);
+    k5shape([[m(196),y-36],[m(214),y-36],[m(214),y+36],[m(196),y+36]],kk([0.25,0.45]),false);
+    k5shape([[m(140),y-222],[m(194),y-222],[m(194),y+222],[m(140),y+222]],kk([0.3,0.55]),false);
+    k5shape([[m(110),y-160],[m(140),y-160],[m(140),y+160],[m(110),y+160]],kk([0.38,0.6]),false);
+    k5tube([[m(110),y],[m(58),y]],kk([0.45,0.6]),26,false); }
+  const kz=kk([0.45,0.75]); if(kz>0){ X.save(); X.globalAlpha*=kz; X.strokeStyle=LIL; X.lineWidth=2.5; const WA=wa;
+    for(const [x0,x1] of [[270,430],[650,810]]){ for(let x=x0;x<=x1;x+=11){ X.beginPath(); X.moveTo(x,y-7); X.lineTo(x+7,y+7); X.stroke(); }
+      X.lineWidth=4; X.beginPath(); X.moveTo(x0,y-46); X.lineTo(x0,y-56); X.lineTo(x1,y-56); X.lineTo(x1,y-46); X.stroke(); X.lineWidth=2.5; }
+    X.save(); X.globalAlpha*=WA; nkTxt('مكان المسكة',540,y-110,46,'#FFFFFF','center'); X.strokeStyle='rgba(199,125,219,0.7)'; X.lineWidth=3;
+    for(const x of [350,730]){ X.beginPath(); X.moveTo(540+(x<540?-100:100),y-110); X.lineTo(x,y-62); X.stroke(); }
+    nkTxt('على الخشونة · بعيد عن الأوزان',540,y+330,32,LIL,'center',1,800); X.restore(); X.restore(); }
+  X.restore(); }
+/* the close-up, front view (client, 15 Nov: «شكل الإيد بدّه تحسين، مو باينة إيد»): the classic grip picture, seen from his feet:
+   the bar across, the four fingers curled over it toward us (each finger its own outline, two creases), the palm and the
+   thumb's pad under the bar, the forearm below. Thumbless: the thumb goes up beside the index and over the top of the bar,
+   it never crosses in front of the fingers; the closed thumb (a dashed lilac ghost) crosses in front of the fingertips.
+   The fingers are drawn after the bar, in front of it: they wrap it, nothing goes into it. */
+const HB={y:800,r:40}, WR=[548,1062];
+const FG=[[500,46,738,884],[549,48,730,892],[598,45,738,884],[643,38,756,868]];       // cx, width, top (knuckle), bottom (tip)
+const PALM=[[470,1062],[452,980],[444,880],[450,770],[668,770],[662,880],[640,1000],[628,1062]];
+const TH_OFF=[[462,1000],[436,905],[436,820],[462,762]], TH_ON=[[462,1000],[478,930],[540,898],[602,880]];
+function xrState(t){ const a1=WS.P2[9]-0.1, a2=WS.P2[13]-0.15, a2e=WE.P2[17], a3=WS.P2[21]-0.05, tOut=a3+0.30;
+  const th=ease(pr(t,a2,a2e)), slip=ease(pr(t,a3,a3+0.30));
+  let barY=HB.y+150*slip; if(t>tOut){ const u=t-tOut; barY=HB.y+150+380*u+0.5*5200*u*u; }
+  return {a1,a2,a2e,a3,tOut,th,slip,barY,strain:ik(t,a2+0.3,0.5)*(1-pr(t,a3+0.4,a3+0.9)),load:ik(t,WS.P2[16]-0.15,0.3)*(1-pr(t,a3-0.1,a3+0.15)),sweat:ik(t,WS.P2[18]-0.1,0.4)*(1-pr(t,tOut,tOut+0.2))}; }
+function finger(cx,w,y0,y1,k,hot){ if(k<=0) return; const r=w/2; X.save(); X.globalAlpha*=Math.min(1,k*1.4); X.translate(0,(1-ease(k))*-18);
+  X.beginPath(); X.moveTo(cx-r,y0+r); X.arc(cx,y0+r,r,Math.PI,0); X.lineTo(cx+r,y1-r); X.arc(cx,y1-r,r,0,Math.PI); X.closePath();
+  X.fillStyle=K5FILL; X.fill(); X.strokeStyle=hot?LIL:K5INK; X.lineWidth=4; X.stroke();
+  X.strokeStyle='rgba(236,230,242,0.45)'; X.lineWidth=2.5; for(const cy of [HB.y-12,(HB.y+y1)/2+8]){ X.beginPath(); X.arc(cx,cy-r*0.9,r*1.05,Math.PI*0.32,Math.PI*0.68); X.stroke(); }   // the joint creases
+  X.restore(); }
+function xray(t){ const a=CAN1(t); if(a<=0||t<T_C1IN) return; const S=xrState(t), t0=T_C1IN+0.05;
+  X.save(); X.globalAlpha=a;
+  /* A → B: the whole barbell, then a push into the right-hand grip zone */
+  const zm=ease(pr(t,t0+0.68,t0+0.98));
+  if(zm<1){ X.save(); const z=1+2.2*zm; X.translate(730,830); X.scale(z,z); X.translate(-730,-830); barbell(t,t0,1-zm,1-Math.min(1,zm*4)); X.restore(); }
+  const ks=ease(pr(t,t0+0.82,t0+1.02)); if(ks<=0){ X.restore(); return; }
+  const k=u=>pr(t,t0+u[0],t0+u[1]);
+  X.save(); X.globalAlpha*=ks;
+  /* the forearm (fixed) */
+  { const g=X.createLinearGradient(0,WR[1],0,1290); g.addColorStop(0,K5INK); g.addColorStop(0.55,K5INK); g.addColorStop(1,'rgba(236,230,242,0)');   /* the forearm's lines fade out downward: no box */
+    k5line([[470,WR[1]],[476,1300]],k([0.95,1.2]),4,g); k5line([[628,WR[1]],[640,1300]],k([0.95,1.2]),4,g); }
+  /* the hand folds back at the wrist: seen from the front it shortens (foreshortening) */
+  const fs=1-0.34*S.th;
+  X.save(); X.translate(WR[0],WR[1]); X.scale(1,fs); X.translate(-WR[0],-WR[1]);
+    k5shape(PALM,k([1.0,1.35]),false);
+    { const kp=k([1.2,1.45]); if(kp>0){ X.save(); X.globalAlpha*=kp; X.strokeStyle='rgba(236,230,242,0.5)'; X.lineWidth=3; X.beginPath(); X.ellipse(478,985,34,62,-0.15,-1.3,1.6); X.stroke(); X.restore(); } }   // the thumb's pad
   X.restore();
-  X.globalAlpha=a*flick; X.drawImage(XR.bar,S.bar[0]-B0[0],S.bar[1]-B0[1]);
-  /* the wrist under strain: a lilac heat at the joint */
-  if(S.strain>0){ X.globalCompositeOperation='lighter'; const g=X.createRadialGradient(PV[0],PV[1]-20,8,PV[0],PV[1]-20,200); g.addColorStop(0,`rgba(255,255,255,${0.30*S.strain})`); g.addColorStop(0.3,`rgba(199,125,219,${0.42*S.strain})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.globalAlpha=a; X.fillStyle=g; X.fillRect(PV[0]-220,PV[1]-240,440,440); }
+  /* the bar (behind the fingers): the hand holds it; when it slips it slides down behind them and drops */
+  { const by=WR[1]-(WR[1]-S.barY)*(S.slip>0?1:fs), kb=k([0.85,1.05])*(1-pr(t,S.tOut,S.tOut+0.16)); if(kb>0){ X.save(); X.globalAlpha*=kb;
+      const g=X.createLinearGradient(0,by-HB.r,0,by+HB.r); g.addColorStop(0,'#5a5560'); g.addColorStop(0.35,'#c9ccd2'); g.addColorStop(0.55,'#8d9098'); g.addColorStop(1,'#3a3440'); X.fillStyle=g; X.fillRect(0,by-HB.r,W,2*HB.r);
+      X.strokeStyle=K5INK; X.lineWidth=4; X.beginPath(); X.moveTo(0,by-HB.r); X.lineTo(W,by-HB.r); X.moveTo(0,by+HB.r); X.lineTo(W,by+HB.r); X.stroke();
+      X.strokeStyle='rgba(199,125,219,0.55)'; X.lineWidth=2; for(let x=-40;x<W+40;x+=16){ X.beginPath(); X.moveTo(x,by-HB.r+6); X.lineTo(x+14,by+HB.r-6); X.stroke(); }   // knurling
+      if(t>S.tOut){ X.strokeStyle='rgba(236,230,242,0.35)'; X.lineWidth=3; for(const dx of [300,540,780]){ X.beginPath(); X.moveTo(dx,by-HB.r-24); X.lineTo(dx,by-HB.r-90); X.stroke(); } }
+      X.restore(); } }
+  X.save(); X.translate(WR[0],WR[1]); X.scale(1,fs); X.translate(-WR[0],-WR[1]);
+    /* the fingers, curled over the bar toward us; they give as it slips (the tips lift) */
+    FG.forEach((f,i)=>finger(f[0],f[1],f[2],f[3]-26*S.slip,k([1.15+i*0.08,1.45+i*0.08]),false));
+    /* the thumb: beside the index and over the top of the bar (lit while he names it) */
+    k5tube(TH_OFF,k([1.45,1.85]),44,S.a1<t&&t<S.a2);
+    const kg=ik(t,S.a1+0.45,0.35)*(1-pr(t,S.a2-0.25,S.a2+0.05)); if(kg>0){ X.save(); X.globalAlpha*=kg; X.setLineDash([16,12]); k5line(TH_ON,1,52,'rgba(199,125,219,0.9)'); X.setLineDash([]); k5line(TH_ON,1,40,'rgba(36,28,43,0.55)'); X.restore(); }
+    if(S.sweat>0){ [[500,850],[549,860],[598,846],[643,840],[520,940],[590,960],[470,900]].forEach((p,i)=>{ const tw_=0.55+0.45*Math.sin(t*9+i*1.7);
+      X.save(); X.globalAlpha*=S.sweat*tw_; X.fillStyle='#FFFFFF'; X.beginPath(); X.ellipse(p[0],p[1],5,8,0,0,7); X.fill(); X.strokeStyle=LIL; X.lineWidth=2; X.stroke(); X.restore(); }); }
   X.restore();
-  { const kd=ik(t,T_C1IN+0.9,0.4); if(kd>0){ X.save(); X.globalAlpha=a*kd*0.8; nkTxt('رسم توضيحي',FILM.x+FILM.w-22,FILM.y+FILM.h-26,24,LIL,'right',1,800); X.restore(); } }
-  if(scan>0&&scan<1){ const g=X.createLinearGradient(0,sy-40,0,sy+4); g.addColorStop(0,'rgba(199,125,219,0)'); g.addColorStop(1,'rgba(230,200,245,0.85)'); X.fillStyle=g; X.fillRect(FILM.x,sy-40,FILM.w,44); }
+  /* the wrist folding back: an arrow round it, a lilac heat */
+  if(S.strain>0){ X.save(); X.globalCompositeOperation='lighter'; const g=X.createRadialGradient(WR[0],WR[1],6,WR[0],WR[1],150); g.addColorStop(0,`rgba(255,255,255,${0.10*S.strain})`); g.addColorStop(0.35,`rgba(199,125,219,${0.30*S.strain})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=g; X.fillRect(WR[0]-160,WR[1]-160,320,320); X.restore();
+    const ka=ik(t,S.a2+0.1,0.4)*(1-pr(t,S.a3-0.2,S.a3+0.1)); if(ka>0){ X.save(); X.globalAlpha*=ka; X.strokeStyle=LIL; X.lineWidth=6; X.lineCap='round'; X.beginPath(); X.arc(WR[0]+150,WR[1]-40,70,Math.PI*0.9,Math.PI*0.9+1.9*ka); X.stroke();
+      const e=Math.PI*0.9+1.9*ka, ex=WR[0]+150+70*Math.cos(e), ey=WR[1]-40+70*Math.sin(e); X.fillStyle=LIL; X.beginPath(); X.arc(ex,ey,9,0,7); X.fill(); X.restore(); } }
   X.restore();
-  xrOverlay(t,S,a); }
-function xrOverlay(t,S,a){ X.save(); X.globalAlpha=a;
-  /* ١ the thumb: not round the bar (the ghost shows where it belongs) */
-  { const tp=L2S(...rot([452,612],S.th)); injLabel(t,S.a1+0.1,tp[0]-14,tp[1],70,tp[1]-110,'Thumbless grip','الإبهام مش ملفوف','left',1-pr(t,S.a2-0.3,S.a2)); }
-  /* ٢ the load on the bar and the wrist folding back */
-  if(S.load>0){ const b=L2S(S.bar[0],S.bar[1]); X.save(); X.globalAlpha*=S.load; X.strokeStyle='#FFFFFF'; X.lineWidth=6; X.lineCap='round';
-    X.beginPath(); X.moveTo(b[0],b[1]-250); X.lineTo(b[0],b[1]-78); X.stroke(); X.fillStyle='#FFFFFF'; X.beginPath(); X.moveTo(b[0]-18,b[1]-86); X.lineTo(b[0]+18,b[1]-86); X.lineTo(b[0],b[1]-58); X.closePath(); X.fill();
-    nkTxt('الوزن',b[0]+30,b[1]-200,40,'#FFFFFF','left'); X.restore(); }
-  { const w=L2S(PV[0],PV[1]-10); injLabel(t,S.a2+0.35,w[0]+40,w[1],1012,w[1]+150,'Wrist extension','الرسغ انطوى لورا','right',1-pr(t,S.a3-0.3,S.a3)); }
-  /* ٣ slippery: the bar leaves the open side of the hand and falls */
-  const kf=ik(t,S.tOut+0.05,0.3); if(kf>0){ X.save(); X.globalAlpha*=kf; const y0=1150; X.fillStyle=LIL; X.beginPath(); X.moveTo(540-16,y0-22); X.lineTo(540+16,y0-22); X.lineTo(540,y0); X.closePath(); X.fill();
-    nkTxt('البار وقع عليه',540,y0+40+(1-kf)*10,44,'#FFFFFF','center'); X.restore(); }
+  xrOverlay(t,S,a*ks); X.restore(); }
+function xrOverlay(t,S,a){ X.save(); X.globalAlpha=a; const fs=1-0.34*S.th, F=p=>[p[0],WR[1]-(WR[1]-p[1])*fs];
+  /* ١ both names, English and Arabic (client: «سويسايد غريب بدها ترجمة… يكتبها الاتنين سوا») */
+  { const tp=F([440,830]); injLabel(t,Math.max(S.a1,T_C1IN+1.9)+0.05,tp[0]-20,tp[1],70,tp[1]-170,'Suicide Grip','مسكة بلا إبهام','left',1-pr(t,S.a2-0.3,S.a2)); }
+  { const gp=F([600,884]); injLabel(t,S.a1+0.75,gp[0]+18,gp[1]+6,1012,gp[1]+150,'Closed grip','المسكة الصح','right',1-pr(t,S.a2-0.3,S.a2)); }   /* the dashed ghost: where the thumb belongs */
+  if(S.load>0){ const bx=560, by=F([0,HB.y])[1]; X.save(); X.globalAlpha*=S.load; X.strokeStyle='#FFFFFF'; X.lineWidth=6; X.lineCap='round';
+    X.beginPath(); X.moveTo(bx,by-300); X.lineTo(bx,by-130); X.stroke(); X.fillStyle='#FFFFFF'; X.beginPath(); X.moveTo(bx-18,by-138); X.lineTo(bx+18,by-138); X.lineTo(bx,by-110); X.closePath(); X.fill();
+    nkTxt('الوزن',bx+30,by-250,40,'#FFFFFF','left'); X.restore(); }
+  injLabel(t,S.a2+0.35,WR[0]-70,WR[1]-10,70,WR[1]+90,'Wrist bent back','الرسغ انطوى لورا','left',1-pr(t,S.a3-0.3,S.a3));   /* left: the right column is under Instagram's buttons */
+  const kf=ik(t,S.tOut+0.08,0.3); if(kf>0){ X.save(); X.globalAlpha*=kf; nkTxt('البار وقع عليه',540,600+(1-kf)*10,48,'#FFFFFF','center'); X.restore(); }
   X.restore(); }
 
 /* 6) the step pills (what went wrong), the chapter headers */
@@ -161,7 +211,7 @@ function stepPill(cx,cy,n,text,k,fs,active){ if(k<=0) return; fs=fs||46; X.save(
   X.fillStyle=PURPLE; X.beginPath(); X.arc(x+w-h/2,cy,h/2-12,0,7); X.fill(); nkTxt(n,x+w-h/2,cy+4,fs*0.8,'#FFFFFF','center'); nkTxt(text,x+w-h-6,cy+3,fs,'#FFFFFF','right'); X.restore(); }
 function canvasText(t){ const a1=CAN1(t), a2=CAN2(t);
   if(a1>0){ X.save(); X.globalAlpha=a1; chapter(t,T_C1IN+0.05,T_C1OUT+0.2,'WHY THE BAR FELL','ليش وقع البار؟');
-    const S=xrState(t), P_=[['١','سويسايد غريب',S.a1],['٢','رسغ ضعيف',S.a2],['٣','قبضة زلقة',WS.P2[18]-0.1]], fs=32, gap=18;
+    const S=xrState(t), P_=[['١','مسكة بلا إبهام',S.a1],['٢','رسغ ضعيف',S.a2],['٣','قبضة زلقة',WS.P2[18]-0.1]], fs=32, gap=18;
     const ws=P_.map(p=>stepPillW(p[0],p[1],fs)), tot=ws.reduce((x,y)=>x+y,0)+gap*2; let x=540+tot/2;
     P_.forEach((p,i)=>{ const cx=x-ws[i]/2; x-=ws[i]+gap; const cur=(i===2?t>=p[2]:(t>=p[2]&&t<P_[i+1][2])); stepPill(cx,440,p[0],p[1],ik(t,p[2],0.35),fs,cur); });
     X.restore(); }
@@ -172,17 +222,42 @@ function chapterDots(t){ const a=CANA(t); if(a<=0) return; const done=CAN1(t)>0?
     if(i<1){ X.fillStyle=on?'rgba(199,125,219,0.6)':'rgba(255,255,255,0.14)'; X.fillRect(x-48,168,32,4); }
     nkTxt(n,x,174,cur?24:20,(on||cur)?'#FFFFFF':'rgba(255,255,255,0.5)','center'); }); X.restore(); }
 
-/* 7) C2: the real spotter, then the wrist wrap the moment he names it */
+/* 7) C2: the spotter (drawn), then the wrist wrap the moment he names it */
+/* the spotter, drawn in the same ink (client: «في لقطة… حدا يوقف وراه، ليش ترجع تعيد نفس لقطة الهوك؟… يا الرسم يا هذا»): a bench
+   press from the side; the bar sinks to his chest, he cannot press it, the spotter behind his head takes it under the bar
+   and lifts it off him. Two-link limbs (shoulder → elbow → hand) solved every frame. */
+function k5ik(s,h,l1,l2,bend){ const dx=h[0]-s[0], dy=h[1]-s[1], d=Math.min(Math.hypot(dx,dy),l1+l2-0.5), a=Math.atan2(dy,dx);
+  const c=Math.acos(Math.max(-1,Math.min(1,(l1*l1+d*d-l2*l2)/(2*l1*d)))); const e=[s[0]+l1*Math.cos(a+bend*c),s[1]+l1*Math.sin(a+bend*c)]; return [s,e,[s[0]+d*Math.cos(a),s[1]+d*Math.sin(a)]]; }
+function spotter(t){ const t0=T_C2IN+0.15, k=u=>pr(t,t0+u[0],t0+u[1]);
+  const sink=ease(pr(t,t0+0.9,t0+1.6)), lift=ease(pr(t,WS.P4[5]-0.2,WS.P4[5]+0.6)), shake=Math.sin(t*38)*5*sink*(1-lift);
+  const bar=[392-30*lift, 790+150*sink-210*lift+shake];
+  X.save();
+  /* the bench and the floor */
+  k5line([[120,1250],[960,1250]],k([0,0.3]),3,'rgba(236,230,242,0.35)');
+  k5shape([[250,1068],[800,1068],[800,1100],[250,1100]],k([0.05,0.35]),false);
+  k5line([[300,1100],[300,1250]],k([0.15,0.35]),6,K5INK); k5line([[750,1100],[750,1250]],k([0.15,0.35]),6,K5INK);
+  /* the lifter, lying, head to the left */
+  k5tube([[640,1040],[770,1050],[800,1246]],k([0.25,0.55]),46,false);           // thigh and shin to the floor
+  k5shape([[336,1004],[640,1010],[652,1062],[336,1068]],k([0.2,0.5]),false);      // torso
+  k5circ(300,1028,38,k([0.25,0.5]),K5FILL,K5INK,4);                                  // head
+  const LA=k5ik([372,1018],[bar[0]+6,bar[1]+14],118,118,-1); k5tube(LA,k([0.4,0.7]),34,false);   // arm to the bar
+  /* the spotter, standing behind his head */
+  k5tube([[178,1246],[184,990]],k([0.3,0.55]),44,false); k5tube([[214,1246],[196,990]],k([0.3,0.55]),44,false);
+  k5shape([[150,990],[230,990],[226,770],[156,770]],k([0.35,0.6]),false); k5circ(192,712,42,k([0.4,0.62]),K5FILL,K5INK,4);
+  const reach=ease(pr(t,WS.P4[5]-0.55,WS.P4[5]-0.15)), hand=[bar[0]-26+(1-reach)*-90, bar[1]+22+(1-reach)*120];
+  const SA=k5ik([205,790],hand,120,120,1); k5tube(SA,k([0.45,0.72]),32,lift>0||reach>0.5);
+  /* the bar from the side: its plate round it */
+  const kb=k([0.45,0.75]); k5circ(bar[0],bar[1],128,kb,'rgba(36,28,43,0.75)',K5INK,5); k5circ(bar[0],bar[1],34,kb,'#3a3440','rgba(199,125,219,0.8)',4); k5circ(bar[0],bar[1],13,kb,'#cfd3d9',K5INK,3);
+  /* the danger while it sinks: his neck and chest under it */
+  const kd=sink*(1-lift); if(kd>0.05){ X.save(); X.globalCompositeOperation='lighter'; const g=X.createRadialGradient(345,1010,6,345,1010,120); g.addColorStop(0,`rgba(199,125,219,${0.45*kd})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=g; X.fillRect(225,890,240,240); X.restore(); }
+  X.restore();
+  checkPill(700,560,'السبوتر بيشيل البار',ik(t,WS.P4[5]-0.05,0.35),38); }
+
 const SP={x:160,y:490,w:760,h:800}, SP_T0=T_C2IN+0.2, SP_E=WS.P4[8]-0.15;
 function protect(t){ const a=CAN2(t); if(a<=0) return; X.save(); X.globalAlpha=a;
-  /* the record: neck compression by a barbell (one line, under the header) */
+  /* the record: neck compression by a barbell (one k5line, under the header) */
   const ks=ik(t,T_C2IN+0.35,0.35)*(1-pr(t,SP_E-0.25,SP_E)); if(ks>0){ X.save(); X.globalAlpha*=ks; nkTxt('بأمريكا: ١١ وفاة على الأقل من بار ضغط على الرقبة (١٩٩٩–٢٠٠٢)',540,438,30,LIL,'center',1,800); X.restore(); }
-  const kv=ik(t,T_C2IN+0.1,0.3)*(1-pr(t,SP_E-0.2,SP_E+0.1)); if(kv>0){ X.save(); X.globalAlpha*=kv;
-    const i=Math.max(0,Math.min(98,Math.floor((t-SP_T0)*36))); X.save(); X.shadowColor='rgba(118,2,138,0.55)'; X.shadowBlur=60; X.fillStyle='#000'; rr(SP.x,SP.y+20,SP.w,SP.h-20,30); X.fill(); X.restore();
-    X.save(); X.beginPath(); rr(SP.x,SP.y+20,SP.w,SP.h-20,30); X.clip(); const im=SPOT[i]; if(im&&im.naturalWidth) X.drawImage(im,SP.x,SP.y+20-30,SP.w,SP.w*860/760); X.restore();
-    X.strokeStyle='rgba(199,125,219,0.45)'; X.lineWidth=2; rr(SP.x,SP.y+20,SP.w,SP.h-20,30); X.stroke();
-    X.fillStyle='rgba(255,255,255,0.94)'; rr(SP.x+24,SP.y+44,232,36,18); X.fill(); X.fillStyle=PURPLE; X.beginPath(); X.arc(SP.x+46,SP.y+62,6,0,7); X.fill(); injLatin('REAL FOOTAGE',SP.x+150,SP.y+63,19,PURPLE,'center',800,3);
-    checkPill(SP.x+SP.w-200,SP.y+SP.h-64,'سبوتر شال البار',ik(t,WS.P4[5]-0.1,0.35),36); X.restore(); }
+  const kv=ik(t,T_C2IN+0.1,0.3)*(1-pr(t,SP_E-0.2,SP_E+0.1)); if(kv>0){ X.save(); X.globalAlpha*=kv; spotter(t); X.restore(); }
   /* the wrap: the line opens the card, the product lands with its name */
   const kp=ik(t,SP_E,0.35); if(kp>0){ const x=150,y=486+(1-kp)*40,w=780,h=810; X.save(); X.globalAlpha*=Math.min(1,kp*1.6); glassPane(x,y,w,h,44,{});
     X.fillStyle=PURPLE; rr(x+w-20,y+40,8,h-80,4); X.fill();
@@ -217,9 +292,6 @@ SCENE_LIST.push(['xray',xray]);
 SCENE_LIST.push(['protect',protect]);
 SCENE_LIST.push(['canvasText',canvasText]);
 SCENE_LIST.push(['chapterDots',chapterDots]);
-SCENE_LIST.push(['hookTag',hookTag]);
-SCENE_LIST.push(['hookWords',hookWords]);
-SCENE_LIST.push(['ringLabel',ringLabel]);
 SCENE_LIST.push(['titleCard',titleCard]);
 SCENE_LIST.push(['ahmadFront',ahmadFront]);
 SCENE_LIST.push(['takeaway',takeaway]);

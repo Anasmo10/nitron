@@ -23,8 +23,15 @@ for piece,groups,disp,hot in CARDS:
 for a,b in zip(cards,cards[1:]):
     if a['e']>b['s']-0.03: a['e']=round(b['s']-0.03,3)
 for c in cards: c.pop('piece')
-# the hook's words are drawn by scenes.js; card 0 is kept so the checker sees text in the first 0.5 s
-cards.insert(0,{'s':0.10,'e':round(wt('H',4)[1],3),'w':[{'t':'ثلثين','s':0.10,'e':wt('H',0)[1],'hot':True},{'t':'الإصابات','s':wt('H',1)[0],'e':wt('H',1)[1],'hot':False}]})
+# v3: the hook's words are the reel's glass captions (client, 15 Nov: no box and no words over the footage)
+hc=[]
+for grp,disp,hot in [([0,1],['ثلثين','الإصابات'],['ثلثين']),([2,3,4],['اللي','بتوصل','للإسعاف'],[]),([5,6],['بتكون','لأنه'],[]),([7,8],['الوزن','وقع'],['وقع']),([9,10],['على','صاحبه'],[])]:
+    ws=[{'t':d,'s':wt('H',wi)[0],'e':wt('H',wi)[1],'hot':d in hot} for wi,d in zip(grp,disp)]
+    hc.append({'s':round(max(0.05,ws[0]['s']-0.1),3),'e':round(ws[-1]['e']+0.2,3),'w':ws})
+for x,y in zip(hc,hc[1:]):
+    if x['e']>y['s']-0.03: x['e']=round(y['s']-0.03,3)
+hc[-1]['e']=min(hc[-1]['e'],round(P['P2']['start']-0.05,3))
+cards=hc+cards
 json.dump({'total':round(tl['total'],3),'cards':cards},open(W+'/caps.json','w'),ensure_ascii=False,indent=1)
 T={'T_'+k:P[k]['start'] for k in ('P2','P3','P4','P5')}
 T['T_C1IN']=tt('P2',2.32)       # the X-ray canvas comes in after «أسباب» (ends 2.12), before «ممكن» (2.58)
@@ -33,7 +40,5 @@ T['T_C2IN']=tt('P3',4.34)       # the protection canvas: in over «ناشفة»,
 T['T_C2OUT']=round(P['P5']['start']+0.05,3)   # out just after the cut to P5
 WS={k:[wt(k,i)[0] for i in range(len(words[c]))] for k,c in CLIP.items()}; WE={k:[wt(k,i)[1] for i in range(len(words[c]))] for k,c in CLIP.items()}
 hdr='const '+', '.join(f'{k}={round(v,3)}' for k,v in T.items())+';\nconst WS='+json.dumps(WS)+', WE='+json.dumps(WE)+';\n'
-geo=json.load(open(W+'/x5_geom.json')); hdr+='const XG='+json.dumps(geo)+';\n'
-ring=json.load(open(B+'/hook/ring.json')); hdr+='const RING='+json.dumps(ring)+';\n'
 open(W+'/scenes.js','w').write(hdr+open(W+'/scenes_body.js').read())
 print(hdr.split('\n')[0]); print(len(cards),'cards, total',tl['total'])
