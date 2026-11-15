@@ -143,7 +143,7 @@ function barbell(t,k0,a,wa){ if(a<=0) return; const y=830, kk=u=>pr(t,k0+u[0],k0
 const HB={y:800,r:40}, WR=[548,1062];
 const FG=[[500,46,738,884],[549,48,730,892],[598,45,738,884],[643,38,756,868]];       // cx, width, top (knuckle), bottom (tip)
 const PALM=[[470,1062],[452,980],[444,880],[450,770],[668,770],[662,880],[640,1000],[628,1062]];
-const TH_OFF=[[462,1000],[436,905],[436,820],[462,762]], TH_ON=[[462,1000],[478,930],[540,898],[602,880]];
+const TH_OFF=[[462,1000],[438,905],[436,820],[452,758],[478,728]],   /* behind the bar, its tip peeking over the top beside the index */ TH_ON=[[462,1000],[478,930],[540,898],[602,880]];
 function xrState(t){ const a1=WS.P2[9]-0.1, a2=WS.P2[13]-0.15, a2e=WE.P2[17], a3=WS.P2[21]-0.05, tOut=a3+0.30;
   const th=ease(pr(t,a2,a2e)), slip=ease(pr(t,a3,a3+0.30));
   let barY=HB.y+150*slip; if(t>tOut){ const u=t-tOut; barY=HB.y+150+380*u+0.5*5200*u*u; }
@@ -168,6 +168,7 @@ function xray(t){ const a=CAN1(t); if(a<=0||t<T_C1IN) return; const S=xrState(t)
   const fs=1-0.34*S.th;
   X.save(); X.translate(WR[0],WR[1]); X.scale(1,fs); X.translate(-WR[0],-WR[1]);
     k5shape(PALM,k([1.0,1.35]),false);
+    k5tube(TH_OFF,k([1.45,1.85]),44,S.a1<t&&t<S.a2);                  // thumbless: behind the bar, never across the fingers
     { const kp=k([1.2,1.45]); if(kp>0){ X.save(); X.globalAlpha*=kp; X.strokeStyle='rgba(236,230,242,0.5)'; X.lineWidth=3; X.beginPath(); X.ellipse(478,985,34,62,-0.15,-1.3,1.6); X.stroke(); X.restore(); } }   // the thumb's pad
   X.restore();
   /* the bar (behind the fingers): the hand holds it; when it slips it slides down behind them and drops */
@@ -180,8 +181,6 @@ function xray(t){ const a=CAN1(t); if(a<=0||t<T_C1IN) return; const S=xrState(t)
   X.save(); X.translate(WR[0],WR[1]); X.scale(1,fs); X.translate(-WR[0],-WR[1]);
     /* the fingers, curled over the bar toward us; they give as it slips (the tips lift) */
     FG.forEach((f,i)=>finger(f[0],f[1],f[2],f[3]-26*S.slip,k([1.15+i*0.08,1.45+i*0.08]),false));
-    /* the thumb: beside the index and over the top of the bar (lit while he names it) */
-    k5tube(TH_OFF,k([1.45,1.85]),44,S.a1<t&&t<S.a2);
     const kg=ik(t,S.a1+0.45,0.35)*(1-pr(t,S.a2-0.25,S.a2+0.05)); if(kg>0){ X.save(); X.globalAlpha*=kg; X.setLineDash([16,12]); k5line(TH_ON,1,52,'rgba(199,125,219,0.9)'); X.setLineDash([]); k5line(TH_ON,1,40,'rgba(36,28,43,0.55)'); X.restore(); }
     if(S.sweat>0){ [[500,850],[549,860],[598,846],[643,840],[520,940],[590,960],[470,900]].forEach((p,i)=>{ const tw_=0.55+0.45*Math.sin(t*9+i*1.7);
       X.save(); X.globalAlpha*=S.sweat*tw_; X.fillStyle='#FFFFFF'; X.beginPath(); X.ellipse(p[0],p[1],5,8,0,0,7); X.fill(); X.strokeStyle=LIL; X.lineWidth=2; X.stroke(); X.restore(); }); }
@@ -194,7 +193,7 @@ function xray(t){ const a=CAN1(t); if(a<=0||t<T_C1IN) return; const S=xrState(t)
   xrOverlay(t,S,a*ks); X.restore(); }
 function xrOverlay(t,S,a){ X.save(); X.globalAlpha=a; const fs=1-0.34*S.th, F=p=>[p[0],WR[1]-(WR[1]-p[1])*fs];
   /* ١ both names, English and Arabic (client: «سويسايد غريب بدها ترجمة… يكتبها الاتنين سوا») */
-  { const tp=F([440,830]); injLabel(t,Math.max(S.a1,T_C1IN+1.9)+0.05,tp[0]-20,tp[1],70,tp[1]-170,'Suicide Grip','مسكة بلا إبهام','left',1-pr(t,S.a2-0.3,S.a2)); }
+  { const tp=F([470,736]); injLabel(t,Math.max(S.a1,T_C1IN+1.9)+0.05,tp[0]-20,tp[1],70,tp[1]-170,'Suicide Grip','مسكة بلا إبهام','left',1-pr(t,S.a2-0.3,S.a2)); }
   { const gp=F([600,884]); injLabel(t,S.a1+0.75,gp[0]+18,gp[1]+6,1012,gp[1]+150,'Closed grip','المسكة الصح','right',1-pr(t,S.a2-0.3,S.a2)); }   /* the dashed ghost: where the thumb belongs */
   if(S.load>0){ const bx=560, by=F([0,HB.y])[1]; X.save(); X.globalAlpha*=S.load; X.strokeStyle='#FFFFFF'; X.lineWidth=6; X.lineCap='round';
     X.beginPath(); X.moveTo(bx,by-300); X.lineTo(bx,by-130); X.stroke(); X.fillStyle='#FFFFFF'; X.beginPath(); X.moveTo(bx-18,by-138); X.lineTo(bx+18,by-138); X.lineTo(bx,by-110); X.closePath(); X.fill();
@@ -223,37 +222,60 @@ function chapterDots(t){ const a=CANA(t); if(a<=0) return; const done=CAN1(t)>0?
     nkTxt(n,x,174,cur?24:20,(on||cur)?'#FFFFFF':'rgba(255,255,255,0.5)','center'); }); X.restore(); }
 
 /* 7) C2: the spotter (drawn), then the wrist wrap the moment he names it */
-/* the spotter, drawn in the same ink (client: «في لقطة… حدا يوقف وراه، ليش ترجع تعيد نفس لقطة الهوك؟… يا الرسم يا هذا»): a bench
-   press from the side; the bar sinks to his chest, he cannot press it, the spotter behind his head takes it under the bar
-   and lifts it off him. Two-link limbs (shoulder → elbow → hand) solved every frame. */
-function k5ik(s,h,l1,l2,bend){ const dx=h[0]-s[0], dy=h[1]-s[1], d=Math.min(Math.hypot(dx,dy),l1+l2-0.5), a=Math.atan2(dy,dx);
-  const c=Math.acos(Math.max(-1,Math.min(1,(l1*l1+d*d-l2*l2)/(2*l1*d)))); const e=[s[0]+l1*Math.cos(a+bend*c),s[1]+l1*Math.sin(a+bend*c)]; return [s,e,[s[0]+d*Math.cos(a),s[1]+d*Math.sin(a)]]; }
-function spotter(t){ const t0=T_C2IN+0.15, k=u=>pr(t,t0+u[0],t0+u[1]);
-  const sink=ease(pr(t,t0+0.9,t0+1.6)), lift=ease(pr(t,WS.P4[5]-0.2,WS.P4[5]+0.6)), shake=Math.sin(t*38)*5*sink*(1-lift);
-  const bar=[392-30*lift, 790+150*sink-210*lift+shake];
+/* the spotter, drawn in the series' ink (v4, client: «إذا بترجع للفريم اللي عم ينزل ويرفع فيه البار… بتلاقيه عم يعمل كوعه لورا…
+   لا حركة صحيحة ولا شي صحيح… راجع فريم باي فريم»). Bodies are tapered capsules joined into one silhouette (each group is
+   outlined as a union: a light pass a few px wider, then the dark fill), with real proportions. Every limb is a two-bone
+   chain solved each frame, and the bend is chosen anatomically: the lifter's elbows drop toward the floor, the spotter's
+   elbows hang down and his knees go forward. The bar follows a bench press J-curve: from over the shoulders to the lower
+   chest; it stalls there, the spotter hinges at the hips and bends his knees, takes it with both hands and lifts it off. */
+function k5cap(P_,A,r1,B,r2){ const dx=B[0]-A[0], dy=B[1]-A[1], d=Math.max(Math.hypot(dx,dy),1e-3), th=Math.atan2(dy,dx), ph=Math.acos(Math.max(-1,Math.min(1,(r1-r2)/d)));
+  P_.moveTo(A[0]+r1*Math.cos(th+ph),A[1]+r1*Math.sin(th+ph)); P_.arc(A[0],A[1],r1,th+ph,th+2*Math.PI-ph); P_.arc(B[0],B[1],r2,th-ph,th+ph); P_.closePath(); }
+function k5two(S,T,l1,l2,pick){ const dx=T[0]-S[0], dy=T[1]-S[1], d=Math.max(Math.abs(l1-l2)+1,Math.min(Math.hypot(dx,dy),l1+l2-0.5)), a=Math.atan2(dy,dx);
+  const c=Math.acos(Math.max(-1,Math.min(1,(l1*l1+d*d-l2*l2)/(2*l1*d)))); const e1=[S[0]+l1*Math.cos(a+c),S[1]+l1*Math.sin(a+c)], e2=[S[0]+l1*Math.cos(a-c),S[1]+l1*Math.sin(a-c)];
+  return {E:pick(e1,e2), H:[S[0]+d*Math.cos(a),S[1]+d*Math.sin(a)]}; }
+const LOWER=(p,q)=>p[1]>q[1]?p:q, FWD=(p,q)=>p[0]>q[0]?p:q;
+/* draw a group of parts as one silhouette: parts = list of builders (P_ => …) */
+function k5body(parts,k,hot,dim){ if(k<=0) return; const P_=new Path2D(); parts.forEach(f=>f(P_)); X.save(); X.globalAlpha*=Math.min(1,k*1.3); X.translate(0,(1-ease(k))*16);
+  X.lineJoin='round'; X.strokeStyle=hot?LIL:(dim?'rgba(236,230,242,0.55)':K5INK); X.lineWidth=8; X.stroke(P_); X.fillStyle=K5FILL; X.fill(P_); X.restore(); }
+const capP=(A,r1,B,r2)=>P_=>k5cap(P_,A,r1,B,r2), circP=(c,r)=>P_=>{ P_.moveTo(c[0]+r,c[1]); P_.arc(c[0],c[1],r,0,2*Math.PI); };
+const polyP=pts=>P_=>{ pts.forEach((q,i)=>i?P_.lineTo(q[0],q[1]):P_.moveTo(q[0],q[1])); P_.closePath(); };
+function spotter(t){ const t0=T_C2IN+0.15, kk=u=>pr(t,t0+u[0],t0+u[1]), tH=WS.P4[5];
+  /* the bar: lockout over the shoulders → lower chest (J-curve) → stalls → lifted off and racked */
+  const LOCK=[392,769], CHEST=[442,938], RACK=[376,752];          // lockout: arm straight over the shoulder (238 px from it)
+  const down=ease(pr(t,t0+0.55,t0+1.25)), lift=ease(pr(t,tH-0.05,tH+0.85));
+  const jx=LOCK[0]+(CHEST[0]-LOCK[0])*Math.pow(down,1.6), jy=LOCK[1]+(CHEST[1]-LOCK[1])*down;
+  const stall=down*(1-lift), shake=stall*Math.sin(t*34)*3.5*pr(t,t0+1.25,t0+1.4);
+  const bar=[jx+(RACK[0]-jx)*lift, jy+(RACK[1]-jy)*lift+shake];
+  /* the lifter, lying on the bench, head to the left */
+  const SH=[380,1006], HP=[642,1024];
+  const l1=124*(1-0.35*down*(1-lift));                                    // the upper arm swings out from the body at the bottom: shorter on a side view
+  const arm=k5two(SH,bar,l1,118,LOWER);                                     // elbow toward the floor, forearm under the bar
+  /* the spotter at the head of the bench: hinge + knee bend while he reaches, back up as he lifts */
+  const reach=ease(pr(t,tH-0.75,tH-0.1)), hinge=0.18+0.55*reach*(1-0.55*lift), sq=reach*(1-0.6*lift);
+  const ANK=[188,1212], hip=[176-4*sq,846+26*sq], tor=252, sS=[hip[0]+tor*Math.sin(hinge),hip[1]-tor*Math.cos(hinge)];
+  const knee=k5two(hip,ANK,190,186,FWD);                                   // knee a little forward
+  const head=[sS[0]+50*Math.sin(hinge*0.8)+8,sS[1]-50*Math.cos(hinge*0.8)];
+  const grip=[bar[0]-30,bar[1]+12], ready=[sS[0]+60+(grip[0]-sS[0]-60)*Math.min(1,reach*1.15),sS[1]+150+(grip[1]-sS[1]-150)*Math.min(1,reach*1.15)];
+  const sArm=k5two([sS[0]+6,sS[1]+14],ready,124,118,LOWER);                 // elbows hang down
   X.save();
-  /* the bench and the floor */
-  k5line([[120,1250],[960,1250]],k([0,0.3]),3,'rgba(236,230,242,0.35)');
-  k5shape([[250,1068],[800,1068],[800,1100],[250,1100]],k([0.05,0.35]),false);
-  k5line([[300,1100],[300,1250]],k([0.15,0.35]),6,K5INK); k5line([[750,1100],[750,1250]],k([0.15,0.35]),6,K5INK);
-  /* the lifter, lying, head to the left */
-  k5tube([[640,1040],[770,1050],[800,1246]],k([0.25,0.55]),46,false);           // thigh and shin to the floor
-  k5shape([[336,1004],[640,1010],[652,1062],[336,1068]],k([0.2,0.5]),false);      // torso
-  k5circ(300,1028,38,k([0.25,0.5]),K5FILL,K5INK,4);                                  // head
-  const LA=k5ik([372,1018],[bar[0]+6,bar[1]+14],118,118,-1); k5tube(LA,k([0.4,0.7]),34,false);   // arm to the bar
-  /* the spotter, standing behind his head */
-  k5tube([[178,1246],[184,990]],k([0.3,0.55]),44,false); k5tube([[214,1246],[196,990]],k([0.3,0.55]),44,false);
-  k5shape([[150,990],[230,990],[226,770],[156,770]],k([0.35,0.6]),false); k5circ(192,712,42,k([0.4,0.62]),K5FILL,K5INK,4);
-  const reach=ease(pr(t,WS.P4[5]-0.55,WS.P4[5]-0.15)), hand=[bar[0]-26+(1-reach)*-90, bar[1]+22+(1-reach)*120];
-  const SA=k5ik([205,790],hand,120,120,1); k5tube(SA,k([0.45,0.72]),32,lift>0||reach>0.5);
-  /* the bar from the side: its plate round it */
-  const kb=k([0.45,0.75]); k5circ(bar[0],bar[1],128,kb,'rgba(36,28,43,0.75)',K5INK,5); k5circ(bar[0],bar[1],34,kb,'#3a3440','rgba(199,125,219,0.8)',4); k5circ(bar[0],bar[1],13,kb,'#cfd3d9',K5INK,3);
-  /* the danger while it sinks: his neck and chest under it */
-  const kd=sink*(1-lift); if(kd>0.05){ X.save(); X.globalCompositeOperation='lighter'; const g=X.createRadialGradient(345,1010,6,345,1010,120); g.addColorStop(0,`rgba(199,125,219,${0.45*kd})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=g; X.fillRect(225,890,240,240); X.restore(); }
+  /* floor and bench */
+  k5line([[90,1236],[990,1236]],kk([0,0.25]),3,'rgba(236,230,242,0.35)');
+  k5body([polyP([[262,1060],[722,1060],[722,1092],[262,1092]]),capP([300,1092],9,[300,1234],9),capP([690,1092],9,[690,1234],9)],kk([0.02,0.3]),false);
+  /* the spotter (behind the lifter's head, a step deeper in the picture) */
+  k5body([capP(hip,40,sS,46),capP(hip,30,knee.E,24),capP(knee.E,24,ANK,15),capP(ANK,13,[ANK[0]+58,ANK[1]+14],11),capP(sS,15,head,12),circP(head,34)],kk([0.18,0.45]),false,true);
+  k5body([capP([sS[0]+6,sS[1]+14],18,sArm.E,15),capP(sArm.E,15,sArm.H,11),circP(sArm.H,15)],kk([0.3,0.55]),lift>0.02||reach>0.6,true);
+  /* the lifter */
+  k5body([polyP([[350,1058],[350,990],[372,968],[436,952],[520,962],[600,984],[668,1000],[676,1058]]),capP([330,1018],13,[362,1010],15),circP([302,1020],34),
+          capP(HP,34,[818,1004],25),capP([818,1004],24,[836,1206],16),capP([836,1210],13,[898,1224],11)],kk([0.1,0.38]),false);
+  k5body([capP(SH,20,arm.E,16),capP(arm.E,16,arm.H,12),circP(arm.H,16)],kk([0.25,0.5]),false);
+  /* the bar from the side: the shaft's end and its plate, in front (the plate kept light so the hands read through it) */
+  const kb=kk([0.3,0.55]); if(kb>0){ X.save(); X.globalAlpha*=kb; X.fillStyle='rgba(36,28,43,0.55)'; X.beginPath(); X.arc(bar[0],bar[1],82,0,7); X.fill(); X.strokeStyle=K5INK; X.lineWidth=5; X.stroke();
+    X.strokeStyle='rgba(199,125,219,0.8)'; X.lineWidth=3; X.beginPath(); X.arc(bar[0],bar[1],62,0,7); X.stroke(); X.fillStyle='#cfd3d9'; X.beginPath(); X.arc(bar[0],bar[1],14,0,7); X.fill(); X.strokeStyle=K5INK; X.lineWidth=3; X.stroke(); X.restore(); }
+  /* the danger while it sits on him */
+  const kd=stall*pr(t,t0+1.2,t0+1.4); if(kd>0.05){ X.save(); X.globalCompositeOperation='lighter'; const g=X.createRadialGradient(CHEST[0]-40,CHEST[1]+40,6,CHEST[0]-40,CHEST[1]+40,130); g.addColorStop(0,`rgba(199,125,219,${0.45*kd})`); g.addColorStop(1,'rgba(118,2,138,0)'); X.fillStyle=g; X.fillRect(CHEST[0]-180,CHEST[1]-100,280,280); X.restore(); }
   X.restore();
-  checkPill(700,560,'السبوتر بيشيل البار',ik(t,WS.P4[5]-0.05,0.35),38); }
-
-const SP={x:160,y:490,w:760,h:800}, SP_T0=T_C2IN+0.2, SP_E=WS.P4[8]-0.15;
+  checkPill(700,560,'السبوتر بيشيل البار',ik(t,tH-0.05,0.35),38); }
+const SP_E=WS.P4[8]-0.15;   /* the spotter until «وإذا بدك», then the wrist wrap */
 function protect(t){ const a=CAN2(t); if(a<=0) return; X.save(); X.globalAlpha=a;
   /* the record: neck compression by a barbell (one k5line, under the header) */
   const ks=ik(t,T_C2IN+0.35,0.35)*(1-pr(t,SP_E-0.25,SP_E)); if(ks>0){ X.save(); X.globalAlpha*=ks; nkTxt('بأمريكا: ١١ وفاة على الأقل من بار ضغط على الرقبة (١٩٩٩–٢٠٠٢)',540,438,30,LIL,'center',1,800); X.restore(); }
