@@ -40,5 +40,7 @@ T['T_C2IN']=tt('P3',4.34)       # the protection canvas: in over «ناشفة»,
 T['T_C2OUT']=round(P['P5']['start']+0.05,3)   # out just after the cut to P5
 WS={k:[wt(k,i)[0] for i in range(len(words[c]))] for k,c in CLIP.items()}; WE={k:[wt(k,i)[1] for i in range(len(words[c]))] for k,c in CLIP.items()}
 hdr='const '+', '.join(f'{k}={round(v,3)}' for k,v in T.items())+';\nconst WS='+json.dumps(WS)+', WE='+json.dumps(WE)+';\n'
-open(W+'/scenes.js','w').write(hdr+open(W+'/scenes_body.js').read())
+import os
+ho=json.load(open(B+'/hook/opts.json')); hdr+='const HOOK='+json.dumps({'opt':os.environ.get('HOOK_OPT','A'),'cut':ho['cut']})+';\n'
+open(W+'/scenes.js','w').write(hdr+open(W+'/scenes_body.js').read()+'\n'+open(W+'/hook_mg.js').read())
 print(hdr.split('\n')[0]); print(len(cards),'cards, total',tl['total'])

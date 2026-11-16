@@ -171,6 +171,19 @@ Brief: «بدنا نساوي خلفية تبع أحمد… فريم فريم، �
 - **Checks on the delivered file (v1):** 841 frames, 30 fps, 28.03 s; −15.1 LUFS, peak −1.9 dBFS; voice offset 0.0 ms; `08_safe_check.js` all ✅ (right column 0.88%); sharpness dips only in the 0.2 s canvas fades, the 4-frame dissolve and the X-ray's own dark reveal (`ep05/sharp5.py`).
 - **Sources (EP05):** Kerr, Collins & Comstock, Am J Sports Med 2010 (65.5% of weight-training ED injuries: weights dropping on the person) · Jumbelic, J Forensic Sci 2007 · James Madison University, Exercise Technique & Spotting. The two papers were read from PubMed abstracts; the JMU page from search summaries.
 
+## EP05 v5 (client, 16 Nov): Instagram limited the reel to 18+
+Client: «بلعنا بان… ما طلع إلا للأشخاص اللي زائد ١٨، لأنه الإصابة كتير قوية… اعمل أكتر من حالة ورجيني الحلول، ما تمنتج وتقطع وتنهي من عندك».
+- **Never show the impact on a real person.** The footage stops while the bar is still falling, before it touches him (EP05: src 0.64 s; at 0.67 it is on him). The injury itself is shown only as a motion graphic.
+- **When the client asks for options, deliver options, not a finished cut.** Each option is a 6 s preview (the hook and Ahmad's first words) with its own sound, built on the same timeline: the hook stays 122 frames, so whichever is chosen drops into the reel without moving anything (`ep05/hook_opts.sh`, `ep05/hook_preview.py`, `HOOK_OPT=A|B|C` in `gen5.py`).
+  - A: the slip in slow motion, then a quick card flip into the chest close-up.
+  - B: freeze, an ink tracing of the frame, the bench drawn, then the close-up.
+  - C: motion graphics only.
+- **The chest close-up** (`ep05/hook_mg.js`, `hkChest`) is the series' ink with purple muscle:
+  - One silhouette for the torso (neck fading into the dark, the trapezius' curve, round deltoids, the arms).
+  - Both pectorals in purple with 17 fibres each, from the sternum and clavicle to the arm.
+  - The bar falls into frame and slams across the lower chest: one soft lilac flash (one impact in the whole hook, never two), the frame shakes, the chest gives and rebounds, three shock rings and debris.
+  - The fibres under the bar crack and split, propagating in slow motion.
+
 ## EP05 v4 (client, 15 Nov): hook quality and correct motion
 - **Hook quality** («ليش عامل البداية بهالجودة السخيفة… مقرّب كتير»): never blow a 360p clip up 4× and then zoom in on top. Each source frame is enhanced ×4 with Real-ESRGAN (`realesr-general-x4v3`), rebuilt as ONNX from the official `.pth` without PyTorch (`ep05/sr/build_sr.py`; PyTorch's index is blocked here, while the GitHub release and PyPI's `onnx` are reachable). About 1.7 s a frame on this CPU. Crop just below any burnt-in text, interpolate after enhancing, and keep the zoom gentle (1.0 → 1.12, `ep05/hook6.py`).
 - **Suspense before the injury** («لازم تترك شوية وقت قبل ما تبدأ الإصابة، تعمل شوية تشويق»): the moments before the failure run slowed (0.40×, about 1.5 s on EP05) with a slow push-in and a dark riser into the moment. Only then does the failure play (0.30×), with the hit on impact. Open from black in 0.2 s.
