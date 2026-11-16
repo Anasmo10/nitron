@@ -31,7 +31,7 @@ function hkChest(t,tF,tI){ /* tF: the bar enters the frame · tI: it lands */
   const zoom=1+0.10*hkE(hkP(t,tF,tI+1.6));
   X.save(); X.fillStyle='#0A0A0C'; X.fillRect(0,0,W,H);
   { const g=X.createRadialGradient(540,900,40,540,900,1000); g.addColorStop(0,'rgba(118,2,138,0.55)'); g.addColorStop(0.6,'rgba(75,1,88,0.18)'); g.addColorStop(1,'rgba(10,10,12,0)'); X.fillStyle=g; X.fillRect(0,0,W,H); }
-  X.translate(540+sx,HK_IMP+sy); X.scale(zoom,zoom*sq); X.translate(-540,-HK_IMP);
+  X.translate(540+sx,HK_IMP+sy); X.scale(0.8*zoom,0.8*zoom*sq); X.translate(-540,-HK_IMP);   /* 0.8: the arms stay clear of Instagram's right column */
   /* torso: neck, the trapezius' curve, round deltoids, the arms, the waist — one silhouette */
   { const P_=new Path2D(); for(const sd of [1,-1]){ const m=(x,y)=>[sd>0?x:1080-x,y];
       let a=m(462,470),b=m(452,540); P_.moveTo(...a); P_.lineTo(...b); let c=m(380,560),d=m(300,592); P_.quadraticCurveTo(...c,...d); c=m(232,612); d=m(196,640); P_.quadraticCurveTo(...c,...d);
@@ -69,6 +69,7 @@ function hkChest(t,tF,tI){ /* tF: the bar enters the frame · tI: it lands */
   /* debris */
   if(hit&&after<1.4){ HK_PART.forEach(p=>{ const tt=after*0.55, x=p.x+p.vx*tt, y=HK_IMP-10+p.vy*tt+900*tt*tt; const a3=Math.max(0,1-after/1.2); X.save(); X.globalAlpha*=a3; X.fillStyle=p.l>0.5?'#FFFFFF':LIL; X.beginPath(); X.arc(x,y,p.r,0,7); X.fill(); X.restore(); }); }
   X.restore();
+  { const g=X.createLinearGradient(0,1430,0,1600); g.addColorStop(0,'rgba(10,10,12,0)'); g.addColorStop(1,'rgba(10,10,12,1)'); X.fillStyle=g; X.fillRect(0,1430,W,H-1430); }   /* the torso fades out above Instagram's bottom zone */
   /* the flash on the hit */
   if(hit&&after<0.16){ X.save(); X.globalAlpha=0.55*(1-after/0.16); X.fillStyle='#E9C9F2'; X.fillRect(0,0,W,H); X.restore(); } }
 /* ── the bench press, side view (the spotter scene's figure, enlarged; no spotter) ── */
