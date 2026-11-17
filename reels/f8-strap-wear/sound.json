@@ -1,0 +1,62 @@
+{
+ "drop": 4.1667,
+ "slam": null,
+ "music_db": -18.0,
+ "duck_db": 8.0,
+ "intro_lp": 2600,
+ "stop_down": [],
+ "sfx_gain": 0.34,
+ "outro_lib": "whoosh_in",
+ "music_low_db": 3.0,
+ "events": [
+  [
+   "lib",
+   0.03,
+   0.5,
+   "es_sub"
+  ],
+  [
+   "lib",
+   2.81,
+   0.24,
+   "thud_b"
+  ],
+  [
+   "lib",
+   4.1667,
+   0.3,
+   "whoosh_a"
+  ],
+  [
+   "stretch",
+   8.822,
+   0.3,
+   0.15,
+   0.36
+  ],
+  [
+   "lib",
+   9.885,
+   0.2,
+   "es_pop_hi"
+  ],
+  [
+   "lib",
+   11.014,
+   0.22,
+   "es_pop"
+  ],
+  [
+   "lib",
+   12.498999999999999,
+   0.18,
+   "es_swish"
+  ],
+  [
+   "lib",
+   17.377,
+   0.26,
+   "ding"
+  ]
+ ]
+}

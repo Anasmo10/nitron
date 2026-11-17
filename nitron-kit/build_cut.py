@@ -19,6 +19,9 @@ reel.json
   piece "track": [[t,x,y,z],...] = a virtual camera (from reframe.py): source point x,y (1080-space) held at "target", zoom z,
                   keyframes at piece-relative seconds, interpolated per frame — his face stays the same size and place across cuts
   piece "xfade": n = dissolve n frames from the previous piece into this one (the two overlap; the voice crossfades too)
+  piece "vo": {"clip","a"} = the voice comes from that clip at raw second a (B-roll of his hands over his own words);
+              with "voice_gain": "clip" every take gets one gain, so a sentence carried across B-roll pieces
+              (vo a = previous vo a + previous b−a) stays seamless, xfades included
   "hires": optional working width (e.g. 1620) for 4K sources: pieces are graded at that size and the zoom
            is resampled from it straight to 1080×1920, so a 1.2–1.4× punch-in stays sharp
 """
@@ -95,15 +98,22 @@ for p in cfg["pieces"]:
     xf=int(p.get("xfade",0)) if tl else 0; st=start-xf/FPS; nn=n-(xf if tl else 0)
     tl.append({"name":p["name"],"start":round(st+xf/FPS,4) if False else round(start,4),"end":round(start+nn/FPS,4),"frames":[k-nn+1,k],"face":f,"xfade_from":round(st,4)}); start+=nn/FPS
 # 4) voice: 48 kHz, exact lengths, 6 ms edge fades, spoken level matched across clips
-SR=48000; VT=np.zeros(round(start*SR)+SR,np.float32); pis=list(zip(cfg["pieces"],tl))
+SR=48000; VT=np.zeros(round(start*SR)+SR,np.float32); pis=list(zip(cfg["pieces"],tl)); VG={}
 for idx,(p,t) in enumerate(pis):
     xf=int(p.get("xfade",0)) if idx else 0; n=t["frames"][1]-t["frames"][0]+1+xf; L=round(n/FPS*SR); s0=round((t["start"]-xf/FPS)*SR)
     if p.get("hold"): continue   # a freeze frame is silent
-    raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{p['a']-xf/FPS}","-i",cfg["clips"][p["clip"]]["file"],"-t",f"{n/FPS:.5f}","-vn","-ac","1","-ar",str(SR),
+    vc,va=(p["vo"]["clip"],p["vo"]["a"]) if p.get("vo") else (p["clip"],p["a"])   # "vo": the voice of another clip under this picture (B-roll over his words)
+    raw=subprocess.run(["ffmpeg","-v","error","-ss",f"{va-xf/FPS}","-i",cfg["clips"][vc]["file"],"-t",f"{n/FPS:.5f}","-vn","-ac","1","-ar",str(SR),
         "-af","highpass=f=70","-f","f32le","-"],capture_output=True,check=True).stdout
     x=np.frombuffer(raw,np.float32).copy(); x=np.pad(x,(0,max(0,L-len(x))))[:L]
-    fr=x[:len(x)//480*480].reshape(-1,480); r=np.sqrt((fr**2).mean(1)); act=r[r>np.percentile(r,60)]
-    x*=0.08/(act.mean()+1e-9)
+    if cfg.get("voice_gain")=="clip":   # one gain per take: a sentence split over several pieces keeps one level, and an xfade between them sums back to the take
+        if vc not in VG:
+            full=np.frombuffer(subprocess.run(["ffmpeg","-v","error","-i",cfg["clips"][vc]["file"],"-vn","-ac","1","-ar",str(SR),"-af","highpass=f=70","-f","f32le","-"],capture_output=True,check=True).stdout,np.float32)
+            fr=full[:len(full)//480*480].reshape(-1,480); r=np.sqrt((fr**2).mean(1)); VG[vc]=0.08/(r[r>np.percentile(r,60)].mean()+1e-9)
+        x*=VG[vc]
+    else:
+        fr=x[:len(x)//480*480].reshape(-1,480); r=np.sqrt((fr**2).mean(1)); act=r[r>np.percentile(r,60)]
+        x*=0.08/(act.mean()+1e-9)
     fi=max(int(0.006*SR),round(xf/FPS*SR)); x[:fi]*=np.linspace(0,1,fi)
     nx=int(pis[idx+1][0].get("xfade",0)) if idx+1<len(pis) else 0; fo=max(int(0.006*SR),round(nx/FPS*SR)); x[-fo:]*=np.linspace(1,0,fo)
     VT[s0:s0+L]+=x[:len(VT)-s0]

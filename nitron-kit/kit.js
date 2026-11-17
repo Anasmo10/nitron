@@ -262,7 +262,9 @@ function nkGlassList(t,cfg){
 /* SHADE: a soft black gradient behind a title so it reads over a busy shot (no box, no glow). */
 function nkShade(t,cfg){ if(t<cfg.s||t>cfg.e) return; const k=pr(t,cfg.s,cfg.s+0.12)*(1-pr(t,cfg.e-0.25,cfg.e)); if(k<=0) return;
   const g=X.createLinearGradient(0,cfg.y0,0,cfg.y1); g.addColorStop(0,'rgba(10,10,12,'+(cfg.a||0.62)+')'); g.addColorStop(1,'rgba(10,10,12,0)');
-  X.save(); X.globalAlpha=k; X.fillStyle=g; X.fillRect(0,Math.min(cfg.y0,cfg.y1),W,Math.abs(cfg.y1-cfg.y0)); X.restore(); }
+  X.save(); X.globalAlpha=k; X.fillStyle=g; X.fillRect(0,Math.min(cfg.y0,cfg.y1),W,Math.abs(cfg.y1-cfg.y0));
+  if(cfg.solid){ X.fillStyle='rgba(10,10,12,'+(cfg.a||0.62)+')'; if(cfg.y0>cfg.y1) X.fillRect(0,cfg.y0,W,H-cfg.y0); else X.fillRect(0,0,W,cfg.y0); }   /* solid: full strength from y0 to the frame edge (a title over a busy shirt print) */
+  X.restore(); }
 
 /* RING: a light-purple ellipse that draws itself around the thing he is talking about (the mistake, the product).
    cfg = {at, e, cx, cy, rx, ry, rot, dur} — one stroke, no fill, no glow. */
