@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;box-sizing:border-box} body{width:1080px;height:1920px;overflow:hidden;position:relative;background:#0A0A0C;font-family:Cairo,sans-serif}
+.bg{position:absolute;inset:0;background:url(bg.png) center/cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,12,.55) 0%,rgba(10,10,12,0) 16%,rgba(10,10,12,0) 50%,rgba(10,10,12,.78) 66%,rgba(10,10,12,.96) 82%,#0A0A0C 100%)}
+.glow{position:absolute;left:-200px;right:-200px;top:1120px;height:700px;background:radial-gradient(closest-side,rgba(118,2,138,.55),rgba(118,2,138,0));filter:blur(20px)}
+svg.ring{position:absolute;left:0;top:0}
+.check{position:absolute;left:770px;top:455px;width:112px;height:112px;border-radius:56px;background:#76028A;border:6px solid #fff;box-shadow:0 14px 40px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}
+.eb{position:absolute;left:50%;top:1102px;transform:translateX(-50%);padding:14px 34px 16px;border-radius:44px;background:rgba(10,10,12,.55);backdrop-filter:blur(18px);border:2px solid rgba(255,255,255,.35);
+ font:900 46px/1 Inter,sans-serif;letter-spacing:4px;color:#fff;white-space:nowrap;box-shadow:inset 0 2px 0 rgba(255,255,255,.35)}
+.t{position:absolute;left:0;right:0;top:1178px;text-align:center;font-weight:900;font-size:168px;line-height:1.2;white-space:nowrap;color:#fff;direction:rtl;text-shadow:0 10px 40px rgba(0,0,0,.6)}
+.t b{color:#C77DDB;font-weight:900}
+.bar{position:absolute;left:50%;top:1398px;width:300px;height:14px;border-radius:7px;background:#76028A;transform:translateX(-50%)}
+.logo{position:absolute;left:50%;top:1660px;width:330px;transform:translateX(-50%)}
+</style></head><body>
+<div class="bg"></div><div class="shade"></div><div class="glow"></div>
+<svg class="ring" width="1080" height="1920"><ellipse cx="482" cy="748" rx="400" ry="330" fill="none" stroke="#C77DDB" stroke-width="10" stroke-dasharray="1700 2600" stroke-dashoffset="-200" stroke-linecap="round" transform="rotate(-10 482 748)" style="filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))"/></svg>
+<div class="check"><svg width="60" height="60" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="eb">FIGURE 8 STRAP</div>
+<div class="t" id="t"><span id="ts">هيك بينلبس <b>صح</b></span></div>
+<div class="bar"></div>
+<img class="logo" src="logo_word.png">
+<script>
+const ts=document.getElementById('ts'), t=document.getElementById('t'); let fs=176;
+function fit(){ t.style.fontSize=fs+'px'; while(ts.getBoundingClientRect().width>960&&fs>100){ fs-=2; t.style.fontSize=fs+'px'; }
+  const r=ts.getBoundingClientRect(); const bar=document.querySelector('.bar'); bar.style.top=(r.bottom+4)+'px'; bar.style.width=Math.round(r.width*0.42)+'px'; }
+document.fonts.ready.then(fit);
+</script></body></html>
