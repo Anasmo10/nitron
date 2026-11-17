@@ -137,13 +137,13 @@ function nkWallWords(t,cfg){
   const w=ws[i], nx=ws[i+1], k=pr(t,w.at-0.10,w.at+0.12), out=1-pr(t,cfg.e-0.16,cfg.e);
   if(!w._y){ const f=BEHIND&&BEHIND.faces, ys=[]; const a=Math.floor(w.at*30)+1, b=Math.ceil((nx?nx.at:cfg.e)*30)+1;
     for(let n=a;n<=b;n++){ const q=f&&f[n]; if(q) ys.push(q.y-0.35*q.h); } ys.sort((p,q)=>p-q);
-    const ht=ys.length?ys[ys.length>>1]:380; X.font='900 '+(cfg.size||250)+'px '+FONT;
+    const ht=ys.length?ys[ys.length>>1]:380; X.font='900 '+(cfg.size||250)+'px '+(w.latin?'Inter, '+FONT:FONT);   /* latin:true = an English word, set in Inter (17 Nov) */
     let sz=Math.min(cfg.size||250,Math.floor((cfg.size||250)*940/X.measureText(w.text).width));
     const dr=cfg.drop===undefined?0.18:cfg.drop;   /* how far the word sinks behind the head (0.18 = house; ~0 = only the descenders, for short words the head would hide) */
     let y=ht+dr*sz; if(y-0.55*sz<168){ sz=Math.max(150,Math.floor((ht+dr*sz-168)/0.55)); y=Math.max(168+0.55*sz,ht+dr*sz); }
     w._y=y; w._sz=sz; }
   X.save(); X.globalAlpha=Math.min(1,k*1.6)*out; const sc=1.12-0.12*ease(k); X.translate(540,w._y); X.scale(sc,sc);
-  X.shadowColor='rgba(0,0,0,0.22)'; X.shadowBlur=24; X.shadowOffsetY=10; nkTxt(w.text,0,0,w._sz,w.color||ACC,'center');
+  X.shadowColor='rgba(0,0,0,0.22)'; X.shadowBlur=24; X.shadowOffsetY=10; if(w.latin) nkLatin(w.text,0,0,w._sz,w.color||ACC,'center'); else nkTxt(w.text,0,0,w._sz,w.color||ACC,'center');
   X.shadowColor='transparent';
   if(w.strike){ const ks=nkK(t,w.strike,0.22); if(ks>0){ X.font='900 '+w._sz+'px '+FONT; const tw=X.measureText(w.text).width;
     X.strokeStyle=ACC; X.lineWidth=w._sz*0.09; X.lineCap='round'; X.beginPath(); X.moveTo(tw/2,w._sz*0.05); X.lineTo(tw/2-tw*ks,w._sz*0.05); X.stroke(); } }
@@ -328,3 +328,7 @@ function nkGlassTitle(t,cfg){
       X.restore(); }
     y+=l.h; });
   X.restore(); }
+
+/* BEHIND HIM (17 Nov: «حط شي ورا احمد مو كله قدام»): draw(t) paints something (a card, an arrow…) and the speaker's own
+   person layer (behind.json ranges, bt/person) goes back on top, so it sits between the wall and him. Push with the 'video' flag. */
+function nkBehind(t,draw){ draw(t); if(PRS_OK) X.drawImage(PRS,0,0,W,H); }
