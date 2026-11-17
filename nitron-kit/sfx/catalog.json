@@ -325,5 +325,10 @@
   "src": "earshot bank fit/hit/bamboo_tok + knock/snap + cut_hit/punch, layered",
   "peak_at": 0.058,
   "desc": "a dry bone-like crack over a short low punch: a bone breaking in a drawing"
+ },
+ "syn_wrong": {
+  "dur": 0.79,
+  "peak_at": 0.02,
+  "desc": "game-show wrong buzzer (two short saw buzzes, synthesised) — the mistake"
  }
 }
