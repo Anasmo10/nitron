@@ -305,3 +305,26 @@ function nkReveal(t,cfg){ if(t<cfg.s||t>cfg.e) return; let y=cfg.y; const ko=pr(
         X.save(); X.fillStyle=ACC; rr(540+tw/2-tw*kb,y+sz*0.55-ko*24,tw*kb,12,6); X.fill(); X.restore(); } } }
     y+=sz*(cfg.gap||1.12); });
 }
+
+/* ═══ kit v2.3 (client, 17 Nov: «التيكست فايت ببعضه» · English product names in English) ═══
+   GLASS TITLE: a headline block on one dark liquid-glass plate. Each line gets its own pitch from its own size
+   (Arabic 1.42×, Latin 1.18×), so stacked lines never touch, and the plate keeps the words off a shirt print or any
+   other text behind them. Latin lines (or latin:true) are set in Inter. Lines land on their words (fade + 16 px rise),
+   an optional purple bar draws under a line. cfg = {s, e, cy, maxW, pad, lines:[{text, at, size, color, latin, bar}]} */
+function nkGlassTitle(t,cfg){
+  if(t<cfg.s-0.05||t>cfg.e) return; const kin=nkK(t,cfg.s,0.26), out=1-pr(t,cfg.e-0.18,cfg.e); if(kin<=0||out<=0) return;
+  const pad=cfg.pad||44, maxW=cfg.maxW||820;
+  const L=cfg.lines.map(l=>{ const lat=l.latin||!/[؀-ۿ]/.test(l.text), f0=l.size||120, fnt=s=>'900 '+s+'px '+(lat?'Inter, '+FONT:FONT);
+    X.font=fnt(f0); const sz=Math.min(f0,Math.floor(f0*(maxW-2*pad)/X.measureText(l.text).width)); X.font=fnt(sz);
+    return {text:l.text,at:l.at,color:l.color,bar:l.bar,lat,sz,w:X.measureText(l.text).width,h:sz*(lat?1.18:1.42)}; });
+  const w=Math.max(...L.map(l=>l.w))+2*pad, h=L.reduce((a,l)=>a+l.h,0)+pad*0.9, x0=540-w/2, y0=cfg.cy-h/2;
+  X.save(); X.globalAlpha*=Math.min(1,kin*1.6)*out; const sc=0.94+0.06*ease(kin); X.translate(540,cfg.cy); X.scale(sc,sc); X.translate(-540,-cfg.cy);
+  glassPane(x0,y0,w,h,Math.min(52,h*0.20),{});
+  let y=y0+pad*0.45;
+  L.forEach(l=>{ const k=nkK(t,l.at,0.24), cy=y+l.h/2;
+    if(k>0){ X.save(); X.globalAlpha*=Math.min(1,k*1.8); const dy=(1-ease(k))*16;
+      if(l.lat) nkLatin(l.text,540,cy+dy,l.sz,l.color||'#FFFFFF','center'); else nkTxt(l.text,540,cy+dy+l.sz*0.05,l.sz,l.color||'#FFFFFF','center');
+      if(l.bar){ const kb=nkK(t,l.at+0.16,0.24); if(kb>0){ X.fillStyle=ACC; rr(540-l.w/2*kb,y+l.h-12,l.w*kb,10,5); X.fill(); } }
+      X.restore(); }
+    y+=l.h; });
+  X.restore(); }

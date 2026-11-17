@@ -6,12 +6,14 @@ clips={f"v{c[1:]}":{"file":f"{D}/{c}.mp4","gains":[1,1,1]} for c in R0}
 for c in ("c04","c02","c01"): clips[f"a{c[1:]}"]={"file":f"/home/user/work/f8/src/{c}.mp4","gains":[1,1,1]}
 # name, clip, raw start (source s), frames, vo take, vo raw start, extra
 P=[("H","c04",0.48,125,"a04",0.48,{"zoom":[1.42,1.22],"snap":0.4}),
-   ("S1","c09",0.10,34,"a02",0.36,{"zoom":[1.04,1.10],"anchor":[470,900],"target":[470,900]}),
-   ("S2","c08",0.80,67,"a02",None,{"zoom":[1.02,1.08],"xfade":5,"anchor":[640,480],"target":[640,480]}),
-   ("S3","c07",1.77,99,"a02",None,{"zoom":[1.02,1.09],"xfade":5,"anchor":[700,420],"target":[700,420]}),
-   ("T","c01",0.46,109,"a01",0.46,{"zoom":[1.26,1.30],"xfade":3}),
-   ("R1","c10",1.90,49,"a01",4.33,{"zoom":[1.03,1.09],"xfade":5,"anchor":[560,300],"target":[560,300]}),
-   ("R2","c06",2.70,59,"a01",None,{"zoom":[1.02,1.07],"xfade":5,"anchor":[540,900],"target":[540,900]})]
+   # v2 (client 17 Nov «المونتاج مو ظابط»): hard cuts on the music's beats (0.3995 s, beat 0 = the drop at 4.167):
+   # S1 3 beats · S2 6 · S3 8 · T 9 · R1 4 · R2 5 — every cut lands on a beat, each gets a quick zoom-through + whoosh
+   ("S1","c09",0.04,36,"a02",0.36,{"zoom":[1.04,1.10],"anchor":[470,900],"target":[470,900]}),
+   ("S2","c08",0.65,72,"a02",None,{"zoom":[1.02,1.08],"anchor":[640,480],"target":[640,480]}),
+   ("S3","c07",1.82,96,"a02",None,{"zoom":[1.02,1.09],"anchor":[700,420],"target":[700,420]}),
+   ("T","c01",0.46,108,"a01",0.46,{"zoom":[1.26,1.30]}),
+   ("R1","c10",1.85,48,"a01",4.33,{"zoom":[1.03,1.09],"anchor":[560,300],"target":[560,300]}),
+   ("R2","c06",2.63,59,"a01",None,{"zoom":[1.02,1.07],"anchor":[540,900],"target":[540,900]})]
 pieces=[]; prev=None
 for name,c,s,n,vt,va,ex in P:
     if va is None: va=round(prev[0]+prev[1]/30,4)

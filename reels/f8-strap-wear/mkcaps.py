@@ -2,7 +2,7 @@
 import json
 W=json.load(open('/home/user/work/f8/words.json'))
 # piece map: (take, raw from, raw to, out start)  — must match reel.json
-MAP=[("c04",0.48,4.6467,0.0),("c02",0.36,7.0267,4.1667),("c01",0.46,4.0933,10.8333),("c01",4.33,7.93,14.4667)]
+MAP=[("c04",0.48,4.6467,0.0),("c02",0.36,7.16,4.1667),("c01",0.46,4.06,10.9667),("c01",4.33,7.8967,14.5667)]
 def out(take,t):
     for tk,a,b,o in MAP:
         if tk==take and a-0.05<=t<=b+0.05: return round(o+t-a,3)
@@ -24,6 +24,6 @@ for take,idx in CARDS:
     cards.append({"s":round(ws[0]["s"]-0.10,3),"e":round(ws[-1]["e"]+0.25,3),"w":ws})
 for a,b in zip(cards,cards[1:]):
     if a["e"]>b["s"]-0.02: a["e"]=round(b["s"]-0.02,3)
-cards[0]["s"]=max(0.0,cards[0]["s"]); cards[-1]["e"]=min(18.05,cards[-1]["e"])
-json.dump({"total":18.0667,"cards":cards},open('/home/user/work/f8/w/caps.json','w'),ensure_ascii=False,indent=1)
+cards[0]["s"]=max(0.0,cards[0]["s"]); cards[-1]["e"]=min(18.12,cards[-1]["e"])
+json.dump({"total":18.1333,"cards":cards},open('/home/user/work/f8/w/caps.json','w'),ensure_ascii=False,indent=1)
 for i,c in enumerate(cards): print(i,c["s"],c["e"]," ".join(("*"+w["t"] if w["hot"] else w["t"]) for w in c["w"]))
