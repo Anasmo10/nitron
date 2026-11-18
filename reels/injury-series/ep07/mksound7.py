@@ -6,11 +6,11 @@ T={k:float(v) for k,v in [x.strip().split('=') for x in hdr.replace('const ','')
 SNAP=3.36; WS=json.loads(open(W+'/scenes.js').read().split('\n')[1].split('const WS=')[1].split(', WE=')[0])
 tear2=WS['7523'][24]-0.02
 ev=[["lib",SNAP-0.02,0.20,"es_riser_dark"],          # dark riser into the snap (under the slow motion)
-    ["lib",T['T_HCUT']+0.04,0.28,"es_swish"],         # the card flip into the drawing
+    ["lib",T["T_HCUT"]+0.04,0.60,"es_swish"],         # the card flip into the drawing
     ["lib",SNAP,0.22,"es_rev_dark"],["lib",SNAP,0.34,"es_imp_deep"],["lib",SNAP+0.02,0.32,"es_crack"],   # the tendon snaps
     ["lib",T['T_C1IN']+0.05,0.55,"whoosh_a"],         # into each drawing (client, F8: trendy, audible, only where something happens)
     ["lib",T['T_C2IN']+0.05,0.50,"soft_whoosh"],
-    ["lib",tear2,0.55,"es_crack"],                     # the tear, close up
+    ["lib",tear2,0.90,"es_crack"],                     # the tear, close up
     ["lib",T['T_C3IN']+0.05,0.55,"whoosh_a"],
     ["lib",T['T_C4IN']+0.05,0.50,"soft_whoosh"],
     # the words on the wall behind Ahmad land with a soft thump, the second word with a pop

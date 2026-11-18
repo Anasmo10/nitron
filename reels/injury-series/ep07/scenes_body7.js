@@ -12,7 +12,7 @@
    The T_*, WS/WE constants and the drawing (a7Arm, hookMG) are above this part (gen7.py). */
 const PURPLE='#76028A', LIL='#C77DDB';
 SCENES=[{s:0,e:T_P1,m:R_FULL},{s:T_P1,e:T_C1IN+0.3,m:R_FULL,nocap:true},{s:T_C1IN+0.3,e:T_C2OUT,m:R_FULL},{s:T_C2OUT,e:T_C3IN+0.3,m:R_FULL,nocap:true},
-        {s:T_C3IN+0.3,e:T_C3OUT,m:R_FULL,nocap:true},{s:T_C3OUT,e:T_P5,m:R_FULL},{s:T_P5,e:99,m:R_FULL,nocap:true}];
+        {s:T_C3IN+0.3,e:T_C3OUT+0.2,m:R_FULL,nocap:true},{s:T_C3OUT+0.2,e:T_P5,m:R_FULL},{s:T_P5,e:99,m:R_FULL,nocap:true}];
 nkNoBarUntil(99);
 const INJ_EP={n:'07',name:'Distal Biceps Tendon Rupture',ar:'تمزّق وتر البايسبس'};
 function injLatin(s,x,y,size,col,al,w,ls){ X.save(); X.font=(w||800)+' '+size+'px Inter, '+FONT; X.fillStyle=col; X.textAlign=al||'center'; X.textBaseline='middle';
@@ -45,7 +45,7 @@ let WALL_T=-1;
 function wallP1(t){ if(nkWallWords(t,{s:T_P1,e:T_C1IN-0.04,size:178,drop:-0.12,words:[
   {text:'PREACHER',at:WS['7521'][10]-0.10,color:'#FFFFFF',latin:true},
   {text:'CURL',at:WS['7521'][11]-0.06,color:LIL,latin:true}]})) WALL_T=t; }
-function wallP2(t){ if(nkWallWords(t,{s:T_C1OUT,e:T_C2IN-0.04,size:200,drop:-0.06,words:[
+function wallP2(t){ if(nkWallWords(t,{s:T_C1OUT,e:T_C2IN-0.04,size:200,drop:-0.16,words:[
   {text:'حمل كبير',at:WS['7523'][1]-0.10,color:'#FFFFFF'},
   {text:'بلا سيطرة',at:WS['7523'][6]-0.10,color:LIL}]})) WALL_T=t; }
 function ahmadBack(t){ if(!ON_CAM(t)) return; orbitDraw(t,STUDIES(),false,SRC_S,SRC_E); if(PRS_OK&&WALL_T!==t) X.drawImage(PRS,0,0,W,H); }
