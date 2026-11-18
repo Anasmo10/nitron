@@ -153,10 +153,11 @@ function canvas4(t){ const a=CAN4(t); if(a<=0) return; X.save(); X.globalAlpha=a
   X.restore(); }
 
 /* ── P5: his last line on liquid glass; the card opens with it ── */
-function takeaway(t){ if(t<T_P5||t>=VEND) return; const k=ik(t,WS['7534'][0]-0.1,0.4), out=1-pr(t,VEND-0.3,VEND); if(k<=0||out<=0) return;
-  const k2=ik(t,WS['7534'][1]-0.06,0.3), k3=ik(t,WS['7534'][3]-0.08,0.3), k4=ik(t,WS['7534'][6]-0.08,0.3), g=ik(t,WS['7534'][3]-0.25,0.4);
-  const x=100,y=1170+(1-k)*60,w=830,h=170+120*g; X.save(); X.globalAlpha=k*out; glassPane(x,y,w,h,40,{}); X.fillStyle=PURPLE; rr(x+w-20,y+30,8,h-60,4); X.fill();
-  nkTxt('بالمختصر',x+w-54,y+52,32,LIL,'right',1,800);
+function takeaway(t){ if(t<T_P5||t>=VEND) return; /* v1: starts once C4 has faded out (never two text panes at once); the pane fits what is on it: «بالمختصر» alone and big, then it grows */
+  const k=ik(t,Math.max(WS['7534'][0]-0.1,T_C4OUT+0.2),0.4), out=1-pr(t,VEND-0.3,VEND); if(k<=0||out<=0) return;
+  const g2=ik(t,WS['7534'][1]-0.2,0.3), k2=ik(t,WS['7534'][1]-0.06,0.3), k3=ik(t,WS['7534'][3]-0.08,0.3), k4=ik(t,WS['7534'][6]-0.08,0.3), g=ik(t,WS['7534'][3]-0.25,0.4);
+  const x=100,y=1170+(1-k)*60,w=830,h=110+60*g2+120*g; X.save(); X.globalAlpha=k*out; glassPane(x,y,w,h,40,{}); X.fillStyle=PURPLE; rr(x+w-20,y+26,8,h-52,4); X.fill();
+  nkTxt('بالمختصر',x+w-54,y+56-4*g2,52-20*g2,LIL,'right',1,800);
   if(k2>0){ X.save(); X.globalAlpha*=k2; nkTxt('تحكّمك بالوزن',x+w-52,y+124+(1-k2)*16,72,'#FFFFFF','right'); X.restore(); }
   if(k3>0){ X.save(); X.globalAlpha*=k3; X.font='900 46px '+FONT; rtlLine([['ممكن يحميك من','#FFFFFF',46],['الإصابة',LIL,56]],x+w-52-(X.measureText('ممكن يحميك من الإصابة').width+40)/2,y+222+(1-k3)*14,46,[1,k4]); X.restore(); }
   X.restore(); }
