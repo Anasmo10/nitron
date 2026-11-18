@@ -33,7 +33,8 @@ for take,groups,hot in CARDS:
     for g in groups:
         ws=[{'t':D.get(words[take][i][0],words[take][i][0]),'s':WS[take][i],'e':WE[take][i]} for i in g]
         for w in ws: w['hot']=w['t'] in hot
-        if [w['t'] for w in ws][-2:]==['Preacher','Curl']: ws[-2]['t']='Preacher'; ws[-1]['t']='Curl'
+        if [w['t'] for w in ws][-2:]==['Preacher','Curl']:   # one token, so the RTL caption keeps the English name in order (v0 showed «Curl Preacher»)
+            ws[-2]={'t':'Preacher\u00a0Curl','s':ws[-2]['s'],'e':ws[-1]['e'],'hot':True}; ws.pop()
         cards.append({'s':round(ws[0]['s']-0.10,3),'e':round(ws[-1]['e']+0.25,3),'w':ws})
 cards.sort(key=lambda c:c['s'])
 for a,b in zip(cards,cards[1:]):

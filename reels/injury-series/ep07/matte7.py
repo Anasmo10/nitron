@@ -15,7 +15,7 @@ import sys, os, json, math, numpy as np, cv2
 B='/home/user/work/ep7'; W=B+'/ep'; n=sys.argv[1]; F0,F1=int(sys.argv[2]),int(sys.argv[3]); OUT=W+'/bt/p_raw'; os.makedirs(OUT,exist_ok=True)
 FR=json.load(open(B+'/frames.json'))[n]
 TL={p['name']:p for p in json.load(open(W+'/timeline.json'))['pieces']}; RE={p['name']:p for p in json.load(open(W+'/reel.json'))['pieces']}
-piece=[k for k,p in RE.items() if p['clip']=='c'+n and TL[k]['frames'][0]<=F0<=TL[k]['frames'][1]][0]; fs0=TL[piece]['frames'][0]   # EP07: a take can have two pieces (P4a, P4); k0=math.ceil(RE[piece]['a']*30-1e-6)
+piece=[k for k,p in RE.items() if p['clip']=='c'+n and TL[k]['frames'][0]<=F0<=TL[k]['frames'][1]][0]; fs0=TL[piece]['frames'][0]; k0=math.ceil(RE[piece]['a']*30-1e-6)   # EP07: a take can have two pieces (P4a, P4)
 K=lambda f: k0+(f-fs0)                                            # reel frame → raw frame (checked against the pictures)
 raw=lambda k: cv2.imread(f'{B}/raw/{n}/{k:04d}.jpg')
 small=lambda im: cv2.cvtColor(cv2.resize(im,(540,960),interpolation=cv2.INTER_AREA),cv2.COLOR_BGR2GRAY)

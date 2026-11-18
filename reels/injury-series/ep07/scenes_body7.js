@@ -42,10 +42,10 @@ const ON_CAM=t=>(t>=T_P1&&t<T_C1IN+0.25)||(t>=T_C1OUT&&t<T_C2IN+0.25)||(t>=T_C2O
 /* behind Ahmad (client, 17 Nov: «حط شي ورا احمد مو كله قدام»): words on the wall behind his head, the person layer back on top.
    P1: the exercise's name in English while he says «هالتمرين» · P2: «حمل كبير» → «بلا سيطرة» on «الحمل كبير… ما عرفت تسيطر» */
 let WALL_T=-1;
-function wallP1(t){ if(nkWallWords(t,{s:T_P1,e:T_C1IN-0.04,size:178,drop:0.05,words:[
+function wallP1(t){ if(nkWallWords(t,{s:T_P1,e:T_C1IN-0.04,size:178,drop:-0.12,words:[
   {text:'PREACHER',at:WS['7521'][10]-0.10,color:'#FFFFFF',latin:true},
   {text:'CURL',at:WS['7521'][11]-0.06,color:LIL,latin:true}]})) WALL_T=t; }
-function wallP2(t){ if(nkWallWords(t,{s:T_C1OUT,e:T_C2IN-0.04,size:200,drop:0.08,words:[
+function wallP2(t){ if(nkWallWords(t,{s:T_C1OUT,e:T_C2IN-0.04,size:200,drop:-0.06,words:[
   {text:'حمل كبير',at:WS['7523'][1]-0.10,color:'#FFFFFF'},
   {text:'بلا سيطرة',at:WS['7523'][6]-0.10,color:LIL}]})) WALL_T=t; }
 function ahmadBack(t){ if(!ON_CAM(t)) return; orbitDraw(t,STUDIES(),false,SRC_S,SRC_E); if(PRS_OK&&WALL_T!==t) X.drawImage(PRS,0,0,W,H); }
@@ -88,14 +88,14 @@ function a7Screen(p,cx,cy,z){ return [1080-(540+(p[0]-cx)*z), 960+(p[1]-cy)*z]; 
 function a7Mirror(cx,cy,z,fn){ X.save(); X.translate(1080,0); X.scale(-1,1); X.translate(540,960); X.scale(z,z); X.translate(-cx,-cy); const r=fn(); X.restore(); return r; }
 
 /* ── C1: why in this exercise — the elbow almost straight, the biceps stretched under the weight ── */
-const C1V={cx:520,cy:1010,z:0.74};
+const C1V={cx:520,cy:1118,z:0.74};   /* 80 px higher than v0: the elbow label and the «الوزن» arrow stay clear of the caption */
 function c1State(t){ const lo=ik(t,WS['7521'][16]-0.3,1.6);                       /* «المرفق» → «الاستقامة»: the forearm lowers */
   return {phi:1.55-1.38*lo, k:pr(t,T_C1IN+0.1,T_C1IN+1.0), stretch:ik(t,WS['7521'][23]-0.15,0.6), tremble:0, hot:t>=WS['7521'][23]-0.15, glow:ik(t,WS['7521'][23],0.5)*0.6}; }
 function canvas1(t){ const a=CAN1(t); if(a<=0) return; X.save(); X.globalAlpha=a; chapter(t,T_C1IN+0.05,T_C1OUT+0.2,'WHY THE PREACHER CURL','ليش بهالتمرين؟');
   const st=c1State(t), g=a7Mirror(C1V.cx,C1V.cy,C1V.z,()=>a7Arm(t,st));
   if(g){ const E=a7Screen(A7.E,C1V.cx,C1V.cy,C1V.z), Hs=a7Screen(g.H,C1V.cx,C1V.cy,C1V.z), B=a7Screen([(A7.S[0]+A7.E[0])/2+A7.nUp[0]*70,(A7.S[1]+A7.E[1])/2+A7.nUp[1]*70],C1V.cx,C1V.cy,C1V.z);
     const out1=1-pr(t,WS['7521'][23]-0.4,WS['7521'][23]-0.1);
-    injLabel(t,WS['7521'][17]-0.05,E[0],E[1]+30,60,1388,'Elbow near full extension','المرفق شبه مفرود','left',out1);   /* under the plate, clear of the posts */
+    injLabel(t,WS['7521'][17]-0.05,E[0],E[1]+30,60,1290,'Elbow near full extension','المرفق شبه مفرود','left',out1);   /* under the plate, clear of the posts */
     injLabel(t,WS['7521'][23]-0.05,B[0],B[1],60,622,'Biceps under stretch','البايسبس ممدودة','left');   /* the free dark above the plate, left of his head */
     const kw=ik(t,WS['7521'][27]-0.12,0.3); if(kw>0){ X.save(); X.globalAlpha*=kw; X.strokeStyle=LIL; X.fillStyle=LIL; X.lineWidth=12; X.lineCap='round';
       const x=Hs[0], y0=Hs[1]+120, y1=y0+120*kw; X.beginPath(); X.moveTo(x,y0); X.lineTo(x,y1); X.stroke(); X.beginPath(); X.moveTo(x-26,y1-6); X.lineTo(x+26,y1-6); X.lineTo(x,y1+30); X.closePath(); X.fill();
@@ -106,7 +106,7 @@ function canvas1(t){ const a=CAN1(t); if(a<=0) return; X.save(); X.globalAlpha=a
 function canvas2(t){ const a=CAN2(t); if(a<=0) return; X.save(); X.globalAlpha=a; chapter(t,T_C2IN+0.05,T_C2OUT+0.2,'WHY IT TEARS','ليش بيتمزّق؟');
   const tB=WS['7523'][22]-0.2;                                                      /* «وهالشي»: into the close-up */
   const kA=ik(t,T_C2IN+0.15,0.35)*(1-pr(t,tB-0.25,tB)); if(kA>0){ X.save(); X.globalAlpha*=kA;
-    const base=1240, top=560, cap=0.62, f=Math.min(1.08,0.12+0.5*ik(t,WS['7523'][11]-0.1,1.4)+0.46*ik(t,WS['7523'][17]-0.15,0.5)), over=f>cap+0.01;
+    const base=1130, top=500, cap=0.62, f=Math.min(1.08,0.12+0.5*ik(t,WS['7523'][11]-0.1,1.4)+0.46*ik(t,WS['7523'][17]-0.15,0.5)), over=f>cap+0.01;
     const bar=(x,label,lat,v,fill,stroke)=>{ const h=(base-top)*v; X.save(); X.fillStyle='rgba(255,255,255,0.05)'; rr(x-90,top,180,base-top,26); X.fill(); X.strokeStyle='rgba(236,230,242,0.25)'; X.lineWidth=3; rr(x-90,top,180,base-top,26); X.stroke();
       if(fill){ X.fillStyle=fill; rr(x-90,base-h,180,h,26); X.fill(); } if(stroke){ X.strokeStyle=stroke; X.lineWidth=6; rr(x-90,base-h,180,h,26); X.stroke(); }
       nkTxt(label,x,base+62,40,'#FFFFFF','center'); injLatin(lat,x,base+112,24,'rgba(255,255,255,0.6)','center',700); X.restore(); };
@@ -137,7 +137,7 @@ function canvas3(t){ const a=CAN3(t); if(a<=0) return; X.save(); X.globalAlpha=a
 
 /* ── C4: the recovery — 0 → 6 → 12 months; the return-to-sport figure from the review ── */
 function canvas4(t){ const a=CAN4(t); if(a<=0) return; X.save(); X.globalAlpha=a; chapter(t,T_C4IN+0.05,T_C4OUT+0.2,'RECOVERY','الاستشفاء');
-  const x0=160, x1=920, y=860, m=v=>x0+(x1-x0)*v/12, k0=ik(t,T_C4IN+0.15,0.35);
+  const x0=160, x1=920, y=800, m=v=>x0+(x1-x0)*v/12, k0=ik(t,T_C4IN+0.15,0.35);
   X.save(); X.globalAlpha*=k0; X.strokeStyle='rgba(236,230,242,0.35)'; X.lineWidth=6; X.lineCap='round'; X.beginPath(); X.moveTo(m(0),y); X.lineTo(m(12),y); X.stroke();
   for(const v of [0,3,6,9,12]){ X.fillStyle='rgba(236,230,242,0.6)'; X.beginPath(); X.arc(m(v),y,8,0,7); X.fill(); injLatin(String(v),m(v),y+56,34,'rgba(255,255,255,0.75)','center',800); }
   nkTxt('شهر',540,y+118,34,'rgba(255,255,255,0.55)','center'); X.restore();
@@ -146,7 +146,7 @@ function canvas4(t){ const a=CAN4(t); if(a<=0) return; X.save(); X.globalAlpha=a
     if(k12>0){ const g=X.createLinearGradient(m(6),0,m(12),0); g.addColorStop(0,LIL); g.addColorStop(1,'rgba(199,125,219,0.35)'); X.strokeStyle=g; X.beginPath(); X.moveTo(m(6),y); X.lineTo(m(6+6*k12),y); X.stroke(); }
     X.restore(); X.save(); X.globalAlpha*=k6; nkGlassPill(m(6),y-120,'٦ أشهر',k6,44); X.restore(); }
   if(k12>0){ X.save(); X.globalAlpha*=k12; nkGlassPill(m(12)-40,y-120,'سنة',k12,44); X.restore(); }
-  const kf=ik(t,WS['7531'][11]-0.05,0.4); if(kf>0){ X.save(); X.globalAlpha*=kf; const bx=120,by=1110,bw=840,bh=230; glassPane(bx,by+(1-kf)*30,bw,bh,36,{}); X.fillStyle=PURPLE; rr(bx+bw-20,by+(1-kf)*30+34,8,bh-68,4); X.fill();
+  const kf=ik(t,WS['7531'][11]-0.05,0.4); if(kf>0){ X.save(); X.globalAlpha*=kf; const bx=120,by=990,bw=840,bh=230; glassPane(bx,by+(1-kf)*30,bw,bh,36,{}); X.fillStyle=PURPLE; rr(bx+bw-20,by+(1-kf)*30+34,8,bh-68,4); X.fill();
     nkTxt('بعد العملية، الرجوع للرياضة',bx+bw-50,by+(1-kf)*30+62,36,LIL,'right',1,800);
     rtlLine([['بالمتوسط','#FFFFFF',52],['٦٫٣ شهر',LIL,64]],540,by+(1-kf)*30+150,52);
     X.restore(); }

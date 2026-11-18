@@ -42,14 +42,8 @@
      "hot": false
     },
     {
-     "t": "Preacher",
+     "t": "Preacher Curl",
      "s": 2.842,
-     "e": 3.282,
-     "hot": false
-    },
-    {
-     "t": "Curl",
-     "s": 3.342,
      "e": 3.903,
      "hot": true
     }
