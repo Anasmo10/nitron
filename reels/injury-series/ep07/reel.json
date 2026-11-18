@@ -1,0 +1,222 @@
+{
+ "clips": {
+  "hook": {
+   "file": "/home/user/work/ep7/hook/hook.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "c7521": {
+   "file": "/home/user/work/ep7/sdr/c7521.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "a7521": {
+   "file": "/home/user/work/ep7/src/IMG_7521.MOV",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "c7523": {
+   "file": "/home/user/work/ep7/sdr/c7523.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "a7523": {
+   "file": "/home/user/work/ep7/src/IMG_7523.MOV",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "c7529": {
+   "file": "/home/user/work/ep7/sdr/c7529.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "a7529": {
+   "file": "/home/user/work/ep7/src/IMG_7529.MOV",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "c7531": {
+   "file": "/home/user/work/ep7/sdr/c7531.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "a7531": {
+   "file": "/home/user/work/ep7/src/IMG_7531.MOV",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "c7534": {
+   "file": "/home/user/work/ep7/sdr/c7534.mp4",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  },
+  "a7534": {
+   "file": "/home/user/work/ep7/src/IMG_7534.MOV",
+   "gains": [
+    1,
+    1,
+    1
+   ]
+  }
+ },
+ "pieces": [
+  {
+   "name": "H",
+   "clip": "hook",
+   "a": 0.0,
+   "b": 3.9333,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7521",
+    "a": 0.0
+   }
+  },
+  {
+   "name": "P1",
+   "clip": "c7521",
+   "a": 3.9333,
+   "b": 12.2333,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7521",
+    "a": 3.9333
+   }
+  },
+  {
+   "name": "P2",
+   "clip": "c7523",
+   "a": 1.3,
+   "b": 9.8,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7523",
+    "a": 1.3
+   }
+  },
+  {
+   "name": "P3",
+   "clip": "c7529",
+   "a": 1.1,
+   "b": 10.1667,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7529",
+    "a": 1.1
+   }
+  },
+  {
+   "name": "P4a",
+   "clip": "c7531",
+   "a": 0.55,
+   "b": 0.95,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7531",
+    "a": 0.55
+   }
+  },
+  {
+   "name": "P4",
+   "clip": "c7531",
+   "a": 1.65,
+   "b": 7.6167,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7531",
+    "a": 1.65
+   }
+  },
+  {
+   "name": "P5",
+   "clip": "c7534",
+   "a": 0.85,
+   "b": 4.7167,
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "target": [
+    540,
+    null
+   ],
+   "vo": {
+    "clip": "a7534",
+    "a": 0.85
+   }
+  }
+ ],
+ "look": "eq=saturation=1.0",
+ "voice_gain": "clip"
+}
