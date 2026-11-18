@@ -7,12 +7,12 @@ def rt(take,s):            # raw take second → timeline second
     if take=='7521': return round(s,3)                                   # H (vo a 0) and P1 (a = start) both map 1:1
     if take=='7523': return round(P['P2']['start']+s-1.30,3)
     if take=='7529': return round(P['P3']['start']+s-1.10,3)
-    if take=='7531': return round(P['P4a']['start']+s-0.55,3) if s<0.95 else round(P['P4']['start']+s-1.65,3)
+    if take=='7531': return round(P['P4']['start']+s-1.65,3)          # v2: P4a removed (it was «والله», not «أما»)
     if take=='7534': return round(P['P5']['start']+s-0.85,3)
 WS={k:[rt(k,w[1]) for w in v] for k,v in words.items()}; WE={k:[rt(k,w[2]) for w in v] for k,v in words.items()}
 # 7531 «أما» is at raw ~0.66–0.92 (the aligner put it at 0.00): fix by hand
-WS['7531'][0]=rt('7531',0.66); WE['7531'][0]=rt('7531',0.92)
-T={'T_P1':P['P1']['start'],'T_P2':P['P2']['start'],'T_P3':P['P3']['start'],'T_P4A':P['P4a']['start'],'T_P4':P['P4']['start'],'T_P5':P['P5']['start']}
+WS['7531'][0]=WS['7531'][1]; WE['7531'][0]=WS['7531'][1]   # v2: there is no «أما» (the take opens with «والله», cut); index kept so the others stay put
+T={'T_P1':P['P1']['start'],'T_P2':P['P2']['start'],'T_P3':P['P3']['start'],'T_P4':P['P4']['start'],'T_P5':P['P5']['start']}
 T['T_C1IN']=round(WS['7521'][13]-0.05,3)      # «بوضعية»
 T['T_C1OUT']=round(T['T_P2']+0.07,3)
 T['T_C2IN']=round(WS['7523'][8]-0.06,3)       # «رح»
@@ -27,7 +27,7 @@ D={'تمزق':'تمزّق','البريتشر':'Preacher','كيرل':'Curl','ال
 CARDS=[('7521',[[0,1,2],[3,4,5,6]],['البايسبس','Curl']),
        ('7521',[[13,14,15],[16,17,18,19],[20,21,22,23],[24,25,26,27]],['المرفق','الاستقامة','البايسبس','متمددة','الوزن']),
        ('7523',[[0,1,2],[3,4,5,6,7],[8,9,10,11,12],[13,14,15,16],[17,18,19,20,21],[22,23,24]],['الحمل','كبير','تسيطر','قوة','الوتر','أكبر','التحمّل','للتمزّق']),
-       ('7531',[[0,1,2],[3,4,5,6],[7,8,9],[10,11,12]],['للعلاج','جراحي','ست','لسنة'])]
+       ('7531',[[1,2],[3,4,5,6],[7,8,9],[10,11,12]],['للعلاج','جراحي','ست','لسنة'])]
 cards=[]
 for take,groups,hot in CARDS:
     for g in groups:

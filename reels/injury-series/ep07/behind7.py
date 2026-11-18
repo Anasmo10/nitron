@@ -3,7 +3,7 @@
 cut-out with alpha > 0.5 in the middle third) so nkWallWords sinks each word just behind his hair."""
 import json, os, cv2, numpy as np
 W = '/home/user/work/ep7/ep'
-RANGES = [[119, 196], [368, 450], [909, 1012]]
+RANGES = [[119, 196], [368, 450], [897, 1000]]   # v2: P4 is 12 frames earlier (the «والله» piece is cut)
 faces = {}
 for a, b in RANGES:
     for i in range(a, b + 1):
