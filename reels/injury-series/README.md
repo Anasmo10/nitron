@@ -222,6 +222,9 @@ Brief: «هاي الابيسود نمبر 7… شوف شو المنتج… إذ�
 - **Wrong word in his voice:** «عضلة» (it is the distal tendon that tears); kept in his voice, «وتر البايسبس» on screen.
 - **Sources (EP07):** Launonen et al., J Hand Surg Am 2020 · Boufadel et al., Am J Sports Med 2025 (return to sport 91.5%, mean 6.3 months) · Ward et al., Bull Hosp Jt Dis 2014 · Almigdad et al., Clin Orthop Surg 2024 · Miyamoto et al., J Bone Joint Surg Am 2010. Read from PubMed abstracts.
 - **Cover:** the episode's own ink drawing (the whole lifter on the pad, the tear glowing and ringed), «ليش انقطع / وتر البايسبس؟»; not EP03's single-joint close-up.
+- **Film card fades with its canvas** (`bake7.py` v1): the clip is blended into the cut at the canvas's own strength in the 0.2 s fades; the un-baked frames are kept in `ep/prebake` so a second bake never double-blends. v0 left the clip at full strength over Ahmad's face while the canvas faded.
+- **One model process at a time:** a second BiRefNet run plus a composite got the main run killed for memory (15 GB). Extend a take's range with a separate run only when nothing else heavy is running.
+- **Checks on the delivered file (v1):** 1080×1920, 30 fps, 43.03 s; −14.9 LUFS, peak −1.8 dBFS; first caption at 0.45 s. `08_safe_check.js` still flags the ink drawing's lines where they run off the frame (top 0.52% in the hook, right column 3.69% in the hook push-in, bottom 1.91% in the tendon close-up, cautious band 7.15% as the hook fades into P1). No text or key detail is in those zones; accepted.
 
 ## The cut-out (client, 14 Nov, on EP04 v1: «القص مو نضيف كتير، بيغبش… التفريغ أبداً مو نضيف، عم تروح وتجي الخلفية البيضاء. أنا ليش عامل لك إياها على خلفية بيضاء؟ مشان يكون القص نضيف»)
 What was wrong in v1 (and in EP02–EP03, which used the same chain):

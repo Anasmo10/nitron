@@ -60,7 +60,7 @@ function titleCard(t){ if(t<T_P1||t>T_C1IN+0.3) return; const k=ik(t,T_P1+0.12,0
   nkTxt(INJ_EP.ar,x+w-52,y+196,58,LIL,'right');
   nkTxt('على الأغلب · من شكل الحركة',x+w-52,y+260,28,'rgba(255,255,255,0.62)','right',1,700); X.restore(); }
 /* P3: his question above his head (his hair never rises above y 390 at this framing), gone before C3's header takes its place */
-function p3Question(t){ if(t<T_C2OUT||t>T_C3IN+0.3) return; const k=ik(t,WS['7529'][0]-0.05,0.3)*(1-pr(t,T_C3IN-0.1,T_C3IN+0.15)); if(k<=0) return;
+function p3Question(t){ if(t<T_C2OUT||t>T_C3IN+0.3) return; const k=ik(t,Math.max(WS['7529'][0]-0.05,T_C2OUT+0.2),0.3)*(1-pr(t,T_C3IN-0.22,T_C3IN)); if(k<=0) return;   /* v1: never over C2's or C3's header while they fade */
   X.save(); X.globalAlpha=k; nkGlassPill(540,250,'كيف تحمي حالك؟',k,58); X.restore(); }
 
 /* ── the dark canvas (+ the film card's footage, baked into the frames by bake7.py, shown through its window) ── */

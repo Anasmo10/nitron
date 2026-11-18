@@ -39,7 +39,7 @@ for take,groups,hot in CARDS:
 cards.sort(key=lambda c:c['s'])
 for a,b in zip(cards,cards[1:]):
     if a['e']>b['s']-0.03: a['e']=round(b['s']-0.03,3)
-cards[0]['s']=max(cards[0]['s'],0.6)
+cards[0]['s']=0.45   # after the 0.2 s fade from black, before 0.5 s (muted viewers; 08_safe_check)
 json.dump({'total':round(tl['total'],3),'cards':cards},open(W+'/caps.json','w'),ensure_ascii=False,indent=1)
 hdr='const '+', '.join(f'{k}={v}' for k,v in T.items())+';\nconst WS='+json.dumps(WS)+', WE='+json.dumps(WE)+';\n'
 open(W+'/scenes.js','w').write(hdr+open(B+'/hook_mg7.js').read()+'\n'+open(B+'/scenes_body7.js').read())
